@@ -1,0 +1,8 @@
+node_modules/
+.env
+.DS_Store
+*.log
+temp/
+output.json
+output.txt
+members_tasks.json
