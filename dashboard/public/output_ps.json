@@ -1,0 +1,136 @@
+{
+  "currentPosition": {
+    "stageNumber": 6,
+    "stageName": "Testing on silicon",
+    "summary": "The team is actively engaged in testing on silicon, with significant progress noted in various measurement and debug tasks."
+  },
+  "stages": [
+    {
+      "stageNumber": 1,
+      "stageName": "Initial test definition",
+      "status": "completed",
+      "taskCount": 0,
+      "tasks": []
+    },
+    {
+      "stageNumber": 2,
+      "stageName": "Test procedure details discussions",
+      "status": "upcoming",
+      "taskCount": 0,
+      "tasks": []
+    },
+    {
+      "stageNumber": 3,
+      "stageName": "Test procedure creation (GitHub, lab HW resources)",
+      "status": "upcoming",
+      "taskCount": 0,
+      "tasks": []
+    },
+    {
+      "stageNumber": 4,
+      "stageName": "Firmware coding (if needed)",
+      "status": "active",
+      "taskCount": 1,
+      "tasks": [
+        {
+          "name": "N3: [FW] QS222_BRING_UP_FW_TASK",
+          "assignee": "Kumaresh Dhotrad/Sumon",
+          "detail": "Firmware bring-up task for QS222."
+        }
+      ]
+    },
+    {
+      "stageNumber": 5,
+      "stageName": "Automation steps (if needed)",
+      "status": "upcoming",
+      "taskCount": 0,
+      "tasks": []
+    },
+    {
+      "stageNumber": 6,
+      "stageName": "Testing on silicon",
+      "status": "active",
+      "taskCount": 6,
+      "tasks": [
+        {
+          "name": "N3: QS127S benchtop experiment to find statics settings for 22 MHz carrier frequency",
+          "assignee": "Ashutosh Nahar",
+          "detail": "Experiment to find static settings for a 22 MHz carrier frequency has been completed."
+        },
+        {
+          "name": "N3: [QS127M Bench] Carrier PLL test.",
+          "assignee": "Deepthi Kammath",
+          "detail": "Carrier PLL test for QS127M is in progress with results in line with design expectations."
+        },
+        {
+          "name": "N3: [QS127M Bench] Baseband schedule bidirectional test.",
+          "assignee": "Anish Saha",
+          "detail": "Bidirectional baseband schedule test for QS127M is in progress."
+        },
+        {
+          "name": "N3: [QS127M Bench] PER with FG test with AGC with ECC + CRC.",
+          "assignee": "Vinayak Agrawal",
+          "detail": "PER test with AGC and ECC+CRC for QS127M is in progress."
+        },
+        {
+          "name": "N3: [QS127M Bench] PER with FG test with AGC without ecc +crc",
+          "assignee": "Vinayak Agrawal",
+          "detail": "PER test with AGC without ECC+CRC for QS127M is in progress."
+        },
+        {
+          "name": "QS221 SILICON DEBUG",
+          "assignee": "Vinayak Agrawal",
+          "detail": "Silicon debug task for QS221."
+        }
+      ]
+    },
+    {
+      "stageNumber": 7,
+      "stageName": "Results review with Design/Architect",
+      "status": "upcoming",
+      "taskCount": 0,
+      "tasks": []
+    },
+    {
+      "stageNumber": 8,
+      "stageName": "Meets design expectations? (YES → next stage, NO → debug & loop back to Stage 6)",
+      "status": "upcoming",
+      "taskCount": 0,
+      "tasks": []
+    },
+    {
+      "stageNumber": 9,
+      "stageName": "Report & Documentation",
+      "status": "upcoming",
+      "taskCount": 0,
+      "tasks": []
+    },
+    {
+      "stageNumber": 10,
+      "stageName": "Feedback to Architect/Design (loops back to Stage 2 for next-gen)",
+      "status": "upcoming",
+      "taskCount": 0,
+      "tasks": []
+    },
+    {
+      "stageNumber": 11,
+      "stageName": "Publish Data Sheet for customers",
+      "status": "upcoming",
+      "taskCount": 0,
+      "tasks": []
+    }
+  ],
+  "blockers": [
+    {
+      "task": "N3: [FW] QS222_BRING_UP_FW_TASK",
+      "reason": "Lack of detailed description and unclear status requires follow-up.",
+      "severity": "medium"
+    },
+    {
+      "task": "QS223 RTL Design",
+      "reason": "Discussions on power modes and core interactions are causing delays.",
+      "severity": "medium"
+    }
+  ],
+  "nextStep": "Continue testing on silicon, focusing on completing the current set of tests and addressing any emerging issues. Follow up on firmware bring-up and RTL design discussions."
+}

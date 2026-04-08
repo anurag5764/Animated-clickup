@@ -15,44 +15,57 @@ const STAGE_NAMES = [
 
 const STAGE_ICONS = ['📝','💬','🔧','💾','⚙️','🧪','🔍','✅','📄','🔁','📊'];
 
+// ===== TEAM CONFIG =====
+const TEAM_FILES = {
+  ps:  'output_ps.json',
+  ams: 'output_ams.json',
+  rtl: 'output_rtl.json'
+};
+
+const teamDataCache = {};
+let activeTeam = 'ps';
+
 // ===== MAIN INIT =====
 document.addEventListener('DOMContentLoaded', () => {
-  loadDashboard();
+  setupTabs();
+  loadTeam('ps');
 });
 
-async function loadDashboard() {
-  let data;
-  try {
-    const res = await fetch('output.json');
-    if (!res.ok) throw new Error('output.json not found');
-    data = await res.json();
-  } catch (err) {
-    showNoData();
+// ===== TAB HANDLING =====
+function setupTabs() {
+  const tabs = document.querySelectorAll('.team-tab');
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const team = tab.dataset.team;
+      if (team === activeTeam) return;
+      tabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      activeTeam = team;
+      loadTeam(team);
+    });
+  });
+}
+
+// ===== LOAD TEAM DATA =====
+async function loadTeam(team) {
+  if (teamDataCache[team]) {
+    renderPipeline(teamDataCache[team].stages);
     return;
   }
-  renderHero(data.currentPosition);
-  renderPipeline(data.stages);
-  renderDetails(data.stages);
-  renderBlockers(data.blockers);
-  renderNextStep(data.nextStep);
-  document.getElementById('headerSubtitle').textContent = 'Real-time workflow analysis powered by AI';
-}
 
-// ===== NO DATA STATE =====
-function showNoData() {
-  document.getElementById('headerSubtitle').textContent = 'No analysis data found';
-  document.getElementById('heroSection').innerHTML = `
-    <div class="no-data">
-      <div class="no-data-icon">📂</div>
-      <p>No <code>output.json</code> found. Run <code>node analyze_workflow.js</code> first.</p>
-    </div>
-  `;
-}
-
-// ===== HERO =====
-function renderHero(pos) {
-  document.getElementById('heroStage').textContent = `Stage ${pos.stageNumber}: ${pos.stageName}`;
-  document.getElementById('heroSummary').textContent = pos.summary;
+  try {
+    const res = await fetch(TEAM_FILES[team]);
+    if (!res.ok) throw new Error('not found');
+    const data = await res.json();
+    teamDataCache[team] = data;
+    renderPipeline(data.stages);
+  } catch (err) {
+    document.getElementById('pipeline').innerHTML = `
+      <div class="no-data">
+        <div class="no-data-icon">📂</div>
+        <p>No data for this team yet.<br>Run <code>node member.js</code> then <code>node analyze_workflow.js</code></p>
+      </div>`;
+  }
 }
 
 // ===== PIPELINE =====
@@ -61,9 +74,8 @@ function renderPipeline(stages) {
   pipeline.innerHTML = '';
 
   stages.forEach((stage, i) => {
-    // Node
     const node = document.createElement('div');
-    node.className = `pipeline-node node--${stage.status} stagger-${i + 1}`;
+    node.className = `pipeline-node node--${stage.status}`;
     node.style.animation = `fadeSlideUp 0.5s ease ${i * 0.08}s both`;
 
     const circle = document.createElement('div');
@@ -77,7 +89,6 @@ function renderPipeline(stages) {
     node.appendChild(circle);
     node.appendChild(label);
 
-    // Tooltip interaction
     node.addEventListener('mouseenter', (e) => showTooltip(e, stage, i));
     node.addEventListener('mousemove', (e) => moveTooltip(e));
     node.addEventListener('mouseleave', hideTooltip);
@@ -153,7 +164,6 @@ function moveTooltip(e) {
   let x = e.clientX + pad;
   let y = e.clientY + pad;
 
-  // Keep tooltip in viewport
   const rect = tooltip.getBoundingClientRect();
   if (x + rect.width > window.innerWidth - pad) {
     x = e.clientX - rect.width - pad;
@@ -168,81 +178,4 @@ function moveTooltip(e) {
 
 function hideTooltip() {
   document.getElementById('tooltip').classList.remove('visible');
-}
-
-// ===== DETAILS GRID =====
-function renderDetails(stages) {
-  const grid = document.getElementById('detailsGrid');
-  grid.innerHTML = '';
-
-  const activeStages = stages.filter(s => s.taskCount > 0);
-
-  if (activeStages.length === 0) {
-    grid.innerHTML = '<div class="no-data"><p>No active stages with tasks.</p></div>';
-    return;
-  }
-
-  activeStages.forEach((stage, i) => {
-    const card = document.createElement('div');
-    card.className = 'detail-card';
-    card.dataset.status = stage.status;
-    card.style.animationDelay = `${0.15 + i * 0.1}s`;
-
-    const stageIndex = stage.stageNumber - 1;
-
-    card.innerHTML = `
-      <div class="detail-card-header">
-        <span class="detail-stage-name">${STAGE_ICONS[stageIndex]} Stage ${stage.stageNumber}: ${STAGE_NAMES[stageIndex]}</span>
-        <span class="detail-task-count">${stage.taskCount} task${stage.taskCount > 1 ? 's' : ''}</span>
-      </div>
-      ${stage.tasks.map(t => `
-        <div class="detail-task-item">
-          <div class="detail-task-name">${t.name}</div>
-          <div class="detail-task-meta">
-            <span class="detail-task-assignee">👤 ${t.assignee}</span>
-            ${t.detail ? `<span class="detail-task-detail">${t.detail}</span>` : ''}
-          </div>
-        </div>
-      `).join('')}
-    `;
-
-    grid.appendChild(card);
-  });
-}
-
-// ===== BLOCKERS =====
-function renderBlockers(blockers) {
-  const section = document.getElementById('blockersSection');
-  const list = document.getElementById('blockersList');
-
-  if (!blockers || blockers.length === 0) {
-    section.style.display = 'none';
-    return;
-  }
-
-  list.innerHTML = '';
-
-  blockers.forEach((b, i) => {
-    const card = document.createElement('div');
-    card.className = `blocker-card severity-${b.severity}`;
-    card.style.animationDelay = `${0.2 + i * 0.12}s`;
-
-    const icons = { high: '🔴', medium: '🟡', low: '⚪' };
-
-    card.innerHTML = `
-      <div class="blocker-icon">${icons[b.severity] || '⚠️'}</div>
-      <div class="blocker-content">
-        <div class="blocker-task">${b.task}</div>
-        <div class="blocker-reason">${b.reason}</div>
-      </div>
-      <span class="blocker-severity severity-${b.severity}">${b.severity}</span>
-    `;
-
-    list.appendChild(card);
-  });
-}
-
-// ===== NEXT STEP =====
-function renderNextStep(nextStep) {
-  document.getElementById('nextStepText').textContent = nextStep || 'No next step defined.';
 }

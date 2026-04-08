@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 
 const STAGE_NAMES = {
   1: 'Initial Test Definition',
@@ -41,32 +41,26 @@ const statusConfig = {
 
 const getStage = (stages, num) => stages.find(s => s.stageNumber === num) || { stageNumber: num, status: 'upcoming', taskCount: 0, tasks: [] };
 
-const Node = ({ num, isDiamond = false, stages, onMouseEnter, onMouseMove, onMouseLeave, sideBranch = null }) => {
+const Node = ({ num, isDiamond = false, stages, onMouseEnter, onMouseLeave, sideBranch = null }) => {
   const stage = getStage(stages, num);
   const config = statusConfig[stage.status];
 
   if (isDiamond) {
     return (
-      <div className="relative flex justify-center py-5 w-full animate-fade-up">
+      <div className="relative flex justify-center py-[6px] w-full animate-fade-up">
         {sideBranch === 'right' && (
-          <div className="absolute left-[calc(50%+3.5rem)] top-1/2 -translate-y-1/2 w-24 md:w-32 border-t-2 border-dashed border-blocked/40">
-            <span className="absolute bottom-1 left-2 text-[0.55rem] font-bold text-blocked">NO</span>
-            <span className="absolute top-1 left-2 text-[0.55rem] text-text-muted leading-tight w-24 text-left">
-              Debug with design
-            </span>
+          <div className="absolute left-[calc(50%+2.8rem)] top-1/2 -translate-y-1/2 w-20 border-t-2 border-dashed border-blocked/40">
+            <span className="absolute bottom-0.5 left-1 text-[0.5rem] font-bold text-blocked">NO</span>
+            <span className="absolute top-0.5 left-1 text-[0.45rem] text-text-muted leading-tight w-20">Debug loop</span>
           </div>
         )}
-
         <div 
-          className="relative cursor-pointer group flex items-center justify-center w-24 h-24"
+          className="relative cursor-pointer group flex items-center justify-center w-16 h-16"
           onMouseEnter={(e) => onMouseEnter(e, stage)}
-          onMouseMove={onMouseMove}
           onMouseLeave={onMouseLeave}
         >
-          {/* Diamond Shape */}
-          <div className={`absolute inset-0 w-20 h-20 m-auto transform rotate-45 border-2 transition-transform duration-300 group-hover:scale-110 ${config.card}`} />
-          {/* Text inside */}
-          <span className="relative z-10 text-[0.55rem] font-medium text-center leading-tight px-1 max-w-[70px]">
+          <div className={`absolute inset-0 w-14 h-14 m-auto transform rotate-45 border-2 transition-transform duration-300 group-hover:scale-110 ${config.card}`} />
+          <span className="relative z-10 text-[0.45rem] font-medium text-center leading-tight px-1 max-w-[52px]">
              {STAGE_NAMES[num]}
           </span>
         </div>
@@ -75,40 +69,39 @@ const Node = ({ num, isDiamond = false, stages, onMouseEnter, onMouseMove, onMou
   }
 
   return (
-    <div className="relative flex justify-center py-3 w-full animate-fade-up" style={{ animationDelay: `${num * 0.05}s` }}>
+    <div className="relative flex justify-center py-[5px] w-full animate-fade-up" style={{ animationDelay: `${num * 0.05}s` }}>
       <div 
-        className={`relative z-10 cursor-pointer group w-60 border-2 rounded-lg p-3 text-center transition-all duration-300 hover:-translate-y-1 ${config.card}`}
+        className={`relative z-10 cursor-pointer group w-44 border-2 rounded-md px-2.5 py-2 text-center transition-all duration-300 hover:-translate-y-0.5 ${config.card}`}
         onMouseEnter={(e) => onMouseEnter(e, stage)}
-        onMouseMove={onMouseMove}
         onMouseLeave={onMouseLeave}
       >
-        <div className="text-[0.6rem] opacity-60 uppercase tracking-widest mb-1 font-bold">Stage {num}</div>
-        <div className="text-[0.8rem] font-semibold">{STAGE_NAMES[num]}</div>
+        <div className="text-[0.5rem] opacity-60 uppercase tracking-widest mb-0.5 font-bold">Stage {num}</div>
+        <div className="text-[0.7rem] font-semibold leading-tight">{STAGE_NAMES[num]}</div>
       </div>
     </div>
   );
 };
 
 const DiamondOnly = ({ label, sideBranch }) => (
-  <div className="relative flex justify-center py-5 w-full">
+  <div className="relative flex justify-center py-[6px] w-full">
     {sideBranch === 'left' && (
-      <div className="absolute right-[calc(50%+3.5rem)] top-1/2 -translate-y-1/2 w-16 md:w-20 border-t-2 border-dashed border-white/20">
-        <span className="absolute bottom-1 right-2 text-[0.55rem] font-bold text-text-muted">NO</span>
+      <div className="absolute right-[calc(50%+2.8rem)] top-1/2 -translate-y-1/2 w-14 border-t-2 border-dashed border-white/20">
+        <span className="absolute bottom-0.5 right-1 text-[0.5rem] font-bold text-text-muted">NO</span>
       </div>
     )}
-    <div className="relative flex items-center justify-center w-24 h-24">
-      <div className="absolute inset-0 w-16 h-16 m-auto transform rotate-45 border-2 border-border bg-[#111]" />
-      <span className="relative z-10 text-[0.55rem] text-center px-1 font-medium">{label}</span>
+    <div className="relative flex items-center justify-center w-16 h-16">
+      <div className="absolute inset-0 w-12 h-12 m-auto transform rotate-45 border-2 border-border bg-[#111]" />
+      <span className="relative z-10 text-[0.45rem] text-center px-0.5 font-medium leading-tight">{label}</span>
     </div>
   </div>
 );
 
 const DownArrow = ({ label }) => (
-  <div className="relative flex flex-col items-center justify-center w-full h-8 shrink-0">
-    <div className="w-0.5 h-full bg-border"></div>
-    <div className="absolute bottom-[-2px] w-2 h-2 border-r-2 border-b-2 border-border transform rotate-45 z-10"></div>
+  <div className="relative flex flex-col items-center justify-center w-full h-4 shrink-0">
+    <div className="w-0.5 h-full bg-white/30"></div>
+    <div className="absolute bottom-[-1px] w-1.5 h-1.5 border-r-[1.5px] border-b-[1.5px] border-white/30 transform rotate-45 z-10"></div>
     {label && (
-      <span className="absolute left-[calc(50%+6px)] top-1/2 -translate-y-1/2 text-[0.6rem] font-bold text-completed">
+      <span className="absolute left-[calc(50%+5px)] top-1/2 -translate-y-1/2 text-[0.5rem] font-bold text-completed">
         {label}
       </span>
     )}
@@ -116,53 +109,65 @@ const DownArrow = ({ label }) => (
 );
 
 const UpArrow = ({ label }) => (
-  <div className="relative flex flex-col items-center justify-center w-full h-8 shrink-0">
-    <div className="w-0.5 h-full bg-border"></div>
-    <div className="absolute top-[2px] w-2 h-2 border-t-2 border-l-2 border-border transform rotate-45 z-10"></div>
+  <div className="relative flex flex-col items-center justify-center w-full h-4 shrink-0">
+    <div className="w-0.5 h-full bg-white/30"></div>
+    <div className="absolute top-[1px] w-1.5 h-1.5 border-t-[1.5px] border-l-[1.5px] border-white/30 transform rotate-45 z-10"></div>
     {label && (
-      <span className="absolute left-[calc(50%+6px)] top-1/2 -translate-y-1/2 text-[0.6rem] font-bold text-completed">
+      <span className="absolute left-[calc(50%+5px)] top-1/2 -translate-y-1/2 text-[0.5rem] font-bold text-completed">
         {label}
       </span>
     )}
   </div>
 );
 
-export default function Pipeline({ stages }) {
+export default function Pipeline({ stages, teamLabel = 'PS Team' }) {
   const [tooltip, setTooltip] = useState(null);
-  const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
+  const [tooltipPos, setTooltipPos] = useState({ left: 0, top: 0 });
+  const timeoutRef = useRef(null);
 
   const handleMouseEnter = (e, stage) => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
     setTooltip(stage);
-    updatePos(e);
-  };
-  const handleMouseMove = (e) => updatePos(e);
-  const handleMouseLeave = () => setTooltip(null);
-  
-  const updatePos = (e) => {
+    
     const pad = 16;
     let x = e.clientX + pad;
     let y = e.clientY + pad;
-    if (x + 320 > window.innerWidth) x = e.clientX - 320 - pad;
-    if (y + 200 > window.innerHeight) y = e.clientY - 200 - pad;
-    setTooltipPos({ x, y });
+    
+    // Position it steadily when hovered, ensuring it doesn't overflow
+    const estimatedWidth = 320; 
+    const estimatedHeight = 350;
+
+    if (x + estimatedWidth > window.innerWidth) x = e.clientX - estimatedWidth - pad;
+    if (y + estimatedHeight > window.innerHeight) y = Math.max(pad, window.innerHeight - estimatedHeight - pad);
+    
+    setTooltipPos({ left: x, top: y });
   };
 
-  const nodeProps = { stages, onMouseEnter: handleMouseEnter, onMouseMove: handleMouseMove, onMouseLeave: handleMouseLeave };
+  const handleMouseLeave = () => {
+    timeoutRef.current = setTimeout(() => {
+      setTooltip(null);
+    }, 200);
+  };
+
+  const handleTooltipEnter = () => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+  };
+
+  const nodeProps = { stages, onMouseEnter: handleMouseEnter, onMouseLeave: handleMouseLeave };
 
   return (
-    <section className="px-4 pb-16 relative z-[1]">
-      <div className="max-w-[900px] mx-auto bg-card border border-border rounded-3xl p-6 md:p-10 relative overflow-hidden">
+    <section className="h-full w-full flex flex-col items-center justify-center p-4 overflow-hidden">
+      <div className="w-full max-w-[850px] h-full flex flex-col bg-card border border-border rounded-2xl relative overflow-hidden">
         
-        <h2 className="text-center text-xs font-bold uppercase tracking-[0.15em] text-text-secondary mb-10">
-          Flowchart Architecture
+        <h2 className="text-center text-[0.65rem] font-bold uppercase tracking-[0.15em] text-text-secondary pt-4 pb-2 shrink-0">
+          {teamLabel} · Flowchart Architecture
         </h2>
 
-        {/* Horizontal scroll on extra small screens to preserve U-shape */}
-        <div className="w-full overflow-x-auto pb-6">
-          <div className="flex items-end justify-center min-w-[700px] md:min-w-0 mx-auto w-full">
+        <div className="flex-1 flex items-center justify-center overflow-hidden px-4 pb-4">
+          <div className="flex items-end justify-center w-full">
             
             {/* Left Column (Down) */}
-            <div className="flex flex-col items-center w-64 shrink-0">
+            <div className="flex flex-col items-center w-48 shrink-0">
               <Node num={1} {...nodeProps} />
               <DownArrow />
               <Node num={2} {...nodeProps} />
@@ -180,15 +185,15 @@ export default function Pipeline({ stages }) {
               <Node num={5} {...nodeProps} />
             </div>
 
-            {/* Middle Connector - Bottom Horizontal Line */}
-            <div className="flex items-center shrink-0 w-16 lg:w-32 h-[88px]">
-              <div className="w-full h-0.5 bg-border relative">
-                 <div className="absolute right-[2px] top-1/2 -translate-y-1/2 w-2 h-2 border-r-2 border-t-2 border-border transform rotate-45"></div>
+            {/* Middle Connector */}
+            <div className="flex items-center shrink-0 w-12 lg:w-24 h-[52px]">
+              <div className="w-full h-0.5 bg-white/30 relative">
+                 <div className="absolute right-[1px] top-1/2 -translate-y-1/2 w-1.5 h-1.5 border-r-[1.5px] border-t-[1.5px] border-white/30 transform rotate-45"></div>
               </div>
             </div>
 
             {/* Right Column (Up) */}
-            <div className="flex flex-col items-center w-64 shrink-0">
+            <div className="flex flex-col items-center w-48 shrink-0">
               <Node num={11} {...nodeProps} />
               <UpArrow />
               <Node num={10} {...nodeProps} />
@@ -209,20 +214,22 @@ export default function Pipeline({ stages }) {
       {/* Tooltip */}
       {tooltip && (
         <div
-          className="fixed z-[9999] bg-[#111] border border-white/[0.08] rounded-xl p-4 max-w-[320px] min-w-[220px] pointer-events-none shadow-[0_16px_48px_rgba(0,0,0,0.6)]"
-          style={{ left: tooltipPos.x, top: tooltipPos.y }}
+          className="fixed z-[9999] bg-[#111] border border-white/[0.08] rounded-xl p-4 w-[320px] shadow-[0_16px_48px_rgba(0,0,0,0.6)] flex flex-col"
+          style={{ left: tooltipPos.left, top: tooltipPos.top, maxHeight: 'min(350px, 90vh)' }}
+          onMouseEnter={handleTooltipEnter}
+          onMouseLeave={handleMouseLeave}
         >
-          <div className="flex items-center gap-2 mb-2 pb-2 border-b border-white/[0.06]">
+          <div className="flex items-center gap-2 mb-2 pb-2 border-b border-white/[0.06] shrink-0">
             <span className={`text-[0.6rem] font-semibold tracking-wider uppercase px-2 py-0.5 rounded ${statusConfig[tooltip.status]?.badge}`}>
               {statusConfig[tooltip.status]?.icon} {tooltip.status.toUpperCase()}
             </span>
             <span className="text-xs text-text-secondary">Stage {tooltip.stageNumber}</span>
           </div>
-          <div className="text-sm font-medium mb-2 leading-tight">{STAGE_NAMES[tooltip.stageNumber]}</div>
-          <div className="text-xs text-text-secondary">
+          <div className="text-sm font-medium mb-2 leading-tight shrink-0">{STAGE_NAMES[tooltip.stageNumber]}</div>
+          <div className="flex-1 overflow-y-auto min-h-0 pr-1 -mr-1 custom-scrollbar">
             {tooltip.tasks && tooltip.tasks.length > 0 ? (
               <>
-                <div className="text-text-muted text-[0.7rem] mb-1.5">{tooltip.taskCount} task(s)</div>
+                <div className="text-text-muted text-[0.7rem] mb-1.5 sticky top-0 bg-[#111] py-1">{tooltip.taskCount} task(s)</div>
                 {tooltip.tasks.map((t, ti) => (
                   <div key={ti} className={`py-1.5 ${ti < tooltip.tasks.length - 1 ? 'border-b border-white/[0.04]' : ''}`}>
                     <div className="text-foreground/90 font-medium text-[0.78rem]">{t.name}</div>
