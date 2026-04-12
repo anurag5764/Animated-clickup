@@ -6,3 +6,10 @@ temp/
 output.json
 output.txt
 members_tasks.json
+
+# Large local ClickUp / classifier outputs (regenerate with test.js / classify.js)
+ams_tasks.json
+ams_classified.json
+ams_classified_checkpoint.json
+ams_blocker_analysis.json
+output_raw_batch_0.txt

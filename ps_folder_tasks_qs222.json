@@ -1,0 +1,984 @@
+{
+  "projectId": "qs222",
+  "projectLabel": "QS222",
+  "folderId": "90172530829",
+  "extractedAt": "2026-04-09T22:39:29.330Z",
+  "psAssigneeFilterCount": 8,
+  "extractMode": "ps_assignee_and_in_progress",
+  "includeClosedApi": false,
+  "statusWhitelist": null,
+  "taskCount": 31,
+  "tasks": [
+    {
+      "id": "86dx4txhj",
+      "name": "QS222 KT",
+      "description": "",
+      "assignees": [
+        "Anirudh Roy",
+        "Vinayak Agrawal",
+        "Sayantan Dey"
+      ],
+      "parentId": "86dx4txhg",
+      "listId": "901704951471",
+      "listName": "QS222_TO",
+      "comments": []
+    },
+    {
+      "id": "86e0bkb98",
+      "name": "Enable on-chip ADR",
+      "description": "**What & Why**\nCoupling these two tasks, as they seem related - let me know if they need to be split.\n[@Kumaresh Dhotrad](#user_mention#89339454) can you drop a link to information from the IC team on the function of FFT, and the test spec?\n\n**Implementation Plan**\nThe task creator or implementer should specify implementation and validation steps in a set of bullet points.\n\n**Completion criteria**\nThe task creator should specify the completion criteria, including specific results and metrics in a set of bullet points.",
+      "assignees": [
+        "Kumaresh Dhotrad"
+      ],
+      "parentId": null,
+      "listId": "901705114191",
+      "listName": "QS222 FW",
+      "comments": [
+        {
+          "text": "note: original planned start date was last Thursday, but we haven't yet received a spec from the IC team yet, but are also not actively blocked on it, because we're closing other delayed work.\n",
+          "author": "Suhaib Ishaque",
+          "date": "2026-03-23T13:53:04.747Z"
+        },
+        {
+          "text": "want to complete before end of march, at which point post-silicon team will be occupied - @Kumaresh Dhotrad and @Suhaib Ishaque will scope when spec is received\n",
+          "author": "Suhaib Ishaque",
+          "date": "2026-03-13T20:14:25.933Z"
+        }
+      ]
+    },
+    {
+      "id": "86e0bg74g",
+      "name": "Enable FFT PER schedule",
+      "description": "**What & Why**\n[@Kumaresh Dhotrad](#user_mention#89339454) can you drop a link to information from the IC team on the function of FFT, and the test spec?\n\n**Implementation Plan**\nThe task creator or implementer should specify implementation and validation steps in a set of bullet points.\n\n**Completion criteria**\nThe task creator should specify the completion criteria, including specific results and metrics in a set of bullet points.",
+      "assignees": [
+        "Kumaresh Dhotrad"
+      ],
+      "parentId": null,
+      "listId": "901705114191",
+      "listName": "QS222 FW",
+      "comments": [
+        {
+          "text": "note: original planned start date was last Thursday, but we haven't yet received a spec from the IC team yet, but are also not actively blocked on it, because we're closing other delayed work.\n",
+          "author": "Suhaib Ishaque",
+          "date": "2026-03-23T13:52:57.187Z"
+        },
+        {
+          "text": "want to complete before end of march, at which point post-silicon team will be occupied - @Kumaresh Dhotrad and @Suhaib Ishaque will scope when spec is received\n",
+          "author": "Suhaib Ishaque",
+          "date": "2026-03-13T20:14:18.821Z"
+        }
+      ]
+    },
+    {
+      "id": "86e0hcwdy",
+      "name": "N3:[RX Power] QAM2, QAM4, QAM16  - rerun FE Block for outlier measurements.",
+      "description": "**Why:** Ixana wants to publish the data sheet for QS222 and hence needed to complete the RX power validation.\n\n**Deliverable:** Get the power measurements for the FE block outlier cases from the earlier task where the power measurements are taken for QAM2, QAM4, QAM16 modes. The FE current is expected to be same across the various ADC clock frequencies. We are seeing higher current for lower ADC clock frequencies. This need to be rerun to rule out any measurement issues and confirm the reproducibility of the issue.\n\n**Assumptions:** Hope the instruments and the data collection scripts work as expected for these outlier cases as well.",
+      "assignees": [
+        "Deepthi Kammath"
+      ],
+      "parentId": null,
+      "listId": "901705184394",
+      "listName": "QS222_PS_FT",
+      "comments": [
+        {
+          "text": "Due dates will be assigned later.\n",
+          "author": "Sarat Anumula",
+          "date": "2026-03-27T06:59:09.831Z"
+        },
+        {
+          "text": "Moving this task to \"Open\" because of other priorities and upcoming QS127M work. We will revisit this after QS127M work is completed.\n",
+          "author": "Sarat Anumula",
+          "date": "2026-03-27T06:58:43.913Z"
+        },
+        {
+          "text": "New follow up task based on the 23-march silicon results review meeting. Some debug needs to be done for the FE block current measurements.\n",
+          "author": "Sarat Anumula",
+          "date": "2026-03-24T04:05:20.046Z"
+        }
+      ]
+    },
+    {
+      "id": "86e0gt91a",
+      "name": "N3: {RX Validation] RX validation in adiabatic mode. Path clearing - Phase2.",
+      "description": "",
+      "assignees": [
+        "Anish Saha"
+      ],
+      "parentId": null,
+      "listId": "901705184394",
+      "listName": "QS222_PS_FT",
+      "comments": [
+        {
+          "text": "moving this task to open.\n",
+          "author": "Sarat Anumula",
+          "date": "2026-03-30T06:56:46.179Z"
+        },
+        {
+          "text": "Thanks @Anish Saha",
+          "author": "Sarat Anumula",
+          "date": "2026-03-30T06:56:32.600Z"
+        },
+        {
+          "text": "@Sarat Anumula\nSince QS127M is scheduled to arrive today, I recommend keeping this task open so we can revisit it after completing the QS127M validation.\n",
+          "author": "Anish Saha",
+          "date": "2026-03-30T06:25:10.509Z"
+        },
+        {
+          "text": "@Sarat Anumula\nGlitches were observed because the packet detect (PD) signal was not rising as expected. After optimizing the PD settings, the glitches were reduced but not fully eliminated. The next steps involve further optimization and bringing out additional debug signals from RX Controller for closer monitoring.\n",
+          "author": "Anish Saha",
+          "date": "2026-03-30T06:22:47.539Z"
+        },
+        {
+          "text": "@Anish Saha  - can you please capture few comments related to this task. Does the due date needs to be extended ?\n",
+          "author": "Sarat Anumula",
+          "date": "2026-03-30T03:29:22.099Z"
+        },
+        {
+          "text": "@Anish Saha\nNotes from 26-Mar silicon results review meeting:\n\n\nundefined\n",
+          "author": "Sarat Anumula",
+          "date": "2026-03-27T06:41:17.256Z"
+        },
+        {
+          "text": "Notes from 23-Mar silicon results review meeting:\n\nAdiabatic level sensitivity (0.77mV)  is worse than the regular QAM mode (0.12mV).\nNext steps: Glitches in PMDR plot needs to be debugged. Need to plot the AGC gain as well.\n",
+          "author": "Sarat Anumula",
+          "date": "2026-03-24T06:04:22.047Z"
+        }
+      ]
+    },
+    {
+      "id": "86e0bjz9p",
+      "name": "N3: [RX Power] QAM16 power measurements with on chip supply - spot check",
+      "description": "",
+      "assignees": [
+        "Deepthi Kammath"
+      ],
+      "parentId": null,
+      "listId": "901705184394",
+      "listName": "QS222_PS_FT",
+      "comments": []
+    },
+    {
+      "id": "86e0av6af",
+      "name": "N3: full schedule implementation for QS222",
+      "description": "**What & Why**\nSpecify and test complex schedules through the IC testbench.\n\n**Implementation Plan**\n*   build reg\\_config on python, which is loaded onto the device\n    *   validate\n\n**Completion criteria**\n*   PER tests with complex schedule pass",
+      "assignees": [
+        "Kumaresh Dhotrad"
+      ],
+      "parentId": "86dy8f6d6",
+      "listId": "901705184394",
+      "listName": "QS222_PS_FT",
+      "comments": [
+        {
+          "text": "When testing the below schedule the design that I had implemented for json files was not enough.\n\nHUB: [IDLE, TX, TX+ACK, RX+ACK, RX]\nNODE: [IDLE, RX, RX+ACK, TX+ACK, RX]\n\nUpdated the json file to include src and dest per descriptor.\n\nwhen I ran the above schedule we ran into issue where the devices were not receiving acks because the hub uses addresses from its regs configs to send acks rather than the addresses in the packet.\n\nWhich forced us to have same address for all the nodes.\nimage.png\n\nChanged the JSON file again to not take any addresses and only the devices in the network.\n\nThere was an issue in wirsdk firmware where we were calculating the no of packets sent per desc based on the tx_done flag in the irq1 status reg. This set high even after transmission of acks back to node which resulted counting acks as packets. Fixed it by incrementing packets only if we have queued packets to be sent in the previous frame.\n",
+          "author": "Kumaresh Dhotrad",
+          "date": "2026-04-01T12:06:39.008Z"
+        },
+        {
+          "text": "Schedules:\n 1.\n     HUB: [TX, IDLE, RX, IDLE]\n     NODE: [RX, IDLE, TX, IDLE]\n 2.\n     HUB: [TX+ACK, IDLE, RX+ACK, IDLE]\n     NODE: [RX+ACK, IDLE, TX+ACK, IDLE]\n3. Single and multipacket (3)\n    HUB: [IDLE, TX, TX+ACK, RX+ACK, RX]\n     NODE: [IDLE, RX, RX+ACK, TX+ACK, RX]\n\nTestcases:\n\n1. rs and crc\n\n2. all possible combinations and transitions\n     1. without rs+crc\n     2. with rs+crc\n\n3. hub tx + i, node node rx + i: 100->1800 in steps of 100. Run it for 10K times.\n     1. without rs+crc\n     2. with rs+crc\n\n3. hub tx_ack + i, node node rx_ack + i: 100->1800 in steps of 100. Run it for 10K times.\n     1. without rs+crc\n     2. with rs+crc for tx and not ack\n",
+          "author": "Kumaresh Dhotrad",
+          "date": "2026-03-25T13:18:49.958Z"
+        },
+        {
+          "text": "@Suhaib Ishaque I will be validating bidirectional communication between hub and node in baseband without ECC.\n\nHub Schedule: [\"TX\", \"IDLE\", \"RX\", \"IDLE\"]\nNode Schdeule: [\"RX\", \"IDLE\", \"TX\", \"IDLE\"]\n\nI will run the following iterations\n\nhub tx and  hub rx at qam 2,4,16,64\nhub tx at qam 2 hub rx at qam 4\n\nAnd a few more variations of the test.\n\nNext I will try out the same schedule with more than one transaction per slot.\n\nPost which I will add a few more descriptors to try and make it more robust.\n",
+          "author": "Kumaresh Dhotrad",
+          "date": "2026-03-23T16:47:39.909Z"
+        },
+        {
+          "text": "@Kumaresh Dhotrad can you clarify what specific kind of schedule you will create for validation?\n",
+          "author": "Suhaib Ishaque",
+          "date": "2026-03-18T20:51:42.660Z"
+        },
+        {
+          "text": "this task was on hold for awhile as the other priorities surfaced. \n",
+          "author": "Sarat Anumula",
+          "date": "2026-03-12T07:12:17.385Z"
+        },
+        {
+          "text": "Original plan was to complete the task within a week, but the task scope was bigger than anticipated and was taking more time. \n",
+          "author": "Sarat Anumula",
+          "date": "2026-03-12T07:11:28.241Z"
+        }
+      ]
+    },
+    {
+      "id": "86e02dvuk",
+      "name": "N3:[Misc] Measurement FIFO validation - part2-ext: DR_Scale 1, 2,3 QAM2, QAM4, QAM16 modes.",
+      "description": "",
+      "assignees": [
+        "Anish Saha"
+      ],
+      "parentId": null,
+      "listId": "901705184394",
+      "listName": "QS222_PS_FT",
+      "comments": []
+    },
+    {
+      "id": "86dzkg2rf",
+      "name": "N3: [Misc Validation] ADR bring up",
+      "description": "",
+      "assignees": [
+        "Anish Saha"
+      ],
+      "parentId": null,
+      "listId": "901705184394",
+      "listName": "QS222_PS_FT",
+      "comments": [
+        {
+          "text": "23-Feb notes: Revisit this task later. \n",
+          "author": "Sarat Anumula",
+          "date": "2026-02-24T05:39:02.465Z"
+        },
+        {
+          "text": "New task for Anish, discussed with Sumon on 3-Feb. start and due dates will be published later . \n",
+          "author": "Sarat Anumula",
+          "date": "2026-02-03T09:26:01.970Z"
+        }
+      ]
+    },
+    {
+      "id": "86dzkfyjt",
+      "name": "N3: [RX Validation] QAM4 Characterization. Multiple DR_scale, onchip supply, ADC clock scaling",
+      "description": "",
+      "assignees": [
+        "Anish Saha"
+      ],
+      "parentId": null,
+      "listId": "901705184394",
+      "listName": "QS222_PS_FT",
+      "comments": [
+        {
+          "text": "@Sarat Anumula \nThis task will be revisited once the Adiabatic and DSSS modes in RX testing have been completed.\n",
+          "author": "Anish Saha",
+          "date": "2026-03-18T12:13:39.956Z"
+        },
+        {
+          "text": "changed to open.  will revisit this after the high priority task RSSSI measurement is completed. \n",
+          "author": "Sarat Anumula",
+          "date": "2026-03-02T10:08:06.084Z"
+        },
+        {
+          "text": "@Sarat Anumula we need to change the due date \n",
+          "author": "Pushpal Das",
+          "date": "2026-02-27T10:54:10.250Z"
+        },
+        {
+          "text": "On hold - because of the RSSI debug. \n",
+          "author": "Sarat Anumula",
+          "date": "2026-02-24T04:18:34.612Z"
+        },
+        {
+          "text": "Thanks @Anish Saha  ; Due date is changed to 25-Feb. \n",
+          "author": "Sarat Anumula",
+          "date": "2026-02-20T04:38:23.741Z"
+        },
+        {
+          "text": "@Sarat Anumula I was working on other High Priority Task (RSSI Debug & CQI Measurement). Hence this task is on Hold Currently. After I am done with the other task, I will resume work on this.\n",
+          "author": "Anish Saha",
+          "date": "2026-02-19T13:02:09.408Z"
+        },
+        {
+          "text": "ADC_CLK_Scaling_QAM4_debug.pdfDebug Observation:\n We are noticing a trend where increasing dr_scale combined with a reduction in ADC clock frequency is leading to improved sensitivity.\nIssue:\n This behavior contradicts the original design expectation. The intended outcome was that sensitivity should degrade under these conditions.\nNext Step:\n This discrepancy requires further debugging with the help of the design and validation teams to identify the root cause. with help of @sumon da.\n",
+          "author": "Anish Saha",
+          "date": "2026-02-16T13:01:53.116Z"
+        },
+        {
+          "text": "@Anish Saha  - Please add the results here based on data collection done so far. Initial findings - doesn't appear to match design expectations. More debug to be done. \n",
+          "author": "Sarat Anumula",
+          "date": "2026-02-16T05:39:42.080Z"
+        },
+        {
+          "text": "Start and die dates are published \n",
+          "author": "Sarat Anumula",
+          "date": "2026-02-03T09:17:21.223Z"
+        },
+        {
+          "text": "New task for Anish, Discussed with Sumon on 3-Feb. Start and due dates will be published later. \n",
+          "author": "Sarat Anumula",
+          "date": "2026-02-03T08:51:54.154Z"
+        }
+      ]
+    },
+    {
+      "id": "86dzkfyfr",
+      "name": "N3 : [RX Validation] RX validation in DSSS mode. Path clearing.",
+      "description": "**Why:** Validate the QS222 in all modes of operation. (QAM, DSSS, Adiabatic).\n\n**Deliverable:** Enable the DSSS pattern as a testing source from the function generator to test the QS222 IC. Once enabled, make sure to validate the DSSS pattern coming out of FG valid or not by monitoring via on an oscilloscope and test the QS222 IC.\n\nLimitations:",
+      "assignees": [
+        "Anish Saha"
+      ],
+      "parentId": null,
+      "listId": "901705184394",
+      "listName": "QS222_PS_FT",
+      "comments": [
+        {
+          "text": "This task is on hold - changed the owner ship to Anish, as Shiva is leaving. Also moving to the \"To Do\" task list as Anish is busy with the adiabatic mode.\n",
+          "author": "Sarat Anumula",
+          "date": "2026-03-23T08:54:56.357Z"
+        },
+        {
+          "text": "Thanks @Shiva Teja ; I extended the due date to next week wednesday. \n",
+          "author": "Sarat Anumula",
+          "date": "2026-03-13T12:29:51.901Z"
+        },
+        {
+          "text": "@Sarat Anumula \nTried checking with QAM RX settings\nthe PMDR is always 100\nneeds inputs from Design team\n\nSince Sumon is on leave till 15th March, the task will be continued after that\n",
+          "author": "Shiva Teja",
+          "date": "2026-03-11T11:57:50.342Z"
+        },
+        {
+          "text": "Changed the due date to Thu based on the discussions with Shiva & Shovan. Idea is to get the PMDR plot in the DSSS mode. \n",
+          "author": "Sarat Anumula",
+          "date": "2026-03-06T08:34:29.302Z"
+        },
+        {
+          "text": "Thanks @Shiva Teja - let us plan to enable one simple RX case. will mark this subtask of pattern generation from FG complete. \n",
+          "author": "Sarat Anumula",
+          "date": "2026-03-05T10:46:48.681Z"
+        },
+        {
+          "text": "Hi @Sarat Anumula \ni have checked the DSSS and ADIABATIC modes Function generation part and checking the signal quality (by capturing thru scope and calculating EVM)\n\nLooks like the existing code already can produce these DSSS and ADIABATIC waveforms and with expected EVM numbers\nSo this task can be closed\nall related tasks\n",
+          "author": "Shiva Teja",
+          "date": "2026-03-05T06:01:11.416Z"
+        },
+        {
+          "text": "New subtask was created and published the dates now. \n",
+          "author": "Sarat Anumula",
+          "date": "2026-03-03T11:34:21.754Z"
+        },
+        {
+          "text": "New task for Vinayak. Discussed with Sumon on 3-Feb. Start and Due dates will be published later. \n",
+          "author": "Sarat Anumula",
+          "date": "2026-02-03T08:49:22.936Z"
+        }
+      ]
+    },
+    {
+      "id": "86dzg5zhx",
+      "name": "QAM16 PMDR testing across packet sizes 32-1800 across dr scales 0-4 and 5,6 with ECC enabled",
+      "description": "",
+      "assignees": [
+        "Deepthi Kammath"
+      ],
+      "parentId": "86dzfdte6",
+      "listId": "901705184394",
+      "listName": "QS222_PS_FT",
+      "comments": []
+    },
+    {
+      "id": "86dzg5zck",
+      "name": "QAM16 PMDR testing across packet sizes 32-1800 across dr scales 0-4 and 5,6 with ECC disabled.",
+      "description": "",
+      "assignees": [
+        "Deepthi Kammath"
+      ],
+      "parentId": "86dzfdte6",
+      "listId": "901705184394",
+      "listName": "QS222_PS_FT",
+      "comments": []
+    },
+    {
+      "id": "86dzg5yxu",
+      "name": "Debug the QAM16 PMDR failure seen with dr_scale = 4 (ceiling issue)",
+      "description": "",
+      "assignees": [
+        "Deepthi Kammath"
+      ],
+      "parentId": "86dzfdte6",
+      "listId": "901705184394",
+      "listName": "QS222_PS_FT",
+      "comments": [
+        {
+          "text": "No need to debug the DR_Scale = 4 issue; detail comments are captured for the parent task. \n",
+          "author": "Sarat Anumula",
+          "date": "2026-01-30T08:47:36.969Z"
+        }
+      ]
+    },
+    {
+      "id": "86dzfe746",
+      "name": "Debug benchtop  setup for not receiving ACK's DRscale greater than 8 in adiabatic mode.",
+      "description": "",
+      "assignees": [
+        "Anish Saha",
+        "Sayantan Dey"
+      ],
+      "parentId": "86dyukkg3",
+      "listId": "901705184394",
+      "listName": "QS222_PS_FT",
+      "comments": [
+        {
+          "text": "@Sarat Anumula Sure we can do that.\n",
+          "author": "Anish Saha",
+          "date": "2026-02-04T06:49:49.022Z"
+        },
+        {
+          "text": "Okay - Thanks @Sayantan Dey for the note. \n@Anish Saha  -  Lets plan on breaking up this task and capture a new task customized for the corner case debug where we need help from Sayantan. \n",
+          "author": "Sarat Anumula",
+          "date": "2026-02-04T04:08:18.196Z"
+        },
+        {
+          "text": "@Sarat Anumula I will be out from 5/2-13/2, and I believe after coming back also I'll mostly be focussed on 223. It's a little difficult to provide a timeline right now, but doesn't seem like until maybe end of this month/223 tapeout.\n",
+          "author": "Sayantan Dey",
+          "date": "2026-02-03T07:30:55.071Z"
+        },
+        {
+          "text": "@Sayantan Dey - any feedback from you - how can we make progress on this task ? Any timeline estimate on when the debug can be completed on your end. \n",
+          "author": "Sarat Anumula",
+          "date": "2026-02-03T07:22:09.491Z"
+        },
+        {
+          "text": "Debug Notes from Post Silicon Team\nAdiabatic_ack not received.pdf\n",
+          "author": "Anish Saha",
+          "date": "2026-02-02T07:31:57.241Z"
+        },
+        {
+          "text": "Open until @Sayantan Dey  is available  \n",
+          "author": "Pushpal Das",
+          "date": "2026-01-30T10:48:00.761Z"
+        },
+        {
+          "text": "Thanks @Sayantan Dey ",
+          "author": "Sarat Anumula",
+          "date": "2026-01-27T12:57:26.986Z"
+        },
+        {
+          "text": "Currently working on some 223 updates (PS, Research and implementation on Power and Clock-gating for Core). Will switch to this whenever I have some BW. Most likely on 29/01/2026.\n",
+          "author": "Sayantan Dey",
+          "date": "2026-01-27T10:52:21.303Z"
+        },
+        {
+          "text": "Need to get input from Sumon and Shovan on the bandwidth from Sayantan and priority for this task. \n",
+          "author": "Sarat Anumula",
+          "date": "2026-01-27T08:41:57.043Z"
+        }
+      ]
+    },
+    {
+      "id": "86dzfdte6",
+      "name": "N3: [RX Validation] QAM16 PMDR testing across dr scales 1,2,3 & 4",
+      "description": "Phase 1: DR scale 1, 2,3,4. (QAM16)\nPhase 2: DR scale 5, 6. (QAM16)\n\nPriorities : QAM4, reset\\_ic debug, SIMO debug. QAM2.\nfor adiabatic and DSSS mode - path finding needs to be cleared by Vinayak.",
+      "assignees": [
+        "Deepthi Kammath"
+      ],
+      "parentId": null,
+      "listId": "901705184394",
+      "listName": "QS222_PS_FT",
+      "comments": [
+        {
+          "text": "Deprioritized  - based on the Jan29 silicon results review meeting. No need to debug the DRscale=4 ceiling issue  and higher DR scale as DR scale 0 to 3 is working fine. Hence this is good enough for the silicon health checkout for now. \n\nThe other priority is to get the throughput optimization. Hence this task is considered to be hold at this point. \n\nHence moving this task to Open. Removing the due dates. \n\nWe will reassign the due dates once; the team decides to work on this task. \n",
+          "author": "Sarat Anumula",
+          "date": "2026-01-30T08:46:21.591Z"
+        }
+      ]
+    },
+    {
+      "id": "86dz7gtkz",
+      "name": "N3: Document the corner cases surfaced during the baseband validation (debug will be done later).",
+      "description": "",
+      "assignees": [
+        "Anish Saha"
+      ],
+      "parentId": "86dyukkg3",
+      "listId": "901705184394",
+      "listName": "QS222_PS_FT",
+      "comments": [
+        {
+          "text": "A placeholder, changing the due date with further iterations \n",
+          "author": "Pushpal Das",
+          "date": "2026-02-06T08:43:32.542Z"
+        },
+        {
+          "text": "Delay reason: \n We have received the pre-simulation results, and the previously observed bug is not reproducible in their environment. This indicates further debugging is required to identify what is going wrong in our setup. The investigation will proceed once bandwidth is available.\nI recommend creating an open debug task for this, with ownership assigned to myself and Sayantan.\n",
+          "author": "Pushpal Das",
+          "date": "2026-01-30T10:53:01.920Z"
+        },
+        {
+          "text": "captured the dependency with the debug task. Debug task is gated by the availability of designer Sayantan. \n",
+          "author": "Sarat Anumula",
+          "date": "2026-01-27T08:38:31.657Z"
+        },
+        {
+          "text": "Debug task is added. \n",
+          "author": "Sarat Anumula",
+          "date": "2026-01-27T08:37:05.690Z"
+        },
+        {
+          "text": "Known Bug :  Adiabatic Mode DR_Scale >= 8 , No ACKs received. Souptik is currently performing the RTL Simulations.\n",
+          "author": "Anish Saha",
+          "date": "2026-01-16T07:36:51.707Z"
+        }
+      ]
+    },
+    {
+      "id": "86dz6uuyg",
+      "name": "N3: Adiabatic mode - QAM2, QAM4.",
+      "description": "",
+      "assignees": [
+        "Anish Saha"
+      ],
+      "parentId": "86dyukkg3",
+      "listId": "901705184394",
+      "listName": "QS222_PS_FT",
+      "comments": [
+        {
+          "text": "keeping it on open with a dependency on @Sayantan Dey and his availability\n",
+          "author": "Pushpal Das",
+          "date": "2026-02-06T08:41:52.983Z"
+        },
+        {
+          "text": "@Sarat Anumula As discussed, we can break this task the corner case debug ,DR Scale >= 8 . Ack Not received in Adiabatic Mode. \n\nSummary\nAll Configurations: PMDR = 0\nData Mode: Adiabatic.\nResults: Excel file will be attached after debug of the corner cases.\nModes tested: No Encoding, CRC enabled, CRC & RS enabled\nQAM Types: QAM2, QAM4\nPacket Sizes: 16,64,128,256,512,1024,1800\nDR Scale: 0,1,2,3,4,5,6,7\n\n",
+          "author": "Anish Saha",
+          "date": "2026-02-04T07:01:30.795Z"
+        },
+        {
+          "text": "Captured the dependency. \n",
+          "author": "Sarat Anumula",
+          "date": "2026-01-27T08:37:48.154Z"
+        },
+        {
+          "text": "@Sarat Anumula @Pushpal Das \nTask Update:\n We have received the pre-simulation results, and the previously observed bug is not reproducible in their environment. This indicates further debugging is required to identify what is going wrong in our setup. The investigation will proceed once bandwidth is available.\nI recommend creating an open debug task for this, with ownership assigned to myself and Sayantan.\n",
+          "author": "Anish Saha",
+          "date": "2026-01-22T11:22:30.520Z"
+        },
+        {
+          "text": "For adiabatic mode testing is blocked and design team (Souptik) is running pre-si sims for the issues seen in the silicon. \n\nIssue seen in silicon : For DR >7 - acks are not being received. \n",
+          "author": "Anish Saha",
+          "date": "2026-01-20T05:29:11.452Z"
+        }
+      ]
+    },
+    {
+      "id": "86dyzddz4",
+      "name": "N3: [Baseband] Debug baseband testing for the packet sizes beyond 1024 bytes in QAM2, QAM4 modes at SPI 24 MHz without IDLE slots.",
+      "description": "1. For packet sizes beyond **1024 bytes** with **QAM2** and **QAM4**, we encountered issues.\n2. Reducing the **SPI frequency to 9.6 MHz** largely mitigates the problem.\n3. The behavior suggests that this is most likely a **firmware-related issue**",
+      "assignees": [
+        "Anish Saha",
+        "Kumaresh Dhotrad"
+      ],
+      "parentId": null,
+      "listId": "901705184394",
+      "listName": "QS222_PS_FT",
+      "comments": [
+        {
+          "text": "@Sarat Anumula Please close this task.\n",
+          "author": "Kumaresh Dhotrad",
+          "date": "2026-03-29T12:32:42.763Z"
+        },
+        {
+          "text": "@Sarat Anumula We did our debug on  the 23rd and 24th and figured out that this was a issue because of a RTL bug in the IC.\n",
+          "author": "Kumaresh Dhotrad",
+          "date": "2026-02-24T06:26:02.203Z"
+        },
+        {
+          "text": "Need to get infor on the start dates and due dates. \n",
+          "author": "Sarat Anumula",
+          "date": "2026-02-24T05:07:45.844Z"
+        },
+        {
+          "text": "Marking this task as complete. \n",
+          "author": "Sarat Anumula",
+          "date": "2026-02-24T05:07:24.874Z"
+        },
+        {
+          "text": "IC bug - addressed in next version. This issue can be closed. Fixed in 223 as well. \n",
+          "author": "Sarat Anumula",
+          "date": "2026-02-24T05:07:15.672Z"
+        },
+        {
+          "text": "We will put this task in to do, first we will finish off few priorities and later we can resolve this bug \n",
+          "author": "Pushpal Das",
+          "date": "2025-12-23T10:40:20.108Z"
+        },
+        {
+          "text": "@Kumaresh Dhotrad \nCurrent Issues Partial Packet Transmission for BB Test in Schedule Mode.\nFor packet sizes beyond 1024 bytes with QAM2 and QAM4, we encountered issues. \nReducing the SPI frequency to 9.6 MHz largely mitigates the problem.\nThe behavior suggests that this is most likely a firmware-related issue\n\n",
+          "author": "Anish Saha",
+          "date": "2025-12-23T08:14:59.358Z"
+        }
+      ]
+    },
+    {
+      "id": "86dyukkg3",
+      "name": "N3: [Baseband] Baseband testing of QAM, DSSS & Adiabatic in schedule mode without IDLE slots with ACK.",
+      "description": "doc:[](https://app.clickup.com/9017196379/v/dc/8cqezuv-18997/8cqezuv-39177?&block=block-c9ca6436-5131-4f03-8e8f-38bf36240230)\n\n**Why:** Need to have QS222 validated in the baseband testing in Schedule mode with ACK for a through validation of QS222.\n\n**Deliverable:**\nConditions: SPI -24 MHz, SYSCLK= 10 MHz ; Onboard supply.\n100 packets - header on. a) no encoding, b) crc, c) rs+crc, max payload size 255, 127, and max parity 32, Header RS Parity = 1\n1. QAM 2- packet size - 16, 64, 128, 256, 512, 1024, 1800 dr\\_scale = 0 to 6 in step of 1\n2. QAM 4- packet size - 16, 64, 128, 256, 512, 1024, 1800 dr\\_scale = 0 to 6 in step of 1\n3. QAM 16- packet size -16, 64, 128, 256, 512, 1024, 1800 dr\\_scale = 0 to 6 in step of 1\n4. QAM 64- packet size - 16, 64, 128, 256, 512, 1024, 1800 dr\\_scale = 0 to 6 in step of 1\n5. DSSS QAM2 (BPSK) - packet size - 16, 64, 128, 256, 512, 1024, 1800 dr\\_scale = 3 to 10 in step of 1\n6. DSSS QAM4 (QPSK) - packet size - 16, 64, 128, 256, 512, 1024, 1800 dr\\_scale = 3 to 10 in step of 1\n7. Adiabatic QAM2 (BPSK) - packet size - 16, 64, 128, 256, 512, 1024, 1800 dr\\_scale = 0 to 12 in step of 1\n8. Adiabatic QAM4 (QPSK) - packet size - 16, 64, 128, 256, 512, 1024, 1800 dr\\_scale = 0 to 12 in step of 1\n\n  \n\n**Risks (T,E):**\n\n**Limitations:** (Assumptions(A), Constraints (C), Dependencies(D)) :\n\n**Results:** Anish will provide an update here (link to the results) after validation is completed.",
+      "assignees": [
+        "Anish Saha"
+      ],
+      "parentId": null,
+      "listId": "901705184394",
+      "listName": "QS222_PS_FT",
+      "comments": [
+        {
+          "text": "keeping it on open with a dependency on @Sayantan Dey and his availability\n",
+          "author": "Pushpal Das",
+          "date": "2026-02-06T08:40:13.175Z"
+        },
+        {
+          "text": "Based on Sayantan feedback - the issue will be debugged towards the end of the month (delay is because of his vacation and other project priorities)\n",
+          "author": "Sarat Anumula",
+          "date": "2026-02-06T04:52:49.123Z"
+        },
+        {
+          "text": "Continuous improvement : It appears like the turnaround time from the post silicon findings to feedback to design to the design reviewing the silicon results to replicating the issue in presi env - to providing workarounds solutions to post silicon team .. is quite time intensive and need to be factored in moving forward when planning a task. \n",
+          "author": "Sarat Anumula",
+          "date": "2026-01-29T05:15:43.984Z"
+        },
+        {
+          "text": "Need sayantan help to debug the issue. \n",
+          "author": "Sarat Anumula",
+          "date": "2026-01-27T10:48:39.513Z"
+        },
+        {
+          "text": "Debug task is added and asssigned to anish and sayantan\n",
+          "author": "Sarat Anumula",
+          "date": "2026-01-27T10:45:43.590Z"
+        },
+        {
+          "text": "Thanks @Anish Saha for the update. \n",
+          "author": "Sarat Anumula",
+          "date": "2026-01-22T15:36:04.560Z"
+        },
+        {
+          "text": "@Sarat Anumula @Pushpal Das \nTask Update:\n We have received the pre-simulation results, and the previously observed bug is not reproducible in their environment. This indicates further debugging is required to identify what is going wrong in our setup. The investigation will proceed once bandwidth is available.\nI recommend creating an open debug task for this, with ownership assigned to myself and Sayantan.\n",
+          "author": "Anish Saha",
+          "date": "2026-01-22T11:24:06.292Z"
+        },
+        {
+          "text": "Postponed the due date to Thu - because the design has yet to provide feedback based on the RTL sims to the post silicon team about the issues surfaced (or seen) during the silicon testing. \n",
+          "author": "Sarat Anumula",
+          "date": "2026-01-20T06:21:12.303Z"
+        },
+        {
+          "text": "Feedback from 19-Jan silicon results review meeting:\n\n\nundefined\n",
+          "author": "Sarat Anumula",
+          "date": "2026-01-19T16:00:15.117Z"
+        },
+        {
+          "text": "@Anish Saha  - please note the new due date set for this task 20-Jan. \n",
+          "author": "Sarat Anumula",
+          "date": "2026-01-16T07:09:25.499Z"
+        },
+        {
+          "text": "Changing the due date to tuesday - given the issues surfaced during the debug. As of now, one subtask (for adiabatic mode) is blocked and design team (Souptik) is running pre-si sims for the issues seen in the silicon. \n\nIssue seen in silicon : For DR >7 - acks are not being received. \n",
+          "author": "Sarat Anumula",
+          "date": "2026-01-16T07:08:42.860Z"
+        },
+        {
+          "text": "@Anish Saha  : Notes from Silicon results review meeting (12-Jan):\n\nDebug the DR_scale >= 8 - as to why ACK not being received. \n\nDocument the corner cases surfaced (will debug later once the main task is completed).\n\nI've created the subtasks for this task to capture the feedback from the silicon results review meeting. \n",
+          "author": "Sarat Anumula",
+          "date": "2026-01-12T23:56:36.409Z"
+        }
+      ]
+    },
+    {
+      "id": "86dyrpgfb",
+      "name": "N3: [RX Validation] Using EVM to improve PMDR - QAM4 modes.",
+      "description": "",
+      "assignees": [
+        "Vinayak Agrawal",
+        "Ashutosh Nahar"
+      ],
+      "parentId": null,
+      "listId": "901705184394",
+      "listName": "QS222_PS_FT",
+      "comments": [
+        {
+          "text": "Start date and end date will be updated later, team is busy with the QAM16 debug and optimizing EVM. \n",
+          "author": "Sarat Anumula",
+          "date": "2025-12-11T06:44:00.224Z"
+        },
+        {
+          "text": "Changed the task title to only QAM16 mode. QAM4 mode will be addressed in a different task. \n",
+          "author": "Sarat Anumula",
+          "date": "2025-12-09T12:08:33.550Z"
+        }
+      ]
+    },
+    {
+      "id": "86dykwqag",
+      "name": "N3: [Other_Misc] version4 - Debug Temp sense test (readout of ADC code).",
+      "description": "This is an extension to the previous debug studies of temp sensor : N3: \\[Misc\\_test\\] TEMPARATURE SENSOR TEST ([https://app.clickup.com/t/86dy17k0m](https://app.clickup.com/t/86dy17k0m))\n\n**Why:** Ixana's QS222 - have a temp sensor that needs to be validated for the proper functioning of the QS222 product.\n**Deliverable:** Measure the temperature analog value and digital code in analog and digital path\n**Risks (T,E):** Risk: T- If it does not function as intended, we may need to proceed with a re-tapeout.\n**Limitations: (Assumptions(A), Constraints (C), Dependency )**\nC: Constraint: Since Ixana post silicon lab doesn't have means to test at the other temperatures - it is assumed that the temp sensor readings from QS222 at room temp is good enough indicator for the working of the temp sensor.\nA: Assumption- Setup and config are correct\n\n**Required documents for reference:**\nTest Description:[](https://app.clickup.com/9017196379/v/dc/8cqezuv-18997/8cqezuv-39177?&block=block-641deb0a-acf8-4d5d-9f5b-988569c5aee9)\nTemp sensor doc: [https://10xar-my.sharepoint.com/:w:/p/shovan/EWB4HZ7\\_FdZEp-bL0etlDC8B7lSGQhQydC7ssU1qgrlIOA?wdOrigin=TEAMS-MAGLEV.p2p\\_ns.rwc&wdExp=TEAMS-TREATMENT&wdhostclicktime=1763450236605&web=1](https://10xar-my.sharepoint.com/:w:/p/shovan/EWB4HZ7_FdZEp-bL0etlDC8B7lSGQhQydC7ssU1qgrlIOA?wdOrigin=TEAMS-MAGLEV.p2p_ns.rwc&wdExp=TEAMS-TREATMENT&wdhostclicktime=1763450236605&web=1)\n\n**Pre-si sim results**: [https://10xar-my.sharepoint.com/:x:/p/shovan/ESvPrctczTlBuS6TWG4Nc4MB4LiTr\\_6hltKclhnTO68nyw?e=aVa5lo](https://10xar-my.sharepoint.com/:x:/p/shovan/ESvPrctczTlBuS6TWG4Nc4MB4LiTr_6hltKclhnTO68nyw?e=aVa5lo)\n\n**Design Contact**: Anirudhh.",
+      "assignees": [
+        "Deepthi Kammath"
+      ],
+      "parentId": null,
+      "listId": "901705184394",
+      "listName": "QS222_PS_FT",
+      "comments": [
+        {
+          "text": "notes from 23-Feb Siicon results review meeting : \n\nRevisit it later. \n",
+          "author": "Sarat Anumula",
+          "date": "2026-02-24T05:06:01.921Z"
+        }
+      ]
+    },
+    {
+      "id": "86dykg497",
+      "name": "N3: [Supplies] VDD_0p8 drops to 0 after chip_en being reset",
+      "description": "**Why:** QS222 - needs to be validated with internal supplies as a power source.\n\n**Deliverable:**\na) Complete debug studies and provide a clear working solution for the QS222 - validation with the internal supplies (0.8 and 1.2V) or aka SIMO output.\n\n**Risks: (T) :** If QS 222 - cannot be validated with internal supply as power source, then design and architecture needs to come up with an alternative plan and provide a fix for the QS 222 validation. Fallback option is to use the external supply.\n\n**Limitations: (C):** Design help for debug.\n**(A):** Issue observed is replicated all the time and can provide insights to the problem observed.\n\n**Results:** Anish / Aniruddh will post the debug studies results here.",
+      "assignees": [
+        "Anish Saha",
+        "Aniruddh CHoudhary"
+      ],
+      "parentId": null,
+      "listId": "901705184394",
+      "listName": "QS222_PS_FT",
+      "comments": [
+        {
+          "text": "@Pushpal Das @Sarat Anumula why this task is still open? This task was long back done.\n",
+          "author": "Aniruddh CHoudhary",
+          "date": "2026-03-04T07:35:09.872Z"
+        },
+        {
+          "text": "@Pushpal Das @Sarat Anumula we should close this task as SIMO changes are incorporated from test results ran with Vinayak & Sumon (New task was open for the same purpose).\n",
+          "author": "Aniruddh CHoudhary",
+          "date": "2026-02-02T07:06:10.319Z"
+        },
+        {
+          "text": "Making it as open - because of the other higher priority tasks - with baseband testing. \n",
+          "author": "Sarat Anumula",
+          "date": "2025-12-10T05:50:51.493Z"
+        },
+        {
+          "text": "Thanks @Aniruddh CHoudhary for the note. Can you please list out any more DOEs that we can try out and resolve this issue. \n",
+          "author": "Sarat Anumula",
+          "date": "2025-12-05T02:28:34.329Z"
+        },
+        {
+          "text": "There are some finding in the debug although not fully resolved. Some supply connections were mixed (a few dig supplier were power by external 0.8V and while others by buck 0.8V). And due to that buck output was getting clamped.\n",
+          "author": "Aniruddh CHoudhary",
+          "date": "2025-12-04T09:55:16.062Z"
+        },
+        {
+          "text": "Pushing the due date to next week, as Anish is on vacation and also Aniruddh is also not available today.  Design needs to analyze in detail on the post silicon findings. \n",
+          "author": "Sarat Anumula",
+          "date": "2025-12-01T09:29:57.246Z"
+        },
+        {
+          "text": "@Aniruddh CHoudhary - Since Anish is on vacation, can you please a 1-2 line update on this task and what's needs to be done. \n",
+          "author": "Sarat Anumula",
+          "date": "2025-12-01T02:42:16.766Z"
+        },
+        {
+          "text": "updated start date and due date for this debug task. \n",
+          "author": "Sarat Anumula",
+          "date": "2025-11-27T09:55:16.137Z"
+        },
+        {
+          "text": "Dates & status need to be updated \n",
+          "author": "Pushpal Das",
+          "date": "2025-11-27T08:35:34.642Z"
+        }
+      ]
+    },
+    {
+      "id": "86dyg3v5a",
+      "name": "N3: [TX Validation] Debugstudies of SPI read /write with internal supply",
+      "description": "**Why:** Need to complete the debug of the SPI read write with internal supply.\n\n**Deliverable:** Document the learnings from the SPI read write debug and share it with the post silicon team.\n\n**Risk: T:** If the SPI read write doesn't work properly with internal supply, then QS222 validation cannot be done using the internal supply and has to rely only on the external supply - not a product feature. Hence, this debug is very important to complete.\n\n**Limitations:**\nConstraints: reset\\_ic() function call\nAssumption: Config and set are working as expected.\n\n**Results:** Anish will share the results here after the task complete.",
+      "assignees": [
+        "Anish Saha"
+      ],
+      "parentId": null,
+      "listId": "901705184394",
+      "listName": "QS222_PS_FT",
+      "comments": [
+        {
+          "text": "Moving this task to \"OPEN\" as this task is blocked by N3: [Supplies] VDD_0p8 drops to 0 after chip_en being reset | #86dykg497  and this supplies task is also moved to \"OPEN\" . Team will revisit this after addressing the pressing tasks of the baseband validation in schedule mode. \n",
+          "author": "Sarat Anumula",
+          "date": "2025-12-09T09:22:54.670Z"
+        },
+        {
+          "text": "@Anish Saha  - can you please post the results in the description section for completeness. \n",
+          "author": "Sarat Anumula",
+          "date": "2025-12-09T07:20:56.008Z"
+        },
+        {
+          "text": "Added the dependency of the power supplies dropping to 0 as this task is blocked by the debug of the task. \n",
+          "author": "Sarat Anumula",
+          "date": "2025-12-01T03:01:02.389Z"
+        },
+        {
+          "text": "@Anish Saha  - This issue seems to be dependent on the resolution of the another bug team is working on ..... \ncan you please confirm ? \nTask preview 86dykg497\n",
+          "author": "Sarat Anumula",
+          "date": "2025-12-01T02:52:28.396Z"
+        },
+        {
+          "text": "@Anish Saha  - please share your debug studies here and include the presentations here. \n",
+          "author": "Sarat Anumula",
+          "date": "2025-11-28T03:59:54.348Z"
+        },
+        {
+          "text": "The reason as to why the power glitches are happening  - VDD_0p8 and VDD_1p2 supplies - when supplied from onchip - is that the power supplies are not able to properly discharge when the chip_en is deasserted, making the power supplies to continue to provide the power to the QS222 - causing the chip to go into an undesired state. \n\nWhen there is a load connected to the power supplies - things seem to be working fine. (as of now - this is being used as a work around - the load can be around 100 ohm or 200 ohm). \n",
+          "author": "Sarat Anumula",
+          "date": "2025-11-28T03:59:28.709Z"
+        },
+        {
+          "text": "SPI read write problem is root caused to the power glitches happening during the chip_en toggling. \n",
+          "author": "Sarat Anumula",
+          "date": "2025-11-28T03:55:49.184Z"
+        },
+        {
+          "text": "@Anish Saha  - please share the learnings here as discussed in the silicon review meeting yesterday night. \nI am extending the deadline to today - based on the progress made in the debug. \n",
+          "author": "Sarat Anumula",
+          "date": "2025-11-28T02:21:41.631Z"
+        },
+        {
+          "text": "@Pushpal Das The on-chip supplies from the SIMO outputs (1P2 and 0P8) are not behaving as expected when the device operates under light load conditions. Assistance of @Aniruddh CHoudhary  is needed to further debug this issue. The task may take longer than expected dates.\n",
+          "author": "Anish Saha",
+          "date": "2025-11-25T09:41:24.354Z"
+        },
+        {
+          "text": "@Anish Saha  - based on the yesterday debug notes - can we capture some summary here. and next steps are to get engaged with Aniruddh. \n",
+          "author": "Sarat Anumula",
+          "date": "2025-11-25T02:42:22.826Z"
+        },
+        {
+          "text": "@Anish Saha  - thought we resolved this issue with the chip_en being low for a longer duration. In that case, can we mark this task as complete? \n",
+          "author": "Sarat Anumula",
+          "date": "2025-11-24T02:13:19.557Z"
+        },
+        {
+          "text": "Reason for SPI Failure:​\nWhen I reset the IC, both supplies initially come up, but one of them (either 1P2 or 0P8) randomly begins to drop. I believe this is not a configuration issue but rather related to the power sequencing or another underlying factor.​\nIn the waveform shown below (Blue = 0p8, Yellow = 1p2), no SPI writes are performed—only the IC reset. After the reset, the 0p8 rail drops to zero.\n image.png\n\n\nIn this figure, I was performing a standard SPI read/write test and observed that both supply voltages were decaying. The random pass/fail behavior appears to be related to the supply sequence.​\nThe supplies should drop sufficiently for the device to return to a valid state. However, they were not always decaying quickly enough, leaving the device in an invalid condition and preventing it from powering on correctly. In some cases, one of the supplies remained high long enough to allow the read/write operation to complete before dropping. After each reset_ic, both supplies rose again, and the cycle repeated.​\nimage.png\n​I was able to successfully perform 100K SPI writes. However, beyond that point, the test begins to fail randomly when reset_ic is enabled after each run (I tried increasing the chip_en duration that did not help). Interestingly, if reset_ic  is disabled, the test consistently passes without any issues. This behavior needs further investigation.\n\n",
+          "author": "Anish Saha",
+          "date": "2025-11-21T12:56:59.806Z"
+        },
+        {
+          "text": "@Anish Saha  \n-Please share the results here. As per inputs in the silicon review meeting on 20-nov-25; please bypass the level shifter and recheck it. \n",
+          "author": "Sarat Anumula",
+          "date": "2025-11-21T03:38:18.046Z"
+        }
+      ]
+    },
+    {
+      "id": "86dyatc46",
+      "name": "N3: [RX-Validation] STAT COUNTER VALIDATION",
+      "description": "",
+      "assignees": [
+        "Vinayak Agrawal"
+      ],
+      "parentId": null,
+      "listId": "901705184394",
+      "listName": "QS222_PS_FT",
+      "comments": [
+        {
+          "text": "23-Feb notes:\n\nKeep it open. Discuss with Kumaresh. \n\nPS team feedback: Might be indirectly verified as this feature is used in the multiple packet transmission.\n",
+          "author": "Sarat Anumula",
+          "date": "2026-02-24T05:42:18.254Z"
+        }
+      ]
+    },
+    {
+      "id": "86dy9txb6",
+      "name": "N3: [PLL validation] PLL jitter improvement",
+      "description": "",
+      "assignees": [
+        "Deepthi Kammath"
+      ],
+      "parentId": null,
+      "listId": "901705184394",
+      "listName": "QS222_PS_FT",
+      "comments": [
+        {
+          "text": "23-Feb notes: Keep it open. \nAfter 223 tape out. Need help from Anriruddh Chaudarry. \n",
+          "author": "Sarat Anumula",
+          "date": "2026-02-24T05:40:38.772Z"
+        }
+      ]
+    },
+    {
+      "id": "86dy8f6d6",
+      "name": "N3: [FW] QS222_BRING_UP_FW_TASK",
+      "description": "",
+      "assignees": [
+        "Kumaresh Dhotrad",
+        "sumon"
+      ],
+      "parentId": null,
+      "listId": "901705184394",
+      "listName": "QS222_PS_FT",
+      "comments": [
+        {
+          "text": "@sumon @Kumaresh Dhotrad - Can you please update the due dates on this task? or provide any additional details here to reflect the latest status. \n",
+          "author": "Sarat Anumula",
+          "date": "2026-03-12T04:07:54.679Z"
+        },
+        {
+          "text": "@sumon @Kumaresh Dhotrad - can you please add few details about this task - and also see if the due date needs to be extended for this task. I didn't find much description about the task and hence not clear on this task. \n",
+          "author": "Sarat Anumula",
+          "date": "2025-12-01T02:14:58.514Z"
+        }
+      ]
+    },
+    {
+      "id": "86dy73q4y",
+      "name": "N3: [RX-Validation] Manual offset correction implementation in binary search",
+      "description": "",
+      "assignees": [
+        "Vinayak Agrawal"
+      ],
+      "parentId": null,
+      "listId": "901705184394",
+      "listName": "QS222_PS_FT",
+      "comments": [
+        {
+          "text": "23-Feb notes. \n\nKeep it open:\n\nCurrent hypothesis: No need for the base band offset correction because of dynamic offset correction. Revisit this task later.\n",
+          "author": "Sarat Anumula",
+          "date": "2026-02-24T05:42:02.194Z"
+        }
+      ]
+    },
+    {
+      "id": "86dy73nu2",
+      "name": "N3: [RX-Validation] AUTOMATIC BB OFC IN PS_ENABLE MODE",
+      "description": "1. Set the ana mux setting correctly for I and Q path -I and Q may fight to set voltage through ana mux",
+      "assignees": [
+        "Vinayak Agrawal"
+      ],
+      "parentId": null,
+      "listId": "901705184394",
+      "listName": "QS222_PS_FT",
+      "comments": [
+        {
+          "text": "23-Feb notes. \n\nKeep it open:\n\nCurrent hypothesis: No need for the base band offset correction because of dynamic offset correction. Revisit this task later. \n",
+          "author": "Sarat Anumula",
+          "date": "2026-02-24T05:41:46.391Z"
+        }
+      ]
+    },
+    {
+      "id": "86dy1q3jy",
+      "name": "N3: [Baseband] ADR Testing with FFT data",
+      "description": "Test des:[](https://app.clickup.com/9017196379/v/dc/8cqezuv-18997/8cqezuv-39177?&block=block-ae7b1557-7aef-4468-8605-60aeeab58191)\nWrite FFT values to ADR SRAM using SPI, run signal power estimation & communication parameter search in bypass mode and get the output parameters in status\n**Measured Parameters:** After receiving adr\\_done, check status registers for calculated communication parameters\n\nRisk: T- If it does not function as intended, we may need to proceed with a re-tapeout.\n\nLimitation: Assumption: The setup and config are correct",
+      "assignees": [
+        "Anish Saha"
+      ],
+      "parentId": null,
+      "listId": "901705184394",
+      "listName": "QS222_PS_FT",
+      "comments": [
+        {
+          "text": "23-Feb Notes: Revisit this task later. \n",
+          "author": "Sarat Anumula",
+          "date": "2026-02-24T05:38:34.401Z"
+        }
+      ]
+    },
+    {
+      "id": "86dy18800",
+      "name": "N3: [Baseband] TWO BOARD SETUP-SCHEDULE - AYSNC MODE",
+      "description": "test doc:\nQAM :[](https://app.clickup.com/9017196379/v/dc/8cqezuv-18997/8cqezuv-39177?&block=block-da7ab4ae-bb69-4245-a122-f4a445266d5e)\nDSSS:[](https://app.clickup.com/9017196379/v/dc/8cqezuv-18997/8cqezuv-39177?&block=block-7215b651-1bb2-41d1-9a12-6dcdcc01a002)\nADIABATIC:[](https://app.clickup.com/9017196379/v/dc/8cqezuv-18997/8cqezuv-39177?&block=block-211af583-e94d-46ca-bac6-25058c4017ef)\n\nRISK: T: If it does not work properly, we may need to go for another tapeout.\nLimitation: The setup and config are correct",
+      "assignees": [
+        "Vinayak Agrawal",
+        "Sayantan Dey"
+      ],
+      "parentId": null,
+      "listId": "901705184394",
+      "listName": "QS222_PS_FT",
+      "comments": [
+        {
+          "text": "This task can be closed. It works. Need to get the start and end dates for this task. \n",
+          "author": "Sarat Anumula",
+          "date": "2026-02-24T05:37:23.090Z"
+        }
+      ]
+    }
+  ]
+}

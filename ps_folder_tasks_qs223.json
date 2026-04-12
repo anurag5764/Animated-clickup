@@ -1,0 +1,44 @@
+{
+  "projectId": "qs223",
+  "projectLabel": "QS223",
+  "folderId": "90172523095",
+  "extractedAt": "2026-04-09T22:39:34.405Z",
+  "psAssigneeFilterCount": 8,
+  "extractMode": "ps_assignee_and_in_progress",
+  "includeClosedApi": false,
+  "statusWhitelist": null,
+  "taskCount": 2,
+  "tasks": [
+    {
+      "id": "86dxgmu8m",
+      "name": "QS223 PD",
+      "description": "",
+      "assignees": [
+        "sumon"
+      ],
+      "parentId": null,
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": [
+        {
+          "text": "Updated based on PD's current speed. 5 din extra kept, we may need to do rePD\n",
+          "author": "Archisman Ghosh",
+          "date": "2025-11-18T16:00:36.839Z"
+        }
+      ]
+    },
+    {
+      "id": "86dx448z4",
+      "name": "QS223 AMS simulations",
+      "description": "",
+      "assignees": [
+        "KiritkumarP",
+        "sumon"
+      ],
+      "parentId": null,
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": []
+    }
+  ]
+}

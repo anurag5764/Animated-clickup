@@ -1,0 +1,278 @@
+{
+  "currentPosition": {
+    "stageNumber": 6,
+    "stageName": "Testing on silicon",
+    "summary": "Currently focused on stage 6 with 8 active tasks."
+  },
+  "stages": [
+    {
+      "stageNumber": 1,
+      "stageName": "Initial test definition",
+      "status": "active",
+      "taskCount": 4,
+      "tasks": [
+        {
+          "name": "Enable on-chip ADR",
+          "assignee": "Kumaresh Dhotrad",
+          "detail": "Auto-mapped to stage 1"
+        },
+        {
+          "name": "Enable FFT PER schedule",
+          "assignee": "Kumaresh Dhotrad",
+          "detail": "Auto-mapped to stage 1"
+        },
+        {
+          "name": "N3: full schedule implementation for QS222",
+          "assignee": "Kumaresh Dhotrad",
+          "detail": "Auto-mapped to stage 1"
+        },
+        {
+          "name": "N3: [Supplies] VDD_0p8 drops to 0 after chip_en being reset",
+          "assignee": "Anish Saha",
+          "detail": "VDD_0p8 drops to 0 after chip_en being reset"
+        }
+      ]
+    },
+    {
+      "stageNumber": 2,
+      "stageName": "Test procedure details discussions (Deliverables, Risks, Dependencies)",
+      "status": "active",
+      "taskCount": 7,
+      "tasks": [
+        {
+          "name": "N3:[RX Power] QAM2, QAM4, QAM16  - rerun FE Block for outlier measurements.",
+          "assignee": "Deepthi Kammath",
+          "detail": "Auto-mapped to stage 2"
+        },
+        {
+          "name": "N3: [RX Validation] QAM4 Characterization. Multiple DR_scale, onchip supply, ADC clock scaling",
+          "assignee": "Anish Saha",
+          "detail": "N3 : [RX Validation] QAM16 PMDR testing across dr scales 1,2,3 & 4"
+        },
+        {
+          "name": "N3: [Baseband] Baseband testing of QAM, DSSS & Adiabatic in schedule mode without IDLE slots with ACK.",
+          "assignee": "Anish Saha",
+          "detail": "Baseband testing of QAM, DSSS & Adiabatic in schedule mode without IDLE slots with AC"
+        },
+        {
+          "name": "N3: [Other_Misc] version4 - Debug Temp sense test (readout of ADC code).",
+          "assignee": "Deepthi Kammath",
+          "detail": "version4 - Debug Temp sense test (readout of ADC code)"
+        },
+        {
+          "name": "N3: [TX Validation] Debugstudies of SPI read /write with internal supply",
+          "assignee": "Anish Saha",
+          "detail": "TX Validation: Debugstudies of SPI read /write with internal supply"
+        },
+        {
+          "name": "N3: [Baseband] ADR Testing with FFT data",
+          "assignee": "Anish Saha",
+          "detail": "ADR Testing with FFT data"
+        },
+        {
+          "name": "N3: [Baseband] TWO BOARD SETUP-SCHEDULE - AYSNC MODE",
+          "assignee": "Vinayak Agrawal",
+          "detail": "Baseband TWO BOARD SETUP-SCHEDULE - AYSNC MODE"
+        }
+      ]
+    },
+    {
+      "stageNumber": 3,
+      "stageName": "Test procedure creation (GitHub, lab HW resources)",
+      "status": "active",
+      "taskCount": 1,
+      "tasks": [
+        {
+          "name": "Debug benchtop  setup for not receiving ACK's DRscale greater than 8 in adiabatic mode.",
+          "assignee": "Anish Saha",
+          "detail": "Debug benchtop  setup for not receiving ACK's DRscale greater than 8 in adiabatic mode."
+        }
+      ]
+    },
+    {
+      "stageNumber": 4,
+      "stageName": "Firmware coding (if needed)",
+      "status": "active",
+      "taskCount": 2,
+      "tasks": [
+        {
+          "name": "N3: [Baseband] Debug baseband testing for the packet sizes beyond 1024 bytes in QAM2, QAM4 modes at SPI 24 MHz without IDLE slots.",
+          "assignee": "Anish Saha",
+          "detail": "Debug baseband testing for the packet sizes beyond 1024 bytes in QAM2, QAM4 modes at"
+        },
+        {
+          "name": "N3: [FW] QS222_BRING_UP_FW_TASK",
+          "assignee": "Kumaresh Dhotrad",
+          "detail": "QS222_BRING_UP_FW_TASK"
+        }
+      ]
+    },
+    {
+      "stageNumber": 5,
+      "stageName": "Automation steps (if needed)",
+      "status": "active",
+      "taskCount": 1,
+      "tasks": [
+        {
+          "name": "N3: [RX-Validation] Manual offset correction implementation in binary search",
+          "assignee": "Vinayak Agrawal",
+          "detail": "Manual offset correction implementation in binary search"
+        }
+      ]
+    },
+    {
+      "stageNumber": 6,
+      "stageName": "Testing on silicon",
+      "status": "active",
+      "taskCount": 8,
+      "tasks": [
+        {
+          "name": "QS222 KT",
+          "assignee": "Anirudh Roy",
+          "detail": "Auto-mapped to stage 6"
+        },
+        {
+          "name": "N3: {RX Validation] RX validation in adiabatic mode. Path clearing - Phase2.",
+          "assignee": "Anish Saha",
+          "detail": "Auto-mapped to stage 6"
+        },
+        {
+          "name": "N3: [RX Power] QAM16 power measurements with on chip supply - spot check",
+          "assignee": "Deepthi Kammath",
+          "detail": "Auto-mapped to stage 6"
+        },
+        {
+          "name": "N3:[Misc] Measurement FIFO validation - part2-ext: DR_Scale 1, 2,3 QAM2, QAM4, QAM16 modes.",
+          "assignee": "Anish Saha",
+          "detail": "Auto-mapped to stage 6"
+        },
+        {
+          "name": "N3: [Misc Validation] ADR bring up",
+          "assignee": "Anish Saha",
+          "detail": "Auto-mapped to stage 6"
+        },
+        {
+          "name": "QAM16 PMDR testing across packet sizes 32-1800 across dr scales 0-4 and 5,6 with ECC disabled.",
+          "assignee": "Deepthi Kammath",
+          "detail": "QAM16 PMDR testing across packet sizes 32-1800 across dr scales 0-4 and 5,6 with ECC disabled."
+        },
+        {
+          "name": "N3: Adiabatic mode - QAM2, QAM4.",
+          "assignee": "Anish Saha",
+          "detail": "Adiabatic mode - QAM2, QAM4."
+        },
+        {
+          "name": "N3: [RX-Validation] STAT COUNTER VALIDATION",
+          "assignee": "Vinayak Agrawal",
+          "detail": "RX-Validation: STAT COUNTER VALIDATION"
+        }
+      ]
+    },
+    {
+      "stageNumber": 7,
+      "stageName": "Results review with Design/Architect",
+      "status": "upcoming",
+      "taskCount": 0,
+      "tasks": []
+    },
+    {
+      "stageNumber": 8,
+      "stageName": "Meets design expectations? (YES → next stage, NO → debug & loop back to Stage 6)",
+      "status": "active",
+      "taskCount": 3,
+      "tasks": [
+        {
+          "name": "Debug the QAM16 PMDR failure seen with dr_scale = 4 (ceiling issue)",
+          "assignee": "Deepthi Kammath",
+          "detail": "Debug the QAM16 PMDR failure seen with dr_scale = 4 (ceiling issue)"
+        },
+        {
+          "name": "N3: [RX Validation] QAM16 PMDR testing across dr scales 1,2,3 & 4",
+          "assignee": "Deepthi Kammath",
+          "detail": "Debug benchtop  setup for not receiving ACK's DRscale greater than 8 in adiabatic mode."
+        },
+        {
+          "name": "N3: Document the corner cases surfaced during the baseband validation (debug will be done later).",
+          "assignee": "Anish Saha",
+          "detail": "Document the corner cases surfaced during the baseband validation (debug will be done later)."
+        }
+      ]
+    },
+    {
+      "stageNumber": 9,
+      "stageName": "Report & Documentation",
+      "status": "upcoming",
+      "taskCount": 0,
+      "tasks": []
+    },
+    {
+      "stageNumber": 10,
+      "stageName": "Feedback to Architect/Design (loops back to Stage 2 for next-gen)",
+      "status": "active",
+      "taskCount": 3,
+      "tasks": [
+        {
+          "name": "N3 : [RX Validation] RX validation in DSSS mode. Path clearing.",
+          "assignee": "Deepthi Kammath",
+          "detail": "N3: [RX Validation] RX validation in DSSS mode. Path clearing."
+        },
+        {
+          "name": "N3: [RX Validation] Using EVM to improve PMDR - QAM4 modes.",
+          "assignee": "Vinayak Agrawal",
+          "detail": "N3: [RX Validation] Using EVM to improve PMDR - QAM4 modes."
+        },
+        {
+          "name": "N3: [PLL validation] PLL jitter improvement",
+          "assignee": "Deepthi Kammath",
+          "detail": "N3: [PLL validation] PLL jitter improvement"
+        }
+      ]
+    },
+    {
+      "stageNumber": 11,
+      "stageName": "Publish Data Sheet for customers",
+      "status": "active",
+      "taskCount": 2,
+      "tasks": [
+        {
+          "name": "QAM16 PMDR testing across packet sizes 32-1800 across dr scales 0-4 and 5,6 with ECC enabled",
+          "assignee": "Deepthi Kammath",
+          "detail": "QAM16 PMDR testing across packet sizes 32-1800 across dr scales 0-4 and 5,6 with ECC enabled"
+        },
+        {
+          "name": "N3: [RX-Validation] AUTOMATIC BB OFC IN PS_ENABLE MODE",
+          "assignee": "Vinayak Agrawal",
+          "detail": "N3: [RX-Validation] AUTOMATIC BB OFC IN PS_ENABLE MODE"
+        }
+      ]
+    }
+  ],
+  "blockers": [
+    {
+      "task": "N3:[RX Power] QAM2, QAM4, QAM16  - rerun FE Block for outlier measurements.",
+      "reason": "Auto-mapped to stage 2",
+      "severity": "low"
+    },
+    {
+      "task": "Debug the QAM16 PMDR failure seen with dr_scale = 4 (ceiling issue)",
+      "reason": "Debug the QAM16 PMDR failure seen with dr_scale = 4 (ceiling issue)",
+      "severity": "low"
+    },
+    {
+      "task": "N3: [Baseband] Debug baseband testing for the packet sizes beyond 1024 bytes in QAM2, QAM4 modes at SPI 24 MHz without IDLE slots.",
+      "reason": "Debug baseband testing for the packet sizes beyond 1024 bytes in QAM2, QAM4 modes at",
+      "severity": "low"
+    },
+    {
+      "task": "N3: [Other_Misc] version4 - Debug Temp sense test (readout of ADC code).",
+      "reason": "version4 - Debug Temp sense test (readout of ADC code)",
+      "severity": "low"
+    },
+    {
+      "task": "N3: [Supplies] VDD_0p8 drops to 0 after chip_en being reset",
+      "reason": "VDD_0p8 drops to 0 after chip_en being reset",
+      "severity": "low"
+    }
+  ],
+  "nextStep": "Complete tasks in \"Testing on silicon\" and prepare for downstream stages."
+}

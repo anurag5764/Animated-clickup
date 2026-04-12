@@ -4,7 +4,9 @@
   "type": "module",
   "main": "member.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "extract:ps-folders": "node extract_ps_folder_tasks.js",
+    "analyze:ps": "node analyze_ps_workflow.js"
   },
   "keywords": [],
   "author": "",

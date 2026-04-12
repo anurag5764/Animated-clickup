@@ -31,28 +31,61 @@ body {
 
 /* Pipeline node pulse animation */
 @keyframes pulse-orange {
-  0%, 100% { box-shadow: 0 0 20px rgba(255,99,33,0.4), 0 0 40px rgba(255,99,33,0.15); }
-  50% { box-shadow: 0 0 30px rgba(255,99,33,0.5), 0 0 60px rgba(255,99,33,0.25); }
+
+  0%,
+  100% {
+    box-shadow: 0 0 20px rgba(255, 99, 33, 0.4), 0 0 40px rgba(255, 99, 33, 0.15);
+  }
+
+  50% {
+    box-shadow: 0 0 30px rgba(255, 99, 33, 0.5), 0 0 60px rgba(255, 99, 33, 0.25);
+  }
 }
 
 @keyframes pulse-red {
-  0%, 100% { box-shadow: 0 0 12px rgba(239,68,68,0.3); }
-  50% { box-shadow: 0 0 24px rgba(239,68,68,0.4); }
+
+  0%,
+  100% {
+    box-shadow: 0 0 12px rgba(239, 68, 68, 0.3);
+  }
+
+  50% {
+    box-shadow: 0 0 24px rgba(239, 68, 68, 0.4);
+  }
 }
 
 @keyframes fade-slide-up {
-  from { opacity: 0; transform: translateY(24px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes fade-slide-right {
-  from { opacity: 0; transform: translateX(-16px); }
-  to { opacity: 1; transform: translateX(0); }
+  from {
+    opacity: 0;
+    transform: translateX(-16px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 @keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+  0% {
+    background-position: -200% 0;
+  }
+
+  100% {
+    background-position: 200% 0;
+  }
 }
 
 .animate-pulse-orange {
@@ -72,7 +105,7 @@ body {
 }
 
 .animate-shimmer {
-  background: linear-gradient(90deg, transparent 25%, rgba(255,99,33,0.08) 50%, transparent 75%);
+  background: linear-gradient(90deg, transparent 25%, rgba(255, 99, 33, 0.08) 50%, transparent 75%);
   background-size: 200% 100%;
   animation: shimmer 3s infinite;
 }
@@ -82,28 +115,34 @@ body {
   width: 6px;
   height: 6px;
 }
+
 ::-webkit-scrollbar-track {
   background: transparent;
 }
+
 ::-webkit-scrollbar-thumb {
-  background: rgba(255,255,255,0.1);
+  background: rgba(255, 255, 255, 0.1);
   border-radius: 3px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255,255,255,0.2);
+  background: rgba(255, 255, 255, 0.2);
 }
 
 /* Tooltip custom scrollbar */
 .custom-scrollbar::-webkit-scrollbar {
   width: 4px;
 }
+
 .custom-scrollbar::-webkit-scrollbar-track {
   background: transparent;
 }
+
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(255,255,255,0.15);
+  background: rgba(255, 255, 255, 0.15);
   border-radius: 4px;
 }
+
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: rgba(255,255,255,0.3);
+  background: rgba(255, 255, 255, 0.3);
 }
