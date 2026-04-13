@@ -24,6 +24,7 @@ export default function AmsDeliveryInsightModal({ open, onClose }) {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [viewFilter, setViewFilter] = useState('worst');
 
   useEffect(() => {
     setMounted(true);
@@ -67,9 +68,15 @@ export default function AmsDeliveryInsightModal({ open, onClose }) {
 
   const members = useMemo(() => {
     const list = [...(data?.members || [])];
-    list.sort((a, b) => a.onTimeRate - b.onTimeRate || b.delayedTasks - a.delayedTasks);
+    if (viewFilter === 'best') {
+      list.sort((a, b) => b.onTimeRate - a.onTimeRate || a.delayedTasks - b.delayedTasks);
+    } else if (viewFilter === 'all') {
+      list.sort((a, b) => String(a.username || '').localeCompare(String(b.username || '')));
+    } else {
+      list.sort((a, b) => a.onTimeRate - b.onTimeRate || b.delayedTasks - a.delayedTasks);
+    }
     return list;
-  }, [data]);
+  }, [data, viewFilter]);
 
   const team = data?.team;
 
@@ -99,9 +106,48 @@ export default function AmsDeliveryInsightModal({ open, onClose }) {
           </button>
         </div>
 
-        <div className="px-4 py-3 text-[0.7rem] text-text-muted border-b border-white/[0.06] shrink-0">
-          Sorted lowest
-          on-time first. Multi-assignee tasks count for each person.
+        <div className="px-4 py-3 text-[0.7rem] text-text-muted border-b border-white/[0.06] shrink-0 space-y-2">
+          <div className="flex items-center justify-between gap-2">
+            <span>
+              {viewFilter === 'best' ? 'Sorted highest on-time first.' : 'Sorted lowest on-time first.'} Multi-assignee
+              tasks count for each person.
+            </span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <button
+              type="button"
+              onClick={() => setViewFilter('worst')}
+              className={`px-2 py-0.5 rounded-full border text-[0.62rem] uppercase tracking-wide transition-colors ${
+                viewFilter === 'worst'
+                  ? 'border-blocked/60 bg-blocked/15 text-blocked'
+                  : 'border-white/15 text-text-muted hover:text-foreground hover:border-white/30'
+              }`}
+            >
+              Worst
+            </button>
+            <button
+              type="button"
+              onClick={() => setViewFilter('best')}
+              className={`px-2 py-0.5 rounded-full border text-[0.62rem] uppercase tracking-wide transition-colors ${
+                viewFilter === 'best'
+                  ? 'border-completed/60 bg-completed/15 text-completed'
+                  : 'border-white/15 text-text-muted hover:text-foreground hover:border-white/30'
+              }`}
+            >
+              Best
+            </button>
+            <button
+              type="button"
+              onClick={() => setViewFilter('all')}
+              className={`px-2 py-0.5 rounded-full border text-[0.62rem] uppercase tracking-wide transition-colors ${
+                viewFilter === 'all'
+                  ? 'border-accent/60 bg-accent/15 text-accent'
+                  : 'border-white/15 text-text-muted hover:text-foreground hover:border-white/30'
+              }`}
+            >
+              All
+            </button>
+          </div>
         </div>
 
         <div className="flex-1 min-h-0 overflow-y-auto custom-scrollbar px-4 py-3">
@@ -113,8 +159,13 @@ export default function AmsDeliveryInsightModal({ open, onClose }) {
               <p className="text-xs text-text-secondary mb-3 tabular-nums">
                 Team:{' '}
                 <span
-                  className="font-semibold"
-                  style={{ color: accuracyColors(team.onTimeRate).text }}
+                  className="inline-flex items-center rounded-full px-2 py-0.5 font-semibold border"
+                  style={{
+                    color: accuracyColors(team.onTimeRate).text,
+                    borderColor: accuracyColors(team.onTimeRate).border,
+                    background: `linear-gradient(90deg, color-mix(in srgb, ${accuracyColors(team.onTimeRate).bar} 22%, transparent), transparent)`,
+                    boxShadow: `0 0 12px ${accuracyColors(team.onTimeRate).barGlow}`,
+                  }}
                 >
                   {team.onTimeRate}%
                 </span>{' '}
@@ -134,7 +185,15 @@ export default function AmsDeliveryInsightModal({ open, onClose }) {
                     >
                       <div className="flex justify-between gap-2 text-xs">
                         <span className="font-medium text-foreground truncate">{m.username}</span>
-                        <span className="shrink-0 tabular-nums font-medium" style={{ color: c.text }}>
+                        <span
+                          className="shrink-0 tabular-nums font-semibold rounded-full px-1.5 py-0.5 border"
+                          style={{
+                            color: c.text,
+                            borderColor: c.border,
+                            background: `linear-gradient(90deg, color-mix(in srgb, ${c.bar} 20%, transparent), transparent)`,
+                            boxShadow: `0 0 10px ${c.barGlow}`,
+                          }}
+                        >
                           {m.onTimeRate}%
                         </span>
                       </div>

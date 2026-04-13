@@ -1,7 +1,6 @@
 'use client';
 
-import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { createPortal } from 'react-dom';
+import { Fragment, useMemo, useRef, useState } from 'react';
 import { compareLnoTasks, parseLnoFromName, stageHeatFromLnoTasks } from '../../../lno.js';
 import AmsDeliveryInsightModal from './AmsDeliveryInsightModal';
 
@@ -116,8 +115,18 @@ function calendarDaysSpanIST(startMs, endMs) {
 
 function formatCalendarDayCount(n) {
   if (n == null || !Number.isFinite(n)) return '—';
-  if (n === 0) return '0 calendar days';
-  return `${n} calendar day${n === 1 ? '' : 's'}`;
+  if (n === 0) return '0 days';
+  return `${n} day${n === 1 ? '' : 's'}`;
+}
+
+function formatTimelineDate(ms) {
+  if (ms == null || !Number.isFinite(Number(ms))) return '—';
+  return new Date(Number(ms)).toLocaleDateString('en-US', {
+    timeZone: DISPLAY_TIMEZONE,
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  });
 }
 
 function taskRoot(task) {
@@ -366,82 +375,9 @@ function scheduleLaneStyle(seg) {
   };
 }
 
-function ScheduleHoverPortal({ tip }) {
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-  if (!mounted || !tip || typeof document === 'undefined') return null;
-  return createPortal(
-    <div
-      role="tooltip"
-      className="fixed z-[10050] pointer-events-none max-w-[min(280px,calc(100vw-20px))] rounded-lg border border-white/20 bg-zinc-950/98 px-2.5 py-2 shadow-2xl backdrop-blur-md"
-      style={{
-        left: tip.x,
-        top: tip.y,
-        transform: tip.placement === 'below' ? 'translate(-50%, 10px)' : 'translate(-50%, calc(-100% - 10px))',
-      }}
-    >
-      {tip.title ? (
-        <div className="text-[0.6rem] font-semibold text-cyan-100/95 border-b border-white/10 pb-1 mb-1">
-          {tip.title}
-        </div>
-      ) : null}
-      <div className="space-y-1">
-        {tip.rows.map((row) =>
-          row.label ? (
-            <div key={row.k} className="flex justify-between gap-4 text-[0.58rem] leading-snug">
-              <span className="text-text-muted shrink-0">{row.label}</span>
-              <span className="text-right text-foreground/95 tabular-nums">{row.value}</span>
-            </div>
-          ) : (
-            <div key={row.k} className="text-[0.58rem] leading-snug text-foreground/95">
-              {row.value}
-            </div>
-          )
-        )}
-      </div>
-    </div>,
-    document.body
-  );
-}
-
 function DelayTimelineBars({ analysis }) {
-  const { timeline, actualWindowCalendarDays, anchorMs } = analysis;
-  const { aStart: aaS, aDue: aaD } = anchorMs || {};
-  const [tip, setTip] = useState(null);
-  const hideT = useRef(null);
-
-  const clearHide = useCallback(() => {
-    if (hideT.current) {
-      window.clearTimeout(hideT.current);
-      hideT.current = null;
-    }
-  }, []);
-
-  const showTip = useCallback(
-    (el, payload) => {
-      clearHide();
-      const r = el.getBoundingClientRect();
-      const centerX = r.left + r.width / 2;
-      const placeAbove = r.top > 120;
-      setTip({
-        x: centerX,
-        y: placeAbove ? r.top : r.bottom,
-        placement: placeAbove ? 'above' : 'below',
-        ...payload,
-      });
-    },
-    [clearHide]
-  );
-
-  const hideTip = useCallback(() => {
-    clearHide();
-    hideT.current = window.setTimeout(() => setTip(null), 140);
-  }, [clearHide]);
-
-  useEffect(() => () => clearHide(), [clearHide]);
-
+  const { timeline, plannedWindowCalendarDays } = analysis;
+  const [hoveredPoint, setHoveredPoint] = useState(null);
   if (!timeline || (!timeline.planned && !timeline.actual)) {
     return (
       <div className="text-[0.65rem] text-text-muted rounded-lg border border-white/10 bg-white/[0.03] px-2.5 py-2 leading-snug min-w-0 max-w-full">
@@ -452,240 +388,96 @@ function DelayTimelineBars({ analysis }) {
 
   const zones = timeline.delayZones || [];
   const milestones = timeline.milestones || [];
-  const leaderZone = zones.find((z) => z.key === 'leader') || null;
-  const lengthZones = zones.filter((z) => z.key === 'length');
-  const completionZones = zones.filter((z) => z.key === 'owner');
+  const lengthZone = zones.find((z) => z.key === 'length') || null;
+  const fallbackRedZone = zones.find((z) => z.key === 'owner') || null;
+  const redZone = lengthZone || fallbackRedZone;
 
-  const barTop = '0.875rem';
+  const sortedByLeft = [...milestones].sort((a, b) => a.left - b.left);
+  const startPoint = sortedByLeft[0] || null;
+  const splitPoint =
+    redZone && Number.isFinite(redZone.left)
+      ? {
+          left: redZone.left,
+          ms: redZone.startMs,
+          key: 'split',
+        }
+      : sortedByLeft[Math.floor(sortedByLeft.length / 2)] || null;
+  const endPoint = sortedByLeft[sortedByLeft.length - 1] || null;
+
+  const anchorTextStyle = (centerPct) => {
+    if (centerPct <= 9) return { left: 0, transform: 'none', textAlign: 'left' };
+    if (centerPct >= 91) return { right: 0, left: 'auto', transform: 'none', textAlign: 'right' };
+    return { left: `${centerPct}%`, transform: 'translateX(-50%)', textAlign: 'center' };
+  };
+
+  const pointDate = (p) => (p?.ms ? formatTimelineDate(p.ms) : '—');
+  const barTop = '0.95rem';
   const barStyle = { top: barTop, height: '3px' };
 
   return (
-    <div className="min-w-0 max-w-full rounded-lg border border-white/[0.1] bg-white/[0.02] px-2.5 py-2.5 overflow-x-hidden overflow-y-visible space-y-2">
-      <ScheduleHoverPortal tip={tip} />
-
+    <div className="min-w-0 max-w-full rounded-lg border border-white/[0.1] bg-white/[0.02] px-2.5 py-2.5 overflow-hidden space-y-2">
       <div>
         <div className="text-[0.62rem] font-semibold uppercase tracking-wide text-text-secondary">Timeline</div>
-        <p className="text-[0.58rem] text-text-muted leading-snug mt-0.5">
-          Calendar days (Asia/Kolkata). Green = task span · amber = start delay · orange = length delay · red =
-          completion delay · dots = milestones.
-        </p>
+        <div className="text-[0.52rem] text-text-muted mt-0.5">Hover for dates</div>
+        <div className="mt-1 text-[0.52rem] text-text-muted leading-snug">
+          Planned: <span className="text-completed">{formatCalendarDayCount(plannedWindowCalendarDays)}</span>
+          {redZone ? (
+            <>
+              {' '}
+              · Delay: <span className="text-blocked">{formatCalendarDayCount(redZone.durationCalendarDays)}</span>
+            </>
+          ) : null}
+        </div>
       </div>
 
-      <div className="relative w-full min-w-0 h-9 overflow-visible">
-        <div
-          className="absolute left-0 right-0 rounded-full bg-zinc-950/90 border border-white/10 pointer-events-none"
-          style={barStyle}
-        />
+      <div className="relative w-full min-w-0 h-16">
+        <div className="absolute left-0 right-0 rounded-full bg-zinc-950/90 border border-white/10 pointer-events-none" style={barStyle} />
+        {hoveredPoint ? (
+          <div
+            className="absolute z-[8] -top-7 px-2 py-1 rounded-md border border-white/15 bg-zinc-950/95 text-[0.55rem] text-foreground whitespace-nowrap shadow-lg"
+            style={anchorTextStyle(hoveredPoint.left)}
+          >
+            {hoveredPoint.date}
+          </div>
+        ) : null}
 
         {timeline.actual ? (
-          <button
-            type="button"
-            tabIndex={0}
-            className="absolute rounded-full bg-completed/88 hover:bg-completed border border-completed-dim cursor-default z-[1] focus:outline-none focus-visible:ring-2 focus-visible:ring-completed/80 shadow-[0_0_10px_rgba(34,197,94,0.2)]"
-            style={{ ...scheduleLaneStyle(timeline.actual), ...barStyle }}
-            onMouseEnter={(e) =>
-              showTip(e.currentTarget, {
-                title: 'Actual task',
-                rows: [
-                  { k: 's', label: 'Start (IST date)', value: toScheduleDayLabel(aaS) || '—' },
-                  { k: 'e', label: 'Date done (IST)', value: toScheduleDayLabel(aaD) || '—' },
-                  { k: 'd', label: 'Span', value: formatCalendarDayCount(actualWindowCalendarDays) },
-                ],
-              })
-            }
-            onMouseLeave={hideTip}
-            onFocus={(e) =>
-              showTip(e.currentTarget, {
-                title: 'Actual task',
-                rows: [
-                  { k: 's', label: 'Start (IST date)', value: toScheduleDayLabel(aaS) || '—' },
-                  { k: 'e', label: 'Date done (IST)', value: toScheduleDayLabel(aaD) || '—' },
-                  { k: 'd', label: 'Span', value: formatCalendarDayCount(actualWindowCalendarDays) },
-                ],
-              })
-            }
-            onBlur={hideTip}
-            aria-label="Actual task window"
+          <div className="absolute z-[1]" style={{ ...scheduleLaneStyle(timeline.actual), ...barStyle }}>
+            <div className="h-full w-full rounded-full bg-completed/88 border border-completed-dim shadow-[0_0_10px_rgba(34,197,94,0.2)]" />
+          </div>
+        ) : null}
+
+        {redZone ? (
+          <div
+            className="absolute z-[3] rounded-full bg-blocked/85 border border-blocked/55 shadow-[0_0_10px_rgba(239,68,68,0.22)]"
+            style={{
+              left: `${redZone.left}%`,
+              width: `${redZone.width}%`,
+              maxWidth: `${Math.max(0, 100 - redZone.left)}%`,
+              ...barStyle,
+            }}
           />
         ) : null}
 
-        {leaderZone ? (
-          <button
-            type="button"
-            tabIndex={0}
-            className="absolute rounded-full bg-warning/88 hover:bg-warning border border-warning/70 cursor-default z-[2] focus:outline-none focus-visible:ring-2 focus-visible:ring-warning/80 shadow-[0_0_10px_rgba(245,158,11,0.28)]"
-            style={{
-              left: `${leaderZone.left}%`,
-              width: `${leaderZone.width}%`,
-              maxWidth: `${Math.max(0, 100 - leaderZone.left)}%`,
-              ...barStyle,
-            }}
-            onMouseEnter={(e) =>
-              showTip(e.currentTarget, {
-                title: 'Start delay',
-                rows: [
-                  { k: 'd', label: 'Late by', value: formatCalendarDayCount(leaderZone.durationCalendarDays) },
-                  { k: 'a', label: 'Planned start', value: toScheduleDayLabel(leaderZone.startMs) || '—' },
-                  { k: 'b', label: 'Actual start', value: toScheduleDayLabel(leaderZone.endMs) || '—' },
-                ],
-              })
-            }
-            onMouseLeave={hideTip}
-            onFocus={(e) =>
-              showTip(e.currentTarget, {
-                title: 'Start delay',
-                rows: [
-                  { k: 'd', label: 'Late by', value: formatCalendarDayCount(leaderZone.durationCalendarDays) },
-                  { k: 'a', label: 'Planned start', value: toScheduleDayLabel(leaderZone.startMs) || '—' },
-                  { k: 'b', label: 'Actual start', value: toScheduleDayLabel(leaderZone.endMs) || '—' },
-                ],
-              })
-            }
-            onBlur={hideTip}
-            aria-label="Start delay"
-          />
-        ) : null}
-
-        {lengthZones.map((z) => (
-          <button
-            key={`len-${z.left}-${z.width}`}
-            type="button"
-            tabIndex={0}
-            className="absolute rounded-full bg-accent/85 hover:bg-accent/95 border border-accent/55 cursor-default z-[3] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/75 shadow-[0_0_10px_rgba(255,99,33,0.22)]"
-            style={{
-              left: `${z.left}%`,
-              width: `${z.width}%`,
-              maxWidth: `${Math.max(0, 100 - z.left)}%`,
-              ...barStyle,
-            }}
-            onMouseEnter={(e) =>
-              showTip(e.currentTarget, {
-                title: 'Length delay',
-                rows: [
-                  { k: 'd', label: 'Delay duration', value: formatCalendarDayCount(z.durationCalendarDays) },
-                  { k: 'a', label: 'From (IST date)', value: toScheduleDayLabel(z.startMs) || '—' },
-                  { k: 'b', label: 'To (IST date)', value: toScheduleDayLabel(z.endMs) || '—' },
-                ],
-              })
-            }
-            onMouseLeave={hideTip}
-            onFocus={(e) =>
-              showTip(e.currentTarget, {
-                title: 'Length delay',
-                rows: [
-                  { k: 'd', label: 'Delay duration', value: formatCalendarDayCount(z.durationCalendarDays) },
-                  { k: 'a', label: 'From (IST date)', value: toScheduleDayLabel(z.startMs) || '—' },
-                  { k: 'b', label: 'To (IST date)', value: toScheduleDayLabel(z.endMs) || '—' },
-                ],
-              })
-            }
-            onBlur={hideTip}
-            aria-label={`Length delay ${formatCalendarDayCount(z.durationCalendarDays)}`}
-          />
-        ))}
-        {completionZones.map((z) => (
-          <button
-            key={`cmp-${z.left}-${z.width}`}
-            type="button"
-            tabIndex={0}
-            className="absolute rounded-full bg-blocked/82 hover:bg-blocked border border-blocked/55 cursor-default z-[3] focus:outline-none focus-visible:ring-2 focus-visible:ring-blocked/70 shadow-[0_0_10px_rgba(239,68,68,0.22)]"
-            style={{
-              left: `${z.left}%`,
-              width: `${z.width}%`,
-              maxWidth: `${Math.max(0, 100 - z.left)}%`,
-              ...barStyle,
-            }}
-            onMouseEnter={(e) =>
-              showTip(e.currentTarget, {
-                title: 'Completion delay',
-                rows: [
-                  { k: 'd', label: 'Delay duration', value: formatCalendarDayCount(z.durationCalendarDays) },
-                  { k: 'a', label: 'From (IST date)', value: toScheduleDayLabel(z.startMs) || '—' },
-                  { k: 'b', label: 'To (IST date)', value: toScheduleDayLabel(z.endMs) || '—' },
-                ],
-              })
-            }
-            onMouseLeave={hideTip}
-            onFocus={(e) =>
-              showTip(e.currentTarget, {
-                title: 'Completion delay',
-                rows: [
-                  { k: 'd', label: 'Delay duration', value: formatCalendarDayCount(z.durationCalendarDays) },
-                  { k: 'a', label: 'From (IST date)', value: toScheduleDayLabel(z.startMs) || '—' },
-                  { k: 'b', label: 'To (IST date)', value: toScheduleDayLabel(z.endMs) || '—' },
-                ],
-              })
-            }
-            onBlur={hideTip}
-            aria-label={`Completion delay ${formatCalendarDayCount(z.durationCalendarDays)}`}
-          />
-        ))}
-
-        {milestones.map((m) => (
-          <button
-            key={m.key}
-            type="button"
-            tabIndex={0}
-            className="absolute z-[4] h-2 w-2 rounded-full border border-white/50 bg-black hover:bg-zinc-900 cursor-default focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-offset-zinc-950 focus-visible:ring-white/50 shadow-sm"
-            style={{
-              left: `${m.left}%`,
-              top: 'calc(0.875rem + 1.5px)',
-              transform: 'translate(-50%, -50%)',
-            }}
-            onMouseEnter={(e) =>
-              showTip(e.currentTarget, {
-                title: '',
-                rows: [
-                  { k: 'n', label: '', value: m.label },
-                  { k: 'd', label: '', value: formatDate(m.ms) },
-                ],
-              })
-            }
-            onMouseLeave={hideTip}
-            onFocus={(e) =>
-              showTip(e.currentTarget, {
-                title: '',
-                rows: [
-                  { k: 'n', label: '', value: m.label },
-                  { k: 'd', label: '', value: formatDate(m.ms) },
-                ],
-              })
-            }
-            onBlur={hideTip}
-            aria-label={`${m.label} ${m.date}`}
-          />
-        ))}
-      </div>
-
-      <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[0.52rem] text-text-muted pt-0.5">
-        <span className="inline-flex items-center gap-1">
-          <span className="inline-block w-2 h-2 rounded-full bg-completed border border-completed-dim" />
-          Task
-        </span>
-        <span className="inline-flex items-center gap-1">
-          <span className="inline-block w-2 h-2 rounded-full bg-warning border border-warning/70" />
-          Start delay
-        </span>
-        <span className="inline-flex items-center gap-1">
-          <span className="inline-block w-2 h-2 rounded-full bg-accent border border-accent-dim" />
-          Length delay
-        </span>
-        <span className="inline-flex items-center gap-1">
-          <span className="inline-block w-2 h-2 rounded-full bg-blocked border border-blocked/70" />
-          Completion delay
-        </span>
-        <span className="inline-flex items-center gap-1">
-          <span className="inline-block w-2 h-2 rounded-full bg-black border border-white/40" />
-          Milestone
-        </span>
+        {[startPoint, splitPoint, endPoint]
+          .filter(Boolean)
+          .map((p, i) => (
+            <Fragment key={`${p.key || 'pt'}-${i}`}>
+              <div
+                className="absolute z-[4] h-2 w-2 rounded-full border border-white/50 bg-black shadow-sm"
+                style={{ left: `${p.left}%`, top: 'calc(0.95rem + 1.5px)', transform: 'translate(-50%, -50%)' }}
+                aria-label={pointDate(p)}
+                onMouseEnter={() => setHoveredPoint({ left: p.left, date: pointDate(p) })}
+                onMouseLeave={() => setHoveredPoint(null)}
+              />
+            </Fragment>
+          ))}
       </div>
 
       {!analysis.hasFullSet ? (
         <p className="text-[0.52rem] text-text-muted leading-snug">
-          Add planned start/due, start date, and date done for delay bands on this line.
+          Add planned start/due, start date, and date done for delay timeline.
         </p>
-      ) : zones.length === 0 ? (
-        <p className="text-[0.52rem] text-text-muted">No start, length, or completion delay segment on this scale.</p>
       ) : null}
     </div>
   );
@@ -1185,6 +977,15 @@ export default function Pipeline({ data, teamLabel = 'AMS Team', teamKey = 'ams'
             </div>
           </div>
         )}
+        {teamKey === 'ams' && (
+          <button
+            type="button"
+            onClick={() => setAmsDeliveryModalOpen(true)}
+            className="absolute bottom-4 right-4 z-20 text-[0.62rem] font-medium uppercase tracking-wider px-3 py-1 rounded-full border border-accent/45 bg-accent/10 text-accent hover:bg-accent/20 hover:border-accent/65 transition-colors"
+          >
+            Leader Board View
+          </button>
+        )}
 
         <div className="flex-1 flex items-center justify-center px-2 sm:px-6 pb-6 min-h-0 overflow-auto">
           {teamKey === 'ps' ? (
@@ -1233,15 +1034,6 @@ export default function Pipeline({ data, teamLabel = 'AMS Team', teamKey = 'ams'
             </div>
           ) : (
             <div className="relative w-[360px] flex flex-col items-center gap-2">
-              {teamKey === 'ams' && (
-                <button
-                  type="button"
-                  onClick={() => setAmsDeliveryModalOpen(true)}
-                  className="shrink-0 text-[0.65rem] font-medium uppercase tracking-wider px-3 py-1 rounded-full border border-accent/40 bg-accent/10 text-accent hover:bg-accent/20 hover:border-accent/60 transition-colors"
-                >
-                  Performance
-                </button>
-              )}
               <div className="relative w-full">
                 <div className="flex flex-col items-center gap-1">
                   {stages.map((stage, index) => (
@@ -1501,16 +1293,10 @@ export default function Pipeline({ data, teamLabel = 'AMS Team', teamKey = 'ams'
                   <div className="text-foreground/95 truncate mt-0.5">{subTooltip.owner}</div>
                 </div>
                 <div className="min-w-0">
-                  <div className="text-[0.6rem] uppercase tracking-wide text-text-muted">Start date</div>
-                  <div className="text-foreground/95 mt-0.5">{formatDate(subTooltip.startDate)}</div>
-                </div>
-                <div className="min-w-0">
-                  <div className="text-[0.6rem] uppercase tracking-wide text-text-muted">Due date</div>
-                  <div className="text-foreground/95 mt-0.5">{formatDate(subTooltip.dueDate)}</div>
-                </div>
-                <div className="min-w-0">
-                  <div className="text-[0.6rem] uppercase tracking-wide text-text-muted">Date done</div>
-                  <div className="text-foreground/95 mt-0.5">{formatDate(subTooltip.dateDone)}</div>
+                  <div className="text-[0.6rem] uppercase tracking-wide text-text-muted">Planned duration</div>
+                  <div className="text-foreground/95 mt-0.5">
+                    {formatCalendarDayCount(subTooltipSchedule?.plannedWindowCalendarDays)}
+                  </div>
                 </div>
               </div>
 
