@@ -1,0 +1,108 @@
+{
+  "currentPosition": {
+    "stageNumber": 11,
+    "stageName": "SDF and NLP Sim",
+    "summary": "Currently focused on stage 11 with 2 active tasks."
+  },
+  "stages": [
+    {
+      "stageNumber": 1,
+      "stageName": "Initial Spec Discussion",
+      "status": "upcoming",
+      "taskCount": 0,
+      "tasks": []
+    },
+    {
+      "stageNumber": 2,
+      "stageName": "Block Diagram Discussion",
+      "status": "upcoming",
+      "taskCount": 0,
+      "tasks": []
+    },
+    {
+      "stageNumber": 3,
+      "stageName": "RTL Implementation",
+      "status": "upcoming",
+      "taskCount": 0,
+      "tasks": []
+    },
+    {
+      "stageNumber": 4,
+      "stageName": "Test Case Creation and Discussion",
+      "status": "upcoming",
+      "taskCount": 0,
+      "tasks": []
+    },
+    {
+      "stageNumber": 5,
+      "stageName": "Lint and CDC Check",
+      "status": "upcoming",
+      "taskCount": 0,
+      "tasks": []
+    },
+    {
+      "stageNumber": 6,
+      "stageName": "Regression and Corner Sim",
+      "status": "upcoming",
+      "taskCount": 0,
+      "tasks": []
+    },
+    {
+      "stageNumber": 7,
+      "stageName": "Code Coverage",
+      "status": "upcoming",
+      "taskCount": 0,
+      "tasks": []
+    },
+    {
+      "stageNumber": 8,
+      "stageName": "Constraints and UPF File Creation",
+      "status": "upcoming",
+      "taskCount": 0,
+      "tasks": []
+    },
+    {
+      "stageNumber": 9,
+      "stageName": "Doc Creation",
+      "status": "upcoming",
+      "taskCount": 0,
+      "tasks": []
+    },
+    {
+      "stageNumber": 10,
+      "stageName": "Release to PD, Floor Planning",
+      "status": "active",
+      "taskCount": 1,
+      "tasks": [
+        {
+          "id": "86dy8f6d6",
+          "name": "N3: [FW] QS222_BRING_UP_FW_TASK",
+          "owner": "Kumaresh Dhotrad, sumon",
+          "description": ""
+        }
+      ]
+    },
+    {
+      "stageNumber": 11,
+      "stageName": "SDF and NLP Sim",
+      "status": "active",
+      "taskCount": 2,
+      "tasks": [
+        {
+          "id": "86e0trfyz",
+          "name": "N3: [SIM] - sensitivy plot across dr_scale [0,1,2,3,4,5,6] - qam2",
+          "owner": "Arka Chowdhury",
+          "description": ""
+        },
+        {
+          "id": "86e0grz3k",
+          "name": "N3: [SIM] QAM16 resonance simulation",
+          "owner": "Arka Chowdhury",
+          "description": ""
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "nextStep": "Complete tasks in \"SDF and NLP Sim\" and prepare for downstream stages."
+}

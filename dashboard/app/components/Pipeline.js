@@ -1,8 +1,51 @@
 'use client';
 
-import { Fragment, useMemo, useRef, useState } from 'react';
+import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { compareLnoTasks, parseLnoFromName, stageHeatFromLnoTasks } from '../../../lno.js';
 import AmsDeliveryInsightModal from './AmsDeliveryInsightModal';
+import AmsTaskNestedDetail from './AmsTaskNestedDetail';
+
+/** Task nested hover: fixed target height (capped by viewport), not tied to parent tooltip height. */
+const NESTED_SUBTOOLTIP_HEIGHT_PX = 560;
+/** Max width for delay-analysis nested panel (“what went wrong”) — keeps it on-screen beside the main tooltip. */
+const NESTED_SUBTOOLTIP_MAX_WIDTH_PX = 520;
+
+const STAGE_TOOLTIP_WIDTH_PX = 420;
+const VIEWPORT_PAD_PX = 12;
+
+/**
+ * Simple fixed position for the stage tooltip: place beside the stage (right, else left),
+ * align top with stage top, clamp so the box (up to max-h) stays in the viewport.
+ */
+function getSimpleStageTooltipPosition(event) {
+  const pad = VIEWPORT_PAD_PX;
+  const w = STAGE_TOOLTIP_WIDTH_PX;
+  const maxH = Math.min(560, Math.floor(window.innerHeight * 0.88));
+  const el = event?.currentTarget;
+  const rect = el && typeof el.getBoundingClientRect === 'function' ? el.getBoundingClientRect() : null;
+
+  if (!rect || rect.width <= 0 || rect.height <= 0) {
+    const cx = Number(event?.clientX) || 0;
+    const cy = Number(event?.clientY) || 0;
+    let left = cx + 16;
+    if (left + w > window.innerWidth - pad) left = cx - w - 16;
+    left = Math.max(pad, Math.min(left, window.innerWidth - w - pad));
+    let top = cy - 24;
+    top = Math.max(pad, Math.min(top, window.innerHeight - maxH - pad));
+    return { left, top };
+  }
+
+  let left = rect.right + pad;
+  if (left + w > window.innerWidth - pad) {
+    left = rect.left - w - pad;
+  }
+  left = Math.max(pad, Math.min(left, window.innerWidth - w - pad));
+
+  let top = rect.top;
+  top = Math.max(pad, Math.min(top, window.innerHeight - pad - maxH));
+  return { left, top };
+}
 
 const AMS_STAGE_NAMES = {
   1: 'Initial Module Spec',
@@ -12,6 +55,21 @@ const AMS_STAGE_NAMES = {
   5: 'Layout',
   6: 'Post Layout Sim',
 };
+
+/** RTL 11-stage workflow (matches analyze_rtl_workflow.js RTL_STAGE_NAMES) */
+const RTL_STAGE_NAMES = [
+  'Initial Spec Discussion',        // 1
+  'Block Diagram Discussion',       // 2
+  'RTL Implementation',             // 3
+  'Test Case Creation & Discussion',// 4
+  'Lint and CDC Check',             // 5
+  'Regression and Corner Sim',      // 6
+  'Code Coverage',                  // 7
+  'Constraints and UPF File Creation',// 8
+  'Doc Creation',                   // 9
+  'Release to PD, Floor Planning',  // 10
+  'SDF and NLP Sim',                // 11
+];
 
 const statusConfig = {
   /** Leverage (L) — high ROI */
@@ -119,6 +177,13 @@ function formatCalendarDayCount(n) {
   return `${n} day${n === 1 ? '' : 's'}`;
 }
 
+function formatSignedDayDelta(n) {
+  if (n == null || !Number.isFinite(n)) return '—';
+  if (n === 0) return '0 days';
+  const abs = Math.abs(n);
+  return `${n > 0 ? '+' : '-'}${abs} day${abs === 1 ? '' : 's'}`;
+}
+
 function formatTimelineDate(ms) {
   if (ms == null || !Number.isFinite(Number(ms))) return '—';
   return new Date(Number(ms)).toLocaleDateString('en-US', {
@@ -148,18 +213,26 @@ function findCustomFieldMs(task, names) {
 }
 
 function plannedStartMsFromTask(task) {
-  const fromCf = findCustomFieldMs(task, ['Planned Start date', 'Planned start date']);
-  if (fromCf != null) return fromCf;
   const root = taskRoot(task);
-  const n = Number(root.plannedStartDate ?? root.planned_start_date);
+  // Per AMS classified payload: planned start is task Start date.
+  const n = Number(
+    root.startDate ??
+      root.start_date ??
+      task.startDate ??
+      task.start_date
+  );
   return Number.isFinite(n) ? n : null;
 }
 
 function plannedDueMsFromTask(task) {
-  const fromCf = findCustomFieldMs(task, ['Planned Due date', 'Planned due date']);
-  if (fromCf != null) return fromCf;
   const root = taskRoot(task);
-  const n = Number(root.plannedDueDate ?? root.planned_due_date);
+  // Per AMS classified payload: planned due is plannedDueDate.
+  const n = Number(
+    root.plannedDueDate ??
+      root.planned_due_date ??
+      task.plannedDueDate ??
+      task.planned_due_date
+  );
   return Number.isFinite(n) ? n : null;
 }
 
@@ -167,9 +240,10 @@ function plannedDueMsFromTask(task) {
 function actualEndMsFromTask(task) {
   const root = taskRoot(task);
   const n = Number(
-    task.dateDone ??
-      task.actualCompletionDate ??
+    // Per AMS classified payload: actual completed date is actualCompletionDate.
+    task.actualCompletionDate ??
       root.actualCompletionDate ??
+      task.dateDone ??
       root.dateDone ??
       root.date_done ??
       root.dateClosed ??
@@ -191,35 +265,44 @@ function computeDelayScheduleAnalysis(task) {
   const pDue = plannedDueMsFromTask(task);
   const aStart =
     Number(
-      task.startDate ??
-        root.startDate ??
+      // Per AMS classified payload: actual start is actualStartDate.
+      task.actualStartDate ??
         root.actualStartDate ??
+        task.actual_start_date ??
+        root.actual_start_date ??
+        task.startDate ??
+        root.startDate ??
         root.start_date ??
         task.start_date
     ) || null;
-  const aDue = actualEndMsFromTask(task);
+  const doneMs = actualEndMsFromTask(task);
+
+  const plannedDurationDays = calendarDaysSpanIST(pStart, pDue);
+  const finalDurationDays = calendarDaysSpanIST(aStart, doneMs);
+  const startDelayDays = pStart != null && aStart != null ? calendarDaysSpanIST(pStart, aStart) : null;
+  const lengthDelayDays =
+    plannedDurationDays != null && finalDurationDays != null
+      ? finalDurationDays - plannedDurationDays
+      : null;
+  const completionDelayDays = pDue != null && doneMs != null ? calendarDaysSpanIST(pDue, doneMs) : null;
 
   const delays = [];
   const dateKey = (ms) => (ms != null && Number.isFinite(Number(ms)) ? toScheduleDayLabel(ms) : '');
-  if (pStart && pDue && aStart && aDue) {
+  if (pStart && pDue && aStart && doneMs) {
     const pk = dateKey(pStart);
     const ak = dateKey(aStart);
     const dk = dateKey(pDue);
-    const akd = dateKey(aDue);
-    const plannedSpanDays = calendarDaysSpanIST(pStart, pDue);
-    const actualSpanDays = calendarDaysSpanIST(aStart, aDue);
+    const doneKey = dateKey(doneMs);
     if (ak > pk) delays.push('start');
-    if (actualSpanDays != null && plannedSpanDays != null && actualSpanDays > plannedSpanDays) {
-      delays.push('length');
-    }
-    if (akd > dk) delays.push('completion');
+    if (lengthDelayDays != null && lengthDelayDays > 0) delays.push('length');
+    if (doneKey > dk && completionDelayDays != null && completionDelayDays > 0) delays.push('completion');
   }
 
   const ps = snapToNoonIST(pStart);
   const pd = snapToNoonIST(pDue);
   const asSnap = snapToNoonIST(aStart);
-  const adSnap = snapToNoonIST(aDue);
-  const candidates = [ps, pd, asSnap, adSnap].filter((x) => x != null && Number.isFinite(x));
+  const doneSnap = snapToNoonIST(doneMs);
+  const candidates = [ps, pd, asSnap, doneSnap].filter((x) => x != null && Number.isFinite(x));
   let timeline = null;
   if (candidates.length >= 2) {
     const tMin = Math.min(...candidates);
@@ -235,38 +318,36 @@ function computeDelayScheduleAnalysis(task) {
       return { left, width: Math.max(right - left, 0.85) };
     };
 
-    const milestoneTitles = {
-      ps: 'Planned start',
-      pd: 'Planned due',
-      as: 'Start date',
-      ad: 'Date done',
-    };
-    const milestones = [];
-    const addM = (rawMs, key, tone) => {
+    const milestonesMap = new Map();
+    const addM = (rawMs, key) => {
       const snap = snapToNoonIST(rawMs);
       if (snap == null || !Number.isFinite(snap)) return;
-      milestones.push({
+      const dayKey = toScheduleDayLabel(rawMs) || String(snap);
+      const existing = milestonesMap.get(dayKey);
+      if (existing) {
+        existing.keys.push(key);
+        return;
+      }
+      milestonesMap.set(dayKey, {
         key,
+        keys: [key],
         left: clampPct(pctRaw(snap)),
-        date: toScheduleDayLabel(rawMs) || '—',
-        tone,
+        date: dayKey,
         ms: rawMs,
-        label: milestoneTitles[key] || key,
       });
     };
-    addM(pStart, 'ps', 'planned');
-    addM(pDue, 'pd', 'planned');
-    addM(aStart, 'as', 'actual');
-    addM(aDue, 'ad', 'actual');
+    addM(pStart, 'ps');
+    addM(pDue, 'pd');
+    addM(aStart, 'fs');
+    addM(doneMs, 'dn');
+    const milestones = Array.from(milestonesMap.values());
 
     const delayZones = [];
-    if (pStart && pDue && aStart && aDue && ps != null && pd != null && asSnap != null && adSnap != null) {
+    if (pStart && pDue && aStart && doneMs && ps != null && pd != null && asSnap != null && doneSnap != null) {
       const pk = dateKey(pStart);
       const ak = dateKey(aStart);
-      const dk = dateKey(pDue);
-      const akd = dateKey(aDue);
-      const plannedSpanDays = calendarDaysSpanIST(pStart, pDue);
-      const actualSpanDays = calendarDaysSpanIST(aStart, aDue);
+      const dueKey = dateKey(pDue);
+      const doneKey = dateKey(doneMs);
 
       if (ak > pk) {
         const g = seg(ps, asSnap);
@@ -284,8 +365,8 @@ function computeDelayScheduleAnalysis(task) {
           swatchClass: 'bg-warning shadow-sm ring-1 ring-warning/50',
         });
       }
-      if (akd > dk) {
-        const g = seg(pd, adSnap);
+      if (doneKey > dueKey && completionDelayDays != null && completionDelayDays > 0 && doneSnap != null) {
+        const g = seg(pd, doneSnap);
         delayZones.push({
           key: 'owner',
           label: 'Completion delay: finished after planned due',
@@ -293,26 +374,26 @@ function computeDelayScheduleAnalysis(task) {
           left: g.left,
           width: g.width,
           startMs: pd,
-          endMs: adSnap,
-          durationCalendarDays: calendarDaysSpanIST(pDue, aDue),
+          endMs: doneSnap,
+          durationCalendarDays: completionDelayDays,
           barClass:
             'bg-blocked/55 border-2 border-blocked/90 shadow-[0_0_14px_rgba(239,68,68,0.3)]',
           swatchClass: 'bg-blocked shadow-sm ring-1 ring-blocked/45',
         });
       }
-      if (plannedSpanDays != null && actualSpanDays != null && actualSpanDays > plannedSpanDays) {
-        const virtualEnd = asSnap + plannedSpanDays * ONE_DAY_MS;
-        if (adSnap > virtualEnd) {
-          const g = seg(virtualEnd, adSnap);
+      if (lengthDelayDays != null && lengthDelayDays > 0 && plannedDurationDays != null) {
+        const plannedEndOnFinalTrack = asSnap + plannedDurationDays * ONE_DAY_MS;
+        if (doneSnap > plannedEndOnFinalTrack) {
+          const g = seg(plannedEndOnFinalTrack, doneSnap);
           delayZones.push({
             key: 'length',
-            label: 'Length delay: actual window longer than planned span',
+            label: 'Length delay: final duration exceeded planned duration',
             shortLegend: 'Length delay',
             left: g.left,
             width: g.width,
-            startMs: virtualEnd,
-            endMs: adSnap,
-            durationCalendarDays: calendarDaysSpanIST(virtualEnd, aDue),
+            startMs: plannedEndOnFinalTrack,
+            endMs: doneSnap,
+            durationCalendarDays: lengthDelayDays,
             barClass:
               'bg-accent/50 border-2 border-accent/90 shadow-[0_0_14px_rgba(255,99,33,0.28)]',
             swatchClass: 'bg-accent shadow-sm ring-1 ring-accent/50',
@@ -323,25 +404,25 @@ function computeDelayScheduleAnalysis(task) {
 
     timeline = {
       planned: ps != null && pd != null ? seg(ps, pd) : null,
-      actual: asSnap != null && adSnap != null ? seg(asSnap, adSnap) : null,
+      final: asSnap != null && doneSnap != null ? seg(asSnap, doneSnap) : null,
       delayZones,
       milestones,
     };
   }
 
-  const plannedWindowCalendarDays = calendarDaysSpanIST(pStart, pDue);
-  const actualWindowCalendarDays = calendarDaysSpanIST(aStart, aDue);
-
   return {
     delays,
-    hasFullSet: Boolean(pStart && pDue && aStart && aDue),
+    hasFullSet: Boolean(pStart && pDue && aStart && doneMs),
     plannedStartLabel: toScheduleDayLabel(pStart) || 'Missing',
     plannedDueLabel: toScheduleDayLabel(pDue) || 'Missing',
-    actualStartLabel: toScheduleDayLabel(aStart) || 'Not set',
-    actualDueLabel: toScheduleDayLabel(aDue) || 'Not set',
-    plannedWindowCalendarDays,
-    actualWindowCalendarDays,
-    anchorMs: { pStart, pDue, aStart, aDue },
+    finalStartLabel: toScheduleDayLabel(aStart) || 'Not set',
+    doneLabel: toScheduleDayLabel(doneMs) || 'Not set',
+    plannedWindowCalendarDays: plannedDurationDays,
+    finalWindowCalendarDays: finalDurationDays,
+    startDelayDays,
+    lengthDelayDays,
+    completionDelayDays,
+    anchorMs: { pStart, pDue, aStart, doneMs },
     timeline,
   };
 }
@@ -376,9 +457,16 @@ function scheduleLaneStyle(seg) {
 }
 
 function DelayTimelineBars({ analysis }) {
-  const { timeline, plannedWindowCalendarDays } = analysis;
-  const [hoveredPoint, setHoveredPoint] = useState(null);
-  if (!timeline || (!timeline.planned && !timeline.actual)) {
+  const {
+    timeline,
+    plannedWindowCalendarDays,
+    finalWindowCalendarDays,
+    anchorMs,
+    startDelayDays,
+    lengthDelayDays,
+    completionDelayDays,
+  } = analysis;
+  if (!timeline || (!timeline.planned && !timeline.final)) {
     return (
       <div className="text-[0.65rem] text-text-muted rounded-lg border border-white/10 bg-white/[0.03] px-2.5 py-2 leading-snug min-w-0 max-w-full">
         Add Planned Start/Due (custom fields), task Start date, and Date done in ClickUp to see a schedule comparison.
@@ -388,21 +476,15 @@ function DelayTimelineBars({ analysis }) {
 
   const zones = timeline.delayZones || [];
   const milestones = timeline.milestones || [];
+  const startZone = zones.find((z) => z.key === 'leader') || null;
   const lengthZone = zones.find((z) => z.key === 'length') || null;
-  const fallbackRedZone = zones.find((z) => z.key === 'owner') || null;
-  const redZone = lengthZone || fallbackRedZone;
-
-  const sortedByLeft = [...milestones].sort((a, b) => a.left - b.left);
-  const startPoint = sortedByLeft[0] || null;
-  const splitPoint =
-    redZone && Number.isFinite(redZone.left)
-      ? {
-          left: redZone.left,
-          ms: redZone.startMs,
-          key: 'split',
-        }
-      : sortedByLeft[Math.floor(sortedByLeft.length / 2)] || null;
-  const endPoint = sortedByLeft[sortedByLeft.length - 1] || null;
+  const completionZone = zones.find((z) => z.key === 'owner') || null;
+  const msValue = (v) => (v != null && Number.isFinite(Number(v)) ? Number(v) : null);
+  const plannedStartMs = msValue(anchorMs?.pStart);
+  const plannedDueMs = msValue(anchorMs?.pDue);
+  const finalStartMs = msValue(anchorMs?.aStart);
+  const signedStartDelay = startDelayDays != null && finalStartMs < plannedStartMs ? -startDelayDays : startDelayDays;
+  const signedCompletionDelay = completionDelayDays;
 
   const anchorTextStyle = (centerPct) => {
     if (centerPct <= 9) return { left: 0, transform: 'none', textAlign: 'left' };
@@ -410,73 +492,106 @@ function DelayTimelineBars({ analysis }) {
     return { left: `${centerPct}%`, transform: 'translateX(-50%)', textAlign: 'center' };
   };
 
-  const pointDate = (p) => (p?.ms ? formatTimelineDate(p.ms) : '—');
-  const barTop = '0.95rem';
-  const barStyle = { top: barTop, height: '3px' };
+  const milestoneEntries = [...milestones].sort((a, b) => Number(a.left) - Number(b.left));
+
+  const laneBaseClass = 'absolute left-0 right-0 rounded-full bg-zinc-950/90 border border-white/10 pointer-events-none';
+  /** Same bar treatment for planned + actual base span (thin muted green). */
+  const laneBarFillClass = 'h-full w-full rounded-full bg-completed/45 border border-completed/45';
+  const scheduleBadgeClass = (value, lateTone, earlyTone = 'text-completed') => {
+    if (value == null) return 'text-text-muted';
+    if (value > 0) return lateTone;
+    if (value < 0) return earlyTone;
+    return 'text-completed';
+  };
+  const timelineDateLabel = (p) => (p?.ms ? formatTimelineDate(p.ms) : '—');
+  /** Alternate labels above/below the single timeline. */
+  const milestoneDateStyle = (p, idx) => {
+    const base = anchorTextStyle(p.left);
+    const isUpper = idx % 2 === 0;
+    return {
+      ...base,
+      top: isUpper ? '1.0rem' : '3.85rem',
+    };
+  };
 
   return (
-    <div className="min-w-0 max-w-full rounded-lg border border-white/[0.1] bg-white/[0.02] px-2.5 py-2.5 overflow-hidden space-y-2">
-      <div>
-        <div className="text-[0.62rem] font-semibold uppercase tracking-wide text-text-secondary">Timeline</div>
-        <div className="text-[0.52rem] text-text-muted mt-0.5">Hover for dates</div>
-        <div className="mt-1 text-[0.52rem] text-text-muted leading-snug">
-          Planned: <span className="text-completed">{formatCalendarDayCount(plannedWindowCalendarDays)}</span>
-          {redZone ? (
-            <>
-              {' '}
-              · Delay: <span className="text-blocked">{formatCalendarDayCount(redZone.durationCalendarDays)}</span>
-            </>
-          ) : null}
-        </div>
+    <div className="min-w-0 max-w-full rounded-lg border border-white/[0.1] bg-white/[0.02] px-2.5 py-2.5 overflow-visible space-y-2">
+      <div className="flex flex-wrap items-center gap-1.5 text-[0.58rem]">
+        <span className={`px-2 py-0.5 rounded border ${delayTypeChipClass('start')}`}>
+          Start: {formatSignedDayDelta(signedStartDelay)}
+        </span>
+        <span className={`px-2 py-0.5 rounded border ${delayTypeChipClass('length')}`}>
+          Length: {formatSignedDayDelta(lengthDelayDays)}
+        </span>
+        <span className={`px-2 py-0.5 rounded border ${delayTypeChipClass('completion')}`}>
+          Completion: {formatSignedDayDelta(signedCompletionDelay)}
+        </span>
       </div>
 
-      <div className="relative w-full min-w-0 h-16">
-        <div className="absolute left-0 right-0 rounded-full bg-zinc-950/90 border border-white/10 pointer-events-none" style={barStyle} />
-        {hoveredPoint ? (
+      <div className="relative w-full min-w-0 h-[5.5rem]">
+        <div className={`${laneBaseClass} top-[2.25rem] h-[5px]`} />
+
+        {timeline.planned ? (
+          <div className="absolute z-[1]" style={{ ...scheduleLaneStyle(timeline.planned), top: '2.25rem', height: '5px' }}>
+            <div className={laneBarFillClass} />
+          </div>
+        ) : null}
+
+        {timeline.final ? (
           <div
-            className="absolute z-[8] -top-7 px-2 py-1 rounded-md border border-white/15 bg-zinc-950/95 text-[0.55rem] text-foreground whitespace-nowrap shadow-lg"
-            style={anchorTextStyle(hoveredPoint.left)}
+            className="absolute z-[2]"
+            style={{ ...scheduleLaneStyle(timeline.final), top: '2.25rem', height: '5px' }}
           >
-            {hoveredPoint.date}
+            <div className="h-full w-full rounded-full border border-white/25 bg-white/10" />
           </div>
         ) : null}
 
-        {timeline.actual ? (
-          <div className="absolute z-[1]" style={{ ...scheduleLaneStyle(timeline.actual), ...barStyle }}>
-            <div className="h-full w-full rounded-full bg-completed/88 border border-completed-dim shadow-[0_0_10px_rgba(34,197,94,0.2)]" />
-          </div>
-        ) : null}
-
-        {redZone ? (
+        {startZone ? (
           <div
-            className="absolute z-[3] rounded-full bg-blocked/85 border border-blocked/55 shadow-[0_0_10px_rgba(239,68,68,0.22)]"
-            style={{
-              left: `${redZone.left}%`,
-              width: `${redZone.width}%`,
-              maxWidth: `${Math.max(0, 100 - redZone.left)}%`,
-              ...barStyle,
-            }}
+            className="absolute z-[3] rounded-full border border-warning/75 bg-warning/35 border-dashed"
+            style={{ left: `${startZone.left}%`, width: `${startZone.width}%`, top: '2.25rem', height: '5px' }}
           />
         ) : null}
 
-        {[startPoint, splitPoint, endPoint]
-          .filter(Boolean)
-          .map((p, i) => (
+        {lengthZone ? (
+          <div
+            className="absolute z-[4] rounded-full bg-accent/75 border border-accent/70 shadow-[0_0_8px_rgba(255,99,33,0.22)]"
+            style={{ left: `${lengthZone.left}%`, width: `${lengthZone.width}%`, top: '2.25rem', height: '5px' }}
+          />
+        ) : null}
+
+        {completionZone ? (
+          <div
+            className="absolute z-[5] rounded-full bg-blocked/85 border border-blocked/60 shadow-[0_0_10px_rgba(239,68,68,0.22)]"
+            style={{ left: `${completionZone.left}%`, width: `${completionZone.width}%`, top: '2.25rem', height: '5px' }}
+          />
+        ) : null}
+
+        {milestoneEntries.map((p, i) => (
             <Fragment key={`${p.key || 'pt'}-${i}`}>
-              <div
-                className="absolute z-[4] h-2 w-2 rounded-full border border-white/50 bg-black shadow-sm"
-                style={{ left: `${p.left}%`, top: 'calc(0.95rem + 1.5px)', transform: 'translate(-50%, -50%)' }}
-                aria-label={pointDate(p)}
-                onMouseEnter={() => setHoveredPoint({ left: p.left, date: pointDate(p) })}
-                onMouseLeave={() => setHoveredPoint(null)}
+              <button
+                type="button"
+                className="absolute z-[40] h-3 w-3 -ml-0.5 -mt-0.5 rounded-full border border-white/50 bg-black shadow-sm cursor-default"
+                style={{
+                  left: `${p.left}%`,
+                  top: '2.45rem',
+                  transform: 'translate(-50%, -50%)',
+                }}
+                aria-label={timelineDateLabel(p)}
               />
+              <div
+                className="absolute z-[50] text-[0.56rem] leading-none text-text-secondary whitespace-nowrap pointer-events-none rounded px-1.5 py-0.5 bg-zinc-950/95 border border-white/[0.2] shadow-sm"
+                style={milestoneDateStyle(p, i)}
+              >
+                {timelineDateLabel(p)}
+              </div>
             </Fragment>
           ))}
       </div>
 
       {!analysis.hasFullSet ? (
         <p className="text-[0.52rem] text-text-muted leading-snug">
-          Add planned start/due, start date, and date done for delay timeline.
+          Add planned start/due, final start date, and date done for delay timeline.
         </p>
       ) : null}
     </div>
@@ -519,25 +634,71 @@ function parseDelayDurationField(task) {
   return Number.isFinite(num) ? num : value;
 }
 
+function formatTaskDescription(value) {
+  if (!value) return '';
+  return String(value)
+    .replace(/\r\n/g, '\n')
+    .replace(/!\[[^\]]*\]\(([^)]+)\)/g, '$1')
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '$1 ($2)')
+    .replace(/\*\*([^*]+)\*\*/g, '$1')
+    .replace(/`([^`]+)`/g, '$1')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim();
+}
+
+/** Plain description for AMS “Where we are” tooltips (matches PS-style list). */
+function amsTaskDescriptionForSimpleList(task) {
+  const raw = task?.raw || task;
+  const text = raw?.description || raw?.markdown_description || '';
+  return formatTaskDescription(text);
+}
+
+function amsOwnerDisplay(task) {
+  const raw = task?.raw;
+  const list = raw?.assignees;
+  if (Array.isArray(list) && list.length > 0) {
+    const joined = list
+      .map((a) => (typeof a === 'string' ? a : a?.username || a?.name || ''))
+      .filter(Boolean)
+      .join(', ');
+    if (joined) return joined;
+  }
+  return task.owner || 'Unassigned';
+}
+
 function normalizePsTask(task) {
+  const root = task.raw || task;
+  const ownerFromAssignees = Array.isArray(task.assignees) && task.assignees.length > 0
+    ? task.assignees
+        .map((a) => (typeof a === 'string' ? a : a?.username || a?.name || ''))
+        .filter(Boolean)
+        .join(', ')
+    : Array.isArray(root.assignees) && root.assignees.length > 0
+      ? root.assignees
+          .map((a) => (typeof a === 'string' ? a : a?.username || a?.name || ''))
+          .filter(Boolean)
+          .join(', ')
+      : '';
   return {
     id: task.name || task.id || `task-${Math.random().toString(36).slice(2)}`,
     name: task.name || 'Untitled task',
     owner:
       typeof task.assignee === 'string'
         ? task.assignee
-        : task.assignee?.username || task.owner || 'Unassigned',
-    detail: task.detail || '',
-    comments: [],
+        : task.assignee?.username || task.owner || ownerFromAssignees || 'Unassigned',
+    detail: '',
+    comments: Array.isArray(task.comments) ? task.comments : [],
+    description: formatTaskDescription(task.description || ''),
     statusLabel: '—',
     blockerSeverity: 'low',
     blockerType: 'workflow',
-    blockerReason: '',
-    delayedLabel: '—',
-    delayDetails: '—',
-    delayDuration: null,
+    blockerReason: task.blockerReason || '',
+    delayedLabel: task.delayedLabel || '—',
+    delayDetails: task.delayDetails || '—',
+    delayDuration: task.delayDuration ?? null,
+    projectName: task.projectName || root.listName,
     isPsTask: true,
-    raw: task,
+    raw: root,
   };
 }
 
@@ -663,6 +824,88 @@ function buildAmsTooltipSections(tasks, filter) {
     });
   }
   return sections;
+}
+
+function toWrongTaskTimeMs(v) {
+  if (v == null) return null;
+  const x = typeof v === 'string' ? Number(v) : v;
+  if (!Number.isFinite(x)) return null;
+  if (x > 1e12) return x;
+  if (x > 1e9 && x < 1e12) return x * 1000;
+  return null;
+}
+
+/** Best-effort “when did this delay matter” timestamp for wrong-view filtering (ms). */
+function getWrongTaskReferenceTimeMs(rawTask) {
+  const t = rawTask;
+  if (!t) return null;
+  const r = t.raw || t;
+  const candidates = [
+    toWrongTaskTimeMs(t.dateDone),
+    toWrongTaskTimeMs(t.actualCompletionDate),
+    toWrongTaskTimeMs(t.actual_completion_date),
+    toWrongTaskTimeMs(t.completionDate),
+    toWrongTaskTimeMs(r.dateDone),
+    toWrongTaskTimeMs(r.actualCompletionDate),
+    toWrongTaskTimeMs(r.dateUpdated),
+    toWrongTaskTimeMs(r.dateCreated),
+    toWrongTaskTimeMs(r.date_created),
+    toWrongTaskTimeMs(t.dateUpdated),
+    toWrongTaskTimeMs(t.date_updated),
+    toWrongTaskTimeMs(t.dateCreated),
+    toWrongTaskTimeMs(t.date_created),
+  ];
+  let best = candidates.find(Boolean);
+  if (!best && Array.isArray(t.comments)) {
+    const dates = t.comments.map((c) => toWrongTaskTimeMs(c.date)).filter(Boolean);
+    best = dates.length ? Math.max(...dates) : null;
+  }
+  return best;
+}
+
+function taskInWrongDateWindow(rawTask, cutoffMs) {
+  const ts = getWrongTaskReferenceTimeMs(rawTask);
+  if (ts == null) return false;
+  return ts >= cutoffMs;
+}
+
+function getWrongDateCutoffMs(filterId) {
+  if (filterId === 'all') return null;
+  const now = Date.now();
+  const DAY = 86400000;
+  switch (filterId) {
+    case 'last7':
+      return now - 7 * DAY;
+    case 'month':
+      return now - 30 * DAY;
+    case 'quarter':
+      return now - 90 * DAY;
+    case 'year':
+      return now - 365 * DAY;
+    default:
+      return null;
+  }
+}
+
+/** Client-side filter for “What went wrong” payloads (PS/RTL: per-stage tasks; AMS: top-level tasks). */
+function filterWrongViewPayload(data, teamKey, cutoffMs) {
+  if (cutoffMs == null || !data) return data;
+  const clone = { ...data };
+  if (teamKey === 'ams') {
+    const tasksRaw = Array.isArray(data.tasks) ? data.tasks : [];
+    const filtered = tasksRaw.filter((t) => taskInWrongDateWindow(t, cutoffMs));
+    return { ...clone, tasks: filtered, stageSummary: [] };
+  }
+  if (Array.isArray(data.stages)) {
+    const stages = data.stages.map((stage) => {
+      const tasks = Array.isArray(stage.tasks)
+        ? stage.tasks.filter((t) => taskInWrongDateWindow(t, cutoffMs))
+        : [];
+      return { ...stage, tasks, taskCount: tasks.length };
+    });
+    return { ...clone, stages };
+  }
+  return data;
 }
 
 function mapAmsStages(data) {
@@ -844,42 +1087,223 @@ function StageBox({ stage, onMouseEnter, onMouseLeave }) {
   );
 }
 
-export default function Pipeline({ data, teamLabel = 'AMS Team', teamKey = 'ams' }) {
+// ─── RTL Flowchart Components ─────────────────────────────────────────────────
+
+function getRtlStage(stages, num) {
+  return (
+    stages.find((s) => s.stageNumber === num) || {
+      stageNumber: num,
+      status: 'upcoming',
+      taskCount: 0,
+      tasks: [],
+      title: RTL_STAGE_NAMES[num - 1] || `Stage ${num}`,
+    }
+  );
+}
+
+function rtlStageHeatStatus(stage) {
+  const n = Number(stage?.taskCount ?? stage?.tasks?.length ?? 0);
+  return n > 0 ? 'active' : 'upcoming';
+}
+
+/** A standard RTL stage box node */
+function RtlNode({ num, stages, onMouseEnter, onMouseLeave }) {
+  const stage = getRtlStage(stages, num);
+  const heat = rtlStageHeatStatus(stage);
+  const config = psWorkflowStatusConfig[heat] || psWorkflowStatusConfig.upcoming;
+  return (
+    <div className="relative flex justify-center py-[5px] w-full animate-fade-up" style={{ animationDelay: `${num * 0.04}s` }}>
+      <button
+        type="button"
+        className={`relative z-10 cursor-pointer group w-44 border-2 rounded-md px-2.5 py-2 text-center transition-all duration-300 hover:-translate-y-0.5 ${config.card}`}
+        onMouseEnter={(e) => onMouseEnter(e, { ...stage, status: heat })}
+        onMouseLeave={onMouseLeave}
+      >
+        <div className="text-[0.5rem] opacity-60 uppercase tracking-widest mb-0.5 font-bold">Stage {num}</div>
+        <div className="text-[0.7rem] font-semibold leading-tight">{stage.title}</div>
+      </button>
+    </div>
+  );
+}
+
+/** Horizontal right-pointing arrow connector between columns */
+function RtlHArrow({ label }) {
+  return (
+    <div className="flex items-center justify-center w-10 shrink-0 h-[52px]">
+      <div className="relative w-full h-0.5 bg-white/30">
+        <div className="absolute right-[1px] top-1/2 -translate-y-1/2 w-1.5 h-1.5 border-r-[1.5px] border-t-[1.5px] border-white/30 transform rotate-45" />
+        {label && (
+          <span className="absolute -top-4 left-1/2 -translate-x-1/2 text-[0.48rem] font-bold text-completed whitespace-nowrap">
+            {label}
+          </span>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Full RTL 3-column flowchart:
+ *
+ * Col-L (down):  1 → 2 → 3 → 4
+ *                             ↓ (horizontal to col-M bottom)
+ * Col-M (up):    9 ← 8 ← 7 ← 6 ← 5 (← from col-L at stage 4)
+ *                    ↘ (horizontal to col-R from stage 8)
+ * Col-R (down):  10 → 11
+ *
+ * Loop back: stage 6 → stage 3 (rendered via SVG)
+ */
+function RtlFlowchart({ stages, onMouseEnter, onMouseLeave }) {
+  return (
+    <div className="relative w-full max-w-[960px] py-2 overflow-auto">
+      <div className="flex items-start justify-center gap-0">
+
+        {/* ── Column Left: stages 1→2→3→4 (downward) ── */}
+        {/* 68px spacer at top so Stage 4 bottom aligns with Stage 5 in middle col */}
+        <div className="flex flex-col items-center w-[11.5rem] sm:w-48 shrink-0">
+          <div aria-hidden="true" className="w-full shrink-0" style={{ height: '68px' }} />
+          <RtlNode num={1} stages={stages} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} />
+          <PsDownArrow />
+          <RtlNode num={2} stages={stages} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} />
+          <PsDownArrow />
+          <RtlNode num={3} stages={stages} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} />
+          <PsDownArrow />
+          <RtlNode num={4} stages={stages} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} />
+        </div>
+
+        {/* ── Horizontal arrow: col-L → col-M at Stage 4 / Stage 5 level ── */}
+        {/* paddingTop = 68px spacer + 3 stage-slots (3×68) = 68+204 = 272px; center at +26px = 298px. Adding 24px to move it lower = 296px padding */}
+        <div className="flex flex-col items-end shrink-0 w-12" style={{ paddingTop: '296px' }}>
+          <RtlHArrow />
+        </div>
+
+        {/* ── Column Middle: stages 9←8←7←6←5 (data flows upward) ── */}
+        {/* Stage 9 at top, Stage 5 at bottom — Stage 5 at center 298px from top */}
+        <div className="flex flex-col items-center w-[11.5rem] sm:w-48 shrink-0">
+          <RtlNode num={9} stages={stages} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} />
+          <PsUpArrow />
+          <RtlNode num={8} stages={stages} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} />
+          <PsUpArrow />
+          <RtlNode num={7} stages={stages} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} />
+          <PsUpArrow />
+          <RtlNode num={6} stages={stages} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} />
+          <PsUpArrow />
+          <RtlNode num={5} stages={stages} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} />
+        </div>
+
+        {/* ── Horizontal arrow: col-M → col-R at Stage 8 / Stage 10 level ── */}
+        <div className="flex flex-col items-center shrink-0 w-12" style={{ paddingTop: '94px' }}>
+          <RtlHArrow />
+        </div>
+
+        {/* ── Column Right: stages 10→11 (downward) ── */}
+        <div className="flex flex-col items-center w-[11.5rem] sm:w-48 shrink-0">
+          <div aria-hidden="true" className="w-full shrink-0" style={{ height: '68px' }} />
+          <RtlNode num={10} stages={stages} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} />
+          <PsDownArrow />
+          <RtlNode num={11} stages={stages} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} />
+        </div>
+
+      </div>
+    </div>
+  );
+}
+
+export default function Pipeline({
+  data,
+  teamLabel = 'AMS Team',
+  teamKey = 'ams',
+  viewTab,
+  wrongDateFilter = 'all',
+  psProject = 'qs222',
+  rtlProject = 'qs222',
+}) {
+  /** AMS: “Where we are” = PS-style flat tooltips; “What went wrong” = nested hover + delay analysis. */
+  const isAmsSimple = teamKey === 'ams' && viewTab === 'current';
+  const isPsRtlWrong = (teamKey === 'ps' || teamKey === 'rtl') && viewTab === 'wrong';
+  const showDelayNestedDetail =
+    (teamKey === 'ams' && viewTab !== 'current') || isPsRtlWrong;
+  const showSimplePsRtlList = (teamKey === 'ps' || teamKey === 'rtl') && viewTab === 'current';
+
   const [tooltip, setTooltip] = useState(null);
   const [tooltipPos, setTooltipPos] = useState({ left: 0, top: 0 });
   const [subTooltip, setSubTooltip] = useState(null);
-  const [subTooltipTop, setSubTooltipTop] = useState(12);
-  const [subTooltipHeight, setSubTooltipHeight] = useState(360);
-  const [subTooltipOnLeft, setSubTooltipOnLeft] = useState(false);
-  const [subTooltipAnchorY, setSubTooltipAnchorY] = useState(0);
+  /** Fixed viewport position for nested panel (set after parent is laid out). */
+  const [subTooltipFixedPos, setSubTooltipFixedPos] = useState(null);
+  const [subTooltipHeight, setSubTooltipHeight] = useState(NESTED_SUBTOOLTIP_HEIGHT_PX);
   const [tooltipLnoFilter, setTooltipLnoFilter] = useState('all');
-  const [amsDeliveryModalOpen, setAmsDeliveryModalOpen] = useState(false);
+  const [leaderBoardModalOpen, setLeaderBoardModalOpen] = useState(false);
   const timeoutRef = useRef(null);
   const tooltipRef = useRef(null);
+  const nestedRef = useRef(null);
+
+  useEffect(() => {
+    if (isAmsSimple) setSubTooltip(null);
+  }, [isAmsSimple]);
+
+  useEffect(() => {
+    if (viewTab === 'current' && (teamKey === 'ps' || teamKey === 'rtl')) setSubTooltip(null);
+  }, [viewTab, teamKey]);
+
+  useEffect(() => {
+    if (viewTab !== 'wrong') setLeaderBoardModalOpen(false);
+  }, [viewTab]);
+
+  /** PS/RTL: folder extracts (`*_folder_tasks_*.json`) match AMS — full per-member task counts + Delayed field. Wrong-only JSON is too narrow for team accuracy. */
+  const leaderBoardStatsUrl = useMemo(() => {
+    if (viewTab !== 'wrong') return null;
+    if (teamKey === 'ams') return '/api/ams-member-stats';
+    if (teamKey === 'ps') {
+      return `/api/ps-member-stats?project=${encodeURIComponent(psProject)}`;
+    }
+    if (teamKey === 'rtl') {
+      return `/api/rtl-member-stats?project=${encodeURIComponent(rtlProject)}`;
+    }
+    return null;
+  }, [viewTab, teamKey, psProject, rtlProject]);
+
+  const showLeaderBoardButton = leaderBoardStatsUrl != null;
 
   const subTooltipSchedule = useMemo(() => {
-    if (!subTooltip || teamKey === 'ps') return null;
+    if (!subTooltip || isAmsSimple) return null;
+    if (!showDelayNestedDetail) return null;
     return computeDelayScheduleAnalysis(subTooltip);
-  }, [subTooltip, teamKey]);
+  }, [subTooltip, isAmsSimple, showDelayNestedDetail]);
 
   const subTooltipCommentsSorted = useMemo(() => {
     if (!subTooltip?.comments?.length) return [];
     return [...subTooltip.comments].sort((a, b) => Number(a.date || 0) - Number(b.date || 0));
   }, [subTooltip]);
 
+  const viewData = useMemo(() => {
+    if (viewTab !== 'wrong' || wrongDateFilter === 'all' || !data) return data;
+    const cutoff = getWrongDateCutoffMs(wrongDateFilter);
+    if (cutoff == null) return data;
+    return filterWrongViewPayload(data, teamKey, cutoff);
+  }, [data, viewTab, wrongDateFilter, teamKey]);
+
   const stages = useMemo(() => {
-    if (teamKey === 'ams') return mapAmsStages(data);
+    if (teamKey === 'ams') return mapAmsStages(viewData);
     if (teamKey === 'ps') {
-      if (!Array.isArray(data?.stages)) return [];
-      return data.stages.map((stage) => ({
+      if (!Array.isArray(viewData?.stages)) return [];
+      return viewData.stages.map((stage) => ({
         ...stage,
         title: stage.stageName || stage.title || `Stage ${stage.stageNumber}`,
         taskCount: Number(stage.taskCount || stage.tasks?.length || 0),
         tasks: Array.isArray(stage.tasks) ? stage.tasks.map((t) => normalizePsTask(t)) : [],
       }));
     }
-    if (!Array.isArray(data?.stages)) return [];
-    return data.stages.map((stage) => ({
+    if (teamKey === 'rtl') {
+      if (!Array.isArray(viewData?.stages)) return [];
+      return viewData.stages.map((stage, idx) => ({
+        ...stage,
+        title: RTL_STAGE_NAMES[idx] || stage.stageName || stage.title || `Stage ${stage.stageNumber}`,
+        taskCount: Number(stage.taskCount || stage.tasks?.length || 0),
+        tasks: Array.isArray(stage.tasks) ? stage.tasks.map((t) => normalizePsTask(t)) : [],
+      }));
+    }
+    if (!Array.isArray(viewData?.stages)) return [];
+    return viewData.stages.map((stage) => ({
       ...stage,
       title: stage.title || stage.stageName || `Stage ${stage.stageNumber}`,
       taskCount: Number(stage.taskCount || stage.tasks?.length || 0),
@@ -893,21 +1317,15 @@ export default function Pipeline({ data, teamLabel = 'AMS Team', teamKey = 'ams'
       },
       topBlockerType: 'none',
     }));
-  }, [data, teamKey]);
+  }, [viewData, teamKey]);
 
   const handleMouseEnter = (event, stage) => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    const pad = 16;
-    const width = 360;
-    const height = 390;
-    let left = event.clientX + pad;
-    let top = event.clientY + pad;
-    if (left + width > window.innerWidth) left = event.clientX - width - pad;
-    if (top + height > window.innerHeight) top = Math.max(pad, window.innerHeight - height - pad);
-    setTooltipPos({ left, top });
+    setTooltipPos(getSimpleStageTooltipPosition(event));
     setTooltip(stage);
     setSubTooltip(null);
-    if (teamKey === 'ams') setTooltipLnoFilter('all');
+    setSubTooltipFixedPos(null);
+    if (teamKey === 'ams' && !isAmsSimple) setTooltipLnoFilter('all');
   };
 
   const closeTooltips = (event) => {
@@ -917,12 +1335,16 @@ export default function Pipeline({ data, teamLabel = 'AMS Team', teamKey = 'ams'
       (nextTarget instanceof Node ||
         (typeof nextTarget === 'object' && 'nodeType' in nextTarget));
 
-    if (isDomNode && tooltipRef.current?.contains(nextTarget)) {
+    if (
+      isDomNode &&
+      (tooltipRef.current?.contains(nextTarget) || nestedRef.current?.contains(nextTarget))
+    ) {
       return;
     }
     timeoutRef.current = setTimeout(() => {
       setTooltip(null);
       setSubTooltip(null);
+      setSubTooltipFixedPos(null);
     }, 320);
   };
 
@@ -931,43 +1353,58 @@ export default function Pipeline({ data, teamLabel = 'AMS Team', teamKey = 'ams'
   };
 
   const openSubTooltip = (event, task) => {
-    const containerRect = tooltipRef.current?.getBoundingClientRect();
-    const containerHeight = tooltipRef.current?.clientHeight || 0;
-    const rowRect = event.currentTarget.getBoundingClientRect();
-    const baseTop = containerRect ? rowRect.top - containerRect.top - 8 : 12;
+    if (isAmsSimple) return;
+    if ((teamKey === 'ps' || teamKey === 'rtl') && viewTab !== 'wrong') return;
 
-    // Keep nested tooltip fully inside viewport and parent hover bounds.
     const viewportPad = 10;
-    const desiredHeight = teamKey === 'ps' ? 360 : 440;
-    const maxFromViewport = Math.max(220, window.innerHeight - (viewportPad * 2));
-    const maxFromContainer = containerHeight ? Math.max(220, containerHeight - 16) : desiredHeight;
-    const nestedHeight = Math.min(desiredHeight, maxFromViewport, maxFromContainer);
+    const maxByViewport = Math.max(220, window.innerHeight - viewportPad * 2);
+    const cap92vh = Math.floor(window.innerHeight * 0.92);
+    const nestedHeight = Math.min(NESTED_SUBTOOLTIP_HEIGHT_PX, cap92vh, maxByViewport);
+    const nestedWidth = Math.min(NESTED_SUBTOOLTIP_MAX_WIDTH_PX, window.innerWidth - 24);
+    const screenPad = VIEWPORT_PAD_PX;
+    const gap = 2;
+
     setSubTooltipHeight(nestedHeight);
-
-    const minTopViewport = containerRect ? Math.max(8, viewportPad - containerRect.top) : 8;
-    const maxTopViewport = containerRect
-      ? window.innerHeight - viewportPad - nestedHeight - containerRect.top
-      : baseTop;
-    const minTop = minTopViewport;
-    const maxTopFromContainer = containerHeight
-      ? containerHeight - nestedHeight - 8
-      : baseTop;
-    const maxTop = Math.max(minTop, Math.min(maxTopFromContainer, maxTopViewport));
-    const clampedTop = Math.min(Math.max(baseTop, minTop), maxTop);
-
-    setSubTooltipTop(clampedTop);
-    setSubTooltipAnchorY(rowRect.top + rowRect.height / 2);
     setSubTooltip(task);
-    setSubTooltipOnLeft(tooltipPos.left + 730 > window.innerWidth);
+    setSubTooltipFixedPos(null);
+
+    queueMicrotask(() => {
+      const pr = tooltipRef.current?.getBoundingClientRect();
+      if (!pr) return;
+
+      const mainRight = pr.right;
+      const freeRight = window.innerWidth - (mainRight + gap) - screenPad;
+      const freeLeft = pr.left - gap - screenPad;
+      const canFitRight = freeRight >= nestedWidth;
+      const canFitLeft = freeLeft >= nestedWidth;
+      let placeLeft = false;
+      if (canFitRight) placeLeft = false;
+      else if (canFitLeft) placeLeft = true;
+      else placeLeft = freeLeft > freeRight;
+
+      let left = placeLeft ? pr.left - nestedWidth - gap : pr.right + gap;
+      left = Math.max(screenPad, Math.min(left, window.innerWidth - nestedWidth - screenPad));
+
+      let top = pr.top;
+      top = Math.max(screenPad, Math.min(top, window.innerHeight - nestedHeight - screenPad));
+
+      setSubTooltipFixedPos({ left, top });
+    });
   };
 
   return (
-    <section className="h-full w-full flex items-center justify-center p-4 overflow-hidden">
-      <div className="w-full max-w-[980px] h-full flex flex-col bg-card border border-border rounded-2xl relative overflow-hidden">
+    <section className="h-full min-h-0 w-full flex flex-col p-3 sm:p-4 box-border overflow-hidden">
+      <div className="w-full max-w-[980px] mx-auto flex flex-1 min-h-0 flex-col bg-card border border-border rounded-2xl relative overflow-hidden">
         <h2 className="text-center text-[0.65rem] font-bold uppercase tracking-[0.15em] text-text-secondary pt-4 pb-2 shrink-0">
-          {teamKey === 'ams' ? `${teamLabel} · AMS Workflow` : teamKey === 'ps' ? `${teamLabel} · Test Flow` : `${teamLabel} · Flowchart`}
+          {teamKey === 'ams'
+            ? `${teamLabel} · AMS Workflow${isAmsSimple ? ' · In progress' : ''}`
+            : teamKey === 'ps'
+              ? `${teamLabel} · Test Flow`
+              : teamKey === 'rtl'
+                ? `${teamLabel} · RTL Pipeline`
+                : `${teamLabel} · Flowchart`}
         </h2>
-        {teamKey === 'ams' && (
+        {teamKey === 'ams' && !isAmsSimple && (
           <div className="px-4 pb-2 shrink-0 flex justify-center">
             <div className="flex flex-wrap items-center justify-center gap-2 text-[0.65rem] text-text-muted">
               <span className="px-2 py-0.5 rounded bg-blocked/15 text-blocked">L Leverage · red</span>
@@ -977,61 +1414,75 @@ export default function Pipeline({ data, teamLabel = 'AMS Team', teamKey = 'ams'
             </div>
           </div>
         )}
-        {teamKey === 'ams' && (
+        {showLeaderBoardButton && (
           <button
             type="button"
-            onClick={() => setAmsDeliveryModalOpen(true)}
+            onClick={() => setLeaderBoardModalOpen(true)}
             className="absolute bottom-4 right-4 z-20 text-[0.62rem] font-medium uppercase tracking-wider px-3 py-1 rounded-full border border-accent/45 bg-accent/10 text-accent hover:bg-accent/20 hover:border-accent/65 transition-colors"
           >
             Leader Board View
           </button>
         )}
 
-        <div className="flex-1 flex items-center justify-center px-2 sm:px-6 pb-6 min-h-0 overflow-auto">
+        <div
+          className={`flex-1 flex min-h-0 px-2 sm:px-6 pb-4 ${
+            teamKey === 'ps' || isAmsSimple
+              ? 'overflow-hidden items-center justify-center'
+              : 'overflow-auto items-center justify-center pb-6'
+          }`}
+        >
           {teamKey === 'ps' ? (
-            <div className="relative w-full max-w-[900px] py-2">
-              <div className="flex items-end justify-center w-full gap-0 sm:gap-1">
-                <div className="flex flex-col items-center w-[11.5rem] sm:w-48 shrink-0">
-                  <PsNode num={1} stages={stages} onMouseEnter={handleMouseEnter} onMouseLeave={closeTooltips} />
-                  <PsDownArrow />
-                  <PsNode num={2} stages={stages} onMouseEnter={handleMouseEnter} onMouseLeave={closeTooltips} />
-                  <PsDownArrow />
-                  <PsNode num={3} stages={stages} onMouseEnter={handleMouseEnter} onMouseLeave={closeTooltips} />
-                  <PsDownArrow />
-                  <PsDiamondPlaceholder label="FW code required?" />
-                  <PsDownArrow label="YES" />
-                  <PsNode num={4} stages={stages} onMouseEnter={handleMouseEnter} onMouseLeave={closeTooltips} />
-                  <PsDownArrow />
-                  <PsDiamondPlaceholder label="Automation needed?" />
-                  <PsDownArrow label="YES" />
-                  <PsNode num={5} stages={stages} onMouseEnter={handleMouseEnter} onMouseLeave={closeTooltips} />
-                </div>
+            <div className="h-full w-full min-h-0 max-h-full flex items-center justify-center overflow-hidden">
+              {/* zoom reflows layout (unlike transform:scale), so the diagram fits without an inner scroll */}
+              <div className="max-h-full max-w-full min-h-0 flex items-center justify-center [zoom:0.65] sm:[zoom:0.72] md:[zoom:0.78] lg:[zoom:0.84] xl:[zoom:0.88] 2xl:[zoom:0.92]">
+                <div className="relative w-full max-w-[900px] py-1 shrink-0">
+                  <div className="flex items-end justify-center w-full gap-0 sm:gap-1">
+                    <div className="flex flex-col items-center w-[11.5rem] sm:w-48 shrink-0">
+                      <PsNode num={1} stages={stages} onMouseEnter={handleMouseEnter} onMouseLeave={closeTooltips} />
+                      <PsDownArrow />
+                      <PsNode num={2} stages={stages} onMouseEnter={handleMouseEnter} onMouseLeave={closeTooltips} />
+                      <PsDownArrow />
+                      <PsNode num={3} stages={stages} onMouseEnter={handleMouseEnter} onMouseLeave={closeTooltips} />
+                      <PsDownArrow />
+                      <PsDiamondPlaceholder label="FW code required?" />
+                      <PsDownArrow label="YES" />
+                      <PsNode num={4} stages={stages} onMouseEnter={handleMouseEnter} onMouseLeave={closeTooltips} />
+                      <PsDownArrow />
+                      <PsDiamondPlaceholder label="Automation needed?" />
+                      <PsDownArrow label="YES" />
+                      <PsNode num={5} stages={stages} onMouseEnter={handleMouseEnter} onMouseLeave={closeTooltips} />
+                    </div>
 
-                <div className="flex items-center shrink-0 w-6 sm:w-12 lg:w-20 h-[52px]">
-                  <div className="w-full h-0.5 bg-white/30 relative">
-                    <div className="absolute right-[1px] top-1/2 -translate-y-1/2 w-1.5 h-1.5 border-r-[1.5px] border-t-[1.5px] border-white/30 transform rotate-45" />
+                    <div className="flex items-center shrink-0 w-6 sm:w-12 lg:w-20 h-[52px]">
+                      <div className="w-full h-0.5 bg-white/30 relative">
+                        <div className="absolute right-[1px] top-1/2 -translate-y-1/2 w-1.5 h-1.5 border-r-[1.5px] border-t-[1.5px] border-white/30 transform rotate-45" />
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col items-center w-[11.5rem] sm:w-48 shrink-0">
+                      <PsNode num={11} stages={stages} onMouseEnter={handleMouseEnter} onMouseLeave={closeTooltips} />
+                      <PsUpArrow />
+                      <PsNode num={10} stages={stages} onMouseEnter={handleMouseEnter} onMouseLeave={closeTooltips} />
+                      <PsUpArrow />
+                      <PsNode num={9} stages={stages} onMouseEnter={handleMouseEnter} onMouseLeave={closeTooltips} />
+                      <PsUpArrow label="YES" />
+                      <PsDiamondNode
+                        stage={getPsStage(stages, 8)}
+                        onMouseEnter={handleMouseEnter}
+                        onMouseLeave={closeTooltips}
+                      />
+                      <PsUpArrow />
+                      <PsNode num={7} stages={stages} onMouseEnter={handleMouseEnter} onMouseLeave={closeTooltips} />
+                      <PsUpArrow />
+                      <PsNode num={6} stages={stages} onMouseEnter={handleMouseEnter} onMouseLeave={closeTooltips} />
+                    </div>
                   </div>
-                </div>
-
-                <div className="flex flex-col items-center w-[11.5rem] sm:w-48 shrink-0">
-                  <PsNode num={11} stages={stages} onMouseEnter={handleMouseEnter} onMouseLeave={closeTooltips} />
-                  <PsUpArrow />
-                  <PsNode num={10} stages={stages} onMouseEnter={handleMouseEnter} onMouseLeave={closeTooltips} />
-                  <PsUpArrow />
-                  <PsNode num={9} stages={stages} onMouseEnter={handleMouseEnter} onMouseLeave={closeTooltips} />
-                  <PsUpArrow label="YES" />
-                  <PsDiamondNode
-                    stage={getPsStage(stages, 8)}
-                    onMouseEnter={handleMouseEnter}
-                    onMouseLeave={closeTooltips}
-                  />
-                  <PsUpArrow />
-                  <PsNode num={7} stages={stages} onMouseEnter={handleMouseEnter} onMouseLeave={closeTooltips} />
-                  <PsUpArrow />
-                  <PsNode num={6} stages={stages} onMouseEnter={handleMouseEnter} onMouseLeave={closeTooltips} />
                 </div>
               </div>
             </div>
+          ) : teamKey === 'rtl' ? (
+            /* ── RTL Flowchart: 3-column layout matching the diagram ── */
+            <RtlFlowchart stages={stages} onMouseEnter={handleMouseEnter} onMouseLeave={closeTooltips} />
           ) : (
             <div className="relative w-[360px] flex flex-col items-center gap-2">
               <div className="relative w-full">
@@ -1068,14 +1519,19 @@ export default function Pipeline({ data, teamLabel = 'AMS Team', teamKey = 'ams'
         </div>
       </div>
 
-      {tooltip && (
-        <div
-          className="fixed z-[9999] flex flex-col max-h-[min(390px,90vh)] w-[360px] max-w-[min(360px,calc(100vw-24px))] bg-[#111] border border-white/[0.08] rounded-xl p-4 shadow-[0_16px_48px_rgba(0,0,0,0.6)]"
-          style={{ left: tooltipPos.left, top: tooltipPos.top }}
-          onMouseEnter={keepTooltips}
-          onMouseLeave={closeTooltips}
-          ref={tooltipRef}
-        >
+      {tooltip &&
+        createPortal(
+          <>
+          <div
+            className="fixed z-[9999] box-border flex max-h-[min(560px,88vh)] w-[420px] max-w-[min(420px,calc(100vw-24px))] flex-col overflow-hidden bg-[#111] border border-white/[0.08] rounded-xl p-4 shadow-[0_16px_48px_rgba(0,0,0,0.6)]"
+            style={{
+              left: tooltipPos.left,
+              top: tooltipPos.top,
+            }}
+            onMouseEnter={keepTooltips}
+            onMouseLeave={closeTooltips}
+            ref={tooltipRef}
+          >
           <div className="flex flex-wrap items-center gap-2 mb-2 pb-2 border-b border-white/[0.08] shrink-0 min-w-0">
             <span
               className={`text-[0.6rem] font-semibold tracking-wider uppercase px-2 py-0.5 rounded max-w-full min-w-0 truncate ${
@@ -1095,7 +1551,7 @@ export default function Pipeline({ data, teamLabel = 'AMS Team', teamKey = 'ams'
             <span className="text-xs text-text-secondary shrink-0">Stage {tooltip.stageNumber}</span>
           </div>
           <div className="text-sm font-semibold mb-2 shrink-0 min-w-0 break-words leading-snug">{tooltip.title}</div>
-          {teamKey === 'ams' && (
+          {teamKey === 'ams' && !isAmsSimple && (
             <div className="flex flex-wrap gap-1.5 mb-2 text-[0.62rem] shrink-0 min-w-0">
               <div className="rounded px-1.5 py-1 border border-white/10 text-text-muted shrink-0">
                 Delayed: {tooltip.stageCounts?.delayed ?? 0}
@@ -1114,7 +1570,7 @@ export default function Pipeline({ data, teamLabel = 'AMS Team', teamKey = 'ams'
               </div>
             </div>
           )}
-          {teamKey !== 'ps' && teamKey !== 'ams' && (
+          {teamKey !== 'ps' && teamKey !== 'ams' && teamKey !== 'rtl' && (
             <div className="grid grid-cols-3 gap-1 mb-2 text-[0.65rem] shrink-0 min-w-0">
               <div className="rounded px-1.5 py-1 border border-white/10 text-text-muted min-w-0">Tasks: {tooltip.taskCount || 0}</div>
               <div className="rounded px-1.5 py-1 border border-white/10 text-text-muted truncate col-span-2 min-w-0">
@@ -1123,7 +1579,7 @@ export default function Pipeline({ data, teamLabel = 'AMS Team', teamKey = 'ams'
             </div>
           )}
           <div className="text-[0.7rem] text-text-muted mb-2 shrink-0">{tooltip.taskCount} task(s)</div>
-          {teamKey === 'ams' && (
+          {teamKey === 'ams' && !isAmsSimple && (
             <div className="flex flex-wrap gap-1 mb-2 shrink-0 min-w-0">
               {[
                 { key: 'all', label: 'All' },
@@ -1148,30 +1604,39 @@ export default function Pipeline({ data, teamLabel = 'AMS Team', teamKey = 'ams'
             </div>
           )}
           <div className="flex-1 min-h-0 overflow-x-hidden overflow-y-auto pr-1 -mr-1 custom-scrollbar">
-            {teamKey === 'ps' && tooltip.tasks.length === 0 && (
+            {(showSimplePsRtlList || (teamKey === 'ams' && isAmsSimple)) && tooltip.tasks.length === 0 && (
               <div className="text-text-muted text-sm">No tasks in this stage.</div>
             )}
-            {teamKey === 'ps' &&
-              tooltip.tasks.map((task) => (
-                <div
-                  key={task.id}
-                  className="relative py-2.5 border-b border-white/[0.05] last:border-b-0 cursor-default min-w-0"
-                >
-                  <div className="min-w-0 max-w-full">
-                    <div className="text-sm text-foreground/95 truncate">{task.name}</div>
-                    <div className="text-xs text-accent-soft/80 mt-0.5 truncate">{task.owner}</div>
-                    {task.detail ? (
-                      <div className="text-xs text-foreground/75 mt-1.5 leading-relaxed whitespace-pre-wrap break-words overflow-x-hidden max-w-full">
-                        {task.detail}
+            {(showSimplePsRtlList || (teamKey === 'ams' && isAmsSimple)) &&
+              tooltip.tasks.map((task) => {
+                const desc =
+                  teamKey === 'ams' && isAmsSimple ? amsTaskDescriptionForSimpleList(task) : task.description;
+                const owner =
+                  teamKey === 'ams' && isAmsSimple ? amsOwnerDisplay(task) : task.owner;
+                return (
+                  <div
+                    key={task.id}
+                    className="relative py-2.5 border-b border-white/[0.05] last:border-b-0 cursor-default min-w-0"
+                  >
+                    <div className="min-w-0 max-w-full">
+                      <div className="text-sm font-medium text-foreground/95 truncate">{task.name}</div>
+                      <div className="text-[0.65rem] text-accent/80 mt-0.5 truncate uppercase tracking-wider font-semibold">
+                        {owner}
                       </div>
-                    ) : null}
+                      {desc ? (
+                        <div className="text-[0.7rem] text-foreground/80 mt-2 leading-relaxed whitespace-pre-wrap break-words max-h-32 overflow-y-auto custom-scrollbar border-l border-white/10 pl-2 ml-0.5 bg-white/[0.01] py-1 rounded-sm">
+                          {desc}
+                        </div>
+                      ) : null}
+                    </div>
                   </div>
-                </div>
-              ))}
-            {teamKey === 'ams' && tooltip.tasks.length === 0 && (
+                );
+              })}
+            {teamKey === 'ams' && !isAmsSimple && tooltip.tasks.length === 0 && (
               <div className="text-text-muted text-sm">No tasks in this stage.</div>
             )}
             {teamKey === 'ams' &&
+              !isAmsSimple &&
               (() => {
                 const sections = buildAmsTooltipSections(tooltip.tasks, tooltipLnoFilter);
                 if (sections.length === 0) {
@@ -1216,11 +1681,36 @@ export default function Pipeline({ data, teamLabel = 'AMS Team', teamKey = 'ams'
                   </div>
                 ));
               })()}
-            {teamKey !== 'ps' && teamKey !== 'ams' && tooltip.tasks.length === 0 && (
+            {isPsRtlWrong && tooltip.tasks.length === 0 && (
+              <div className="text-text-muted text-sm">No delayed tasks in this stage.</div>
+            )}
+            {isPsRtlWrong &&
+              tooltip.tasks.map((task) => (
+                <div
+                  key={task.id}
+                  className="relative py-2 border-b border-white/[0.05] last:border-b-0 cursor-default min-w-0"
+                  onMouseEnter={(event) => openSubTooltip(event, task)}
+                >
+                  <div className="min-w-0 max-w-full">
+                    <div className="text-sm text-foreground/95 min-w-0 truncate leading-snug">{task.name}</div>
+                    <div className="text-xs text-accent-soft/80 mt-0.5 flex flex-wrap items-baseline gap-x-2 gap-y-0.5 min-w-0">
+                      <span className="min-w-0 max-w-full truncate">{task.owner}</span>
+                      <span
+                        className={`min-w-0 max-w-full break-words ${task.delayedLabel === 'Yes' ? 'text-blocked' : 'text-completed'}`}
+                      >
+                        Delay: {task.delayDetails}
+                        {task.delayedLabel === 'Yes' && task.delayDuration != null ? ` (${task.delayDuration}d)` : ''}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            {teamKey !== 'ps' && teamKey !== 'ams' && teamKey !== 'rtl' && tooltip.tasks.length === 0 && (
               <div className="text-text-muted text-sm">No tasks in this stage.</div>
             )}
             {teamKey !== 'ps' &&
               teamKey !== 'ams' &&
+              teamKey !== 'rtl' &&
               tooltip.tasks.map((task) => (
                 <div
                   key={task.id}
@@ -1236,132 +1726,93 @@ export default function Pipeline({ data, teamLabel = 'AMS Team', teamKey = 'ams'
                     </div>
                     <div className="text-xs text-accent-soft/80 mt-0.5 flex flex-wrap gap-x-2 gap-y-0.5 min-w-0">
                       <span className="min-w-0 max-w-full truncate">{task.owner}</span>
-                      <span
-                        className={`min-w-0 max-w-full break-words ${task.delayedLabel === 'Yes' ? 'text-blocked' : 'text-completed'}`}
-                      >
-                        Delay: {task.delayDetails}
-                        {task.delayedLabel === 'Yes' && task.delayDuration !== null ? ` (${task.delayDuration}d)` : ''}
-                      </span>
                     </div>
                   </div>
                 </div>
               ))}
           </div>
+        </div>
 
-          {subTooltip && teamKey !== 'ps' && subTooltipSchedule && (
+          {subTooltip && showDelayNestedDetail && subTooltipFixedPos && (
             <div
-              className={`absolute min-w-0 w-[min(380px,calc(100vw-36px))] max-w-[calc(100vw-36px)] bg-[#0d0d0d] border border-white/[0.14] rounded-xl p-3.5 shadow-[0_16px_42px_rgba(0,0,0,0.55)] overflow-x-hidden overflow-y-auto overscroll-contain custom-scrollbar ${
-                subTooltipOnLeft ? 'right-[calc(100%+2px)]' : 'left-[calc(100%+2px)]'
-              }`}
-              style={{ top: subTooltipTop, height: subTooltipHeight }}
+              ref={nestedRef}
+              className="fixed z-[10000] flex min-h-0 min-w-0 max-h-[min(560px,88vh)] flex-col overflow-hidden rounded-xl border border-white/[0.14] bg-[#0d0d0d] p-3.5 shadow-[0_16px_42px_rgba(0,0,0,0.55)]"
+              style={{
+                left: subTooltipFixedPos.left,
+                top: subTooltipFixedPos.top,
+                height: subTooltipHeight,
+                width: `min(${NESTED_SUBTOOLTIP_MAX_WIDTH_PX}px, calc(100vw - 24px))`,
+                maxWidth: `min(${NESTED_SUBTOOLTIP_MAX_WIDTH_PX}px, calc(100vw - 24px))`,
+              }}
               onMouseEnter={keepTooltips}
               onMouseLeave={closeTooltips}
             >
-              {/* Bridge removes hover gap between parent and nested cards */}
               <div
-                className={`absolute top-0 h-full w-3 ${subTooltipOnLeft ? '-right-3' : '-left-3'}`}
-                style={{ pointerEvents: 'auto' }}
-                onMouseEnter={keepTooltips}
-              />
-              <div
-                className={`pointer-events-none absolute top-1/2 -translate-y-1/2 h-2.5 w-2.5 rotate-45 border border-white/[0.12] bg-[#0d0d0d] ${
-                  subTooltipOnLeft ? '-right-[5px]' : '-left-[5px]'
-                }`}
+                className="pointer-events-none absolute top-1/2 h-2.5 w-2.5 -translate-y-1/2 rotate-45 border border-white/[0.12] bg-[#0d0d0d]"
                 style={{
-                  top: subTooltipAnchorY
-                    ? `${Math.max(16, Math.min(subTooltipAnchorY - tooltipPos.top, 300))}px`
-                    : '50%',
+                  ...(subTooltipFixedPos.left >= tooltipPos.left + STAGE_TOOLTIP_WIDTH_PX - 8
+                    ? { left: -5 }
+                    : { right: -5 }),
                 }}
               />
 
-              <div className="flex items-start justify-between gap-2 mb-1.5 min-w-0">
-                <div className="text-sm font-semibold leading-snug min-w-0 break-words pr-1">{subTooltip.name}</div>
-                <span className={`text-[0.6rem] px-2 py-0.5 rounded shrink-0 ${lnoBadgeClass(subTooltip.lnoTier)}`}>
-                  {subTooltip.lnoLabel || '—'}
-                </span>
-              </div>
+              {teamKey !== 'ams' && !isPsRtlWrong && (
+                <div className="shrink-0 min-w-0">
+                  <div className="flex items-start justify-between gap-2 mb-1.5 min-w-0">
+                    <div className="text-sm font-semibold leading-snug min-w-0 break-words pr-1 text-accent">{subTooltip.name}</div>
+                  </div>
 
-              {subTooltip.projectName ? (
-                <div className="text-[0.65rem] text-text-muted mb-2 truncate" title={subTooltip.projectName}>
-                  <span className="text-text-secondary/90">Project:</span> {subTooltip.projectName}
-                </div>
-              ) : null}
+                  {subTooltip.projectName ? (
+                    <div className="text-[0.65rem] text-text-muted mb-2 truncate" title={subTooltip.projectName}>
+                      <span className="text-text-secondary/90">Project:</span> {subTooltip.projectName}
+                    </div>
+                  ) : null}
 
-              <div className="grid grid-cols-2 gap-x-3 gap-y-2 text-xs mb-3 pb-3 border-b border-white/[0.08]">
-                <div className="min-w-0">
-                  <div className="text-[0.6rem] uppercase tracking-wide text-text-muted">Owner</div>
-                  <div className="text-foreground/95 truncate mt-0.5">{subTooltip.owner}</div>
+                  {(teamKey === 'ps' || teamKey === 'rtl') && (
+                    <div className="text-[0.65rem] text-text-muted mb-2 truncate">
+                      <span className="text-text-secondary/90">Owner:</span> {subTooltip.owner || 'Unassigned'}
+                    </div>
+                  )}
                 </div>
-                <div className="min-w-0">
-                  <div className="text-[0.6rem] uppercase tracking-wide text-text-muted">Planned duration</div>
-                  <div className="text-foreground/95 mt-0.5">
-                    {formatCalendarDayCount(subTooltipSchedule?.plannedWindowCalendarDays)}
+              )}
+
+              {showDelayNestedDetail ? (
+                <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
+                  <AmsTaskNestedDetail
+                    task={subTooltip}
+                    schedule={subTooltipSchedule}
+                    commentsSorted={subTooltipCommentsSorted}
+                    formatDate={formatDate}
+                    formatCalendarDayCount={formatCalendarDayCount}
+                    DelayTimelineBars={DelayTimelineBars}
+                    delayTypeChipClass={delayTypeChipClass}
+                    DELAY_TYPE_LABEL={DELAY_TYPE_LABEL}
+                  />
+                </div>
+              ) : (
+                <div className="grid flex-1 min-h-0 h-full min-w-0 grid-cols-1 mt-1 pt-2 border-t border-white/[0.08]">
+                  <div className="min-w-0 min-h-0 h-full max-h-full flex flex-col justify-start overflow-hidden self-stretch">
+                    <div className="flex flex-col h-full overflow-y-auto custom-scrollbar">
+                      <div className="text-[0.6rem] font-semibold uppercase tracking-wide text-text-secondary mb-1">
+                        Task Description
+                      </div>
+                      <div className="text-[0.7rem] leading-relaxed text-text-muted break-words whitespace-pre-wrap">
+                        {subTooltip.description || 'No description provided.'}
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-
-              <div className="mb-3">
-                <div className="text-[0.6rem] font-semibold uppercase tracking-wide text-text-secondary mb-1.5">
-                  Delay category
-                </div>
-                <div className="flex flex-wrap gap-1.5 mb-2">
-                  {subTooltipSchedule.delays.length === 0 ? (
-                    <span className="text-[0.62rem] px-2 py-1 rounded-md border border-white/12 text-text-muted leading-snug">
-                      {subTooltipSchedule.hasFullSet
-                        ? 'No start, length, or completion pattern from these dates'
-                        : 'Need planned start & due, start date, and date done'}
-                    </span>
-                  ) : (
-                    subTooltipSchedule.delays.map((kind) => (
-                      <span
-                        key={kind}
-                        className={`text-[0.62rem] px-2 py-1 rounded-md border leading-snug ${delayTypeChipClass(kind)}`}
-                      >
-                        {DELAY_TYPE_LABEL[kind] || kind}
-                      </span>
-                    ))
-                  )}
-                </div>
-                <DelayTimelineBars analysis={subTooltipSchedule} />
-              </div>
-
-              <div className="mb-3">
-                <div className="text-[0.6rem] font-semibold uppercase tracking-wide text-text-secondary mb-1">Reasoning</div>
-                <p className="text-xs leading-relaxed text-foreground/90 rounded-md border border-white/10 bg-white/[0.03] px-2 py-2 break-words">
-                  {subTooltip.blockerReason}
-                </p>
-              </div>
-
-              <div>
-                <div className="text-[0.6rem] font-semibold uppercase tracking-wide text-text-secondary mb-1.5">Comments</div>
-                <div className="pr-1 -mr-1 space-y-2">
-                  {subTooltipCommentsSorted.length === 0 ? (
-                    <div className="text-xs text-text-muted">No comments yet.</div>
-                  ) : (
-                    subTooltipCommentsSorted.map((comment, index) => (
-                      <div
-                        key={`${subTooltip.id}-c-${index}-${comment.date || index}`}
-                        className="text-xs rounded-md border border-white/[0.06] bg-white/[0.02] px-2 py-1.5"
-                      >
-                        <div className="text-text-secondary text-[0.65rem]">
-                          {comment.author || 'Unknown'} · {formatDate(comment.date)}
-                        </div>
-                        <div className="text-foreground/90 mt-1 break-words whitespace-pre-wrap">
-                          {comment.comment || comment.text || ''}
-                        </div>
-                      </div>
-                    ))
-                  )}
-                </div>
-              </div>
+              )}
             </div>
           )}
-        </div>
-      )}
+          </>,
+        document.body
+        )}
 
       <AmsDeliveryInsightModal
-        open={amsDeliveryModalOpen}
-        onClose={() => setAmsDeliveryModalOpen(false)}
+        open={leaderBoardModalOpen}
+        onClose={() => setLeaderBoardModalOpen(false)}
+        statsUrl={leaderBoardStatsUrl ?? '/api/ams-member-stats'}
       />
     </section>
   );

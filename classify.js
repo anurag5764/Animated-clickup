@@ -2,6 +2,8 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import { parseLnoFromName } from './lno.js';
 
 const PIPELINE_STAGES = [
@@ -47,8 +49,38 @@ const sleep = (ms) => new Promise(res => setTimeout(res, ms));
 const BLOCKER_TYPES = ['dependency', 'technical', 'review', 'resource', 'requirement', 'unknown'];
 const NON_REASON_VALUES = new Set(['', 'none', 'n/a', 'na', 'null', 'unknown', '-', '--']);
 
-const NEUTRAL_DELAY_REASON =
-  'No clear delay explanation in the comment thread; the task is marked delayed in ClickUp.';
+/** When comments lack a usable delay narrative — keep in sync with prompt + isNeutralDelayReasonPhrase */
+const NEUTRAL_DELAY_REASON = `Delay Reason @pm:
+
+1. Summary:
+No valid delay reason found from comments.
+
+2. Technical:
+No work-related delay cause could be inferred from the comment thread.`;
+
+function sanitizeDelayReason(reason) {
+  let s = String(reason || '').trim();
+  if (!s) return '';
+  s = s
+    .replace(/^from comments:\s*/gim, '')
+    .replace(/^from task details:\s*/gim, '')
+    .trim();
+  s = s
+    .split(/\n/)
+    .map((line) => line.replace(/\s+/g, ' ').trim())
+    .join('\n')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim();
+  if (!s) return '';
+  const flatOneLine = s.replace(/\s+/g, ' ').toLowerCase();
+  if (NON_REASON_VALUES.has(flatOneLine)) return '';
+  return s;
+}
+
+function hasDelayReasonPmFormat(text) {
+  const t = String(text || '').toLowerCase();
+  return t.includes('delay reason @pm') && t.includes('summary') && t.includes('technical');
+}
 
 function canResumeFromCheckpoint(tasks, checkpoint) {
   if (!Array.isArray(checkpoint) || checkpoint.length === 0) return false;
@@ -76,10 +108,38 @@ Two jobs only (ignore L/N/O priority tags in the task name):
 
 (1) PIPELINE STAGE — choose exactly ONE stage ID 1–6 and the matching stageName from the list. Use ALL of: task NAME, DESCRIPTION, and COMMENT thread. Do NOT default everything to stage 4 — only use stage 4 when the work is clearly schematic/transistor/circuit-level Cadence/SPICE-type implementation or pre-layout circuit simulation.
 
-(2) DELAY EXPLANATION (blockerReason) — 1–3 sentences, professional tone.
-    • Primary evidence: COMMENT THREAD. Secondary: title and description. You may mention Delayed=yes / delay duration only as supporting context.
-    • COMMENT ATTRIBUTION: Each line is formatted as "DATE — AUTHOR: text". The AUTHOR is the person who WROTE that comment. If the comment body @-mentions someone else, that person was tagged/notified — they are NOT necessarily the author. Never write "Alice said …" unless Alice is the author of that comment; if Bob wrote "@Alice please update", say "Bob asked Alice for an update" (or similar).
-    • If comments do not contain a clear explanation of the delay (no blockers, dates, dependencies, or substantive discussion), use this exact neutral phrasing for blockerReason: "No clear delay explanation in the comment thread; the task is marked delayed in ClickUp." Do not invent people, meetings, or causes.
+(2) DELAY ANALYSIS (blockerReason) — You are an expert project analyst. Your job is to analyze the ClickUp COMMENT THREAD and extract the REAL delay reason.
+
+STRICT INSTRUCTIONS:
+1. NEVER copy comments verbatim (no pasted comment text, no "NAME wrote:" followed by full quotes).
+2. NEVER output phrases like "verbatim excerpts", "grounded fallback", "fallback", or raw logs.
+3. ALWAYS summarize and interpret the comments in your own words.
+4. If multiple comments conflict: ignore statements like "not my delay", denial, or blame shifting. Prioritize comments that describe actual work, blockers, dependencies, or scope changes.
+5. Extract ONLY the most relevant delay cause.
+6. Convert messy comments into one clean explanation.
+7. Read ALL comments; when newer comments update older ones, prefer the newer narrative. Ignore greetings and off-topic chat.
+8. Evidence: use COMMENT THREAD first; task title/description only as supporting context. Do not invent causes, people, or meetings not in the thread.
+9. COMMENT LINES look like "[N] DATE — written by AUTHOR: text". Use AUTHOR only to understand viewpoint — do not echo the line verbatim.
+
+OUTPUT FORMAT (MANDATORY) — blockerReason must be EXACTLY this shape (same headings and numbering; line breaks as shown):
+
+Delay Reason @pm:
+
+1. Summary:
+<Clear, simple, non-technical reason; max 2 short lines.>
+
+2. Technical:
+<One explanation of the actual root cause: dependency, technical issue, review, ECO, resource, requirement gap, tool flow, etc. Combine all relevant inputs into one coherent paragraph — interpreted, not quoted.>
+
+If there is NO real delay reason (nothing substantive about blockers, dependencies, slips, reviews, timeline, or work scope in the comments), use this EXACT blockerReason:
+
+Delay Reason @pm:
+
+1. Summary:
+No valid delay reason found from comments.
+
+2. Technical:
+No work-related delay cause could be inferred from the comment thread.
 
 Stage list (IDs must match):
 ${PIPELINE_STAGES.map((s) => `${s.id}. ${s.name}: ${s.description}`).join('\n')}
@@ -112,8 +172,8 @@ Tie-breakers:
 blockerType: dependency | technical | review | resource | requirement | unknown
 isBlocker: true if there is a concrete delay narrative (including the neutral "no clear explanation" case, since Delayed=yes); false only if inappropriate.
 
-Respond with ONLY raw JSON. No markdown or backticks:
-{"stage":4,"stageName":"Circuit Implementation and Sim","confidence":0.82,"reasoning":"one sentence tying name/description/comments to this stage","blockerType":"technical","blockerReason":"1–3 sentences, or the neutral sentence if comments lack substance","isBlocker":true}`;
+Respond with ONLY raw JSON. No markdown or backticks. blockerReason must be a single JSON string; use \\n for newlines inside blockerReason, e.g.:
+{"stage":4,"stageName":"Circuit Implementation and Sim","confidence":0.82,"reasoning":"one sentence tying name/description/comments to this stage","blockerType":"technical","blockerReason":"Delay Reason @pm:\\n\\n1. Summary:\\n...\\n\\n2. Technical:\\n...","isBlocker":true}`;
 
   for (let attempt = 1; attempt <= 3; attempt++) {
     try {
@@ -158,7 +218,13 @@ Respond with ONLY raw JSON. No markdown or backticks:
           reasoning: "Failed",
           isBlocker: false,
           blockerType: 'unknown',
-          blockerReason: 'Classification failed after retries'
+          blockerReason: `Delay Reason @pm:
+
+1. Summary:
+Classification did not complete successfully.
+
+2. Technical:
+The delay classifier failed after retries; re-run classify.js or check the local LLM (Ollama) service.`,
         };
       }
       await sleep(1000 * attempt);
@@ -185,21 +251,12 @@ function normalizeClassification(classification = {}) {
     reasoning: classification.reasoning || '',
     isBlocker: Boolean(classification.isBlocker),
     blockerType,
-    blockerReason: classification.blockerReason || '',
+    blockerReason: sanitizeDelayReason(classification.blockerReason) || '',
   };
 }
 
 function normalizeText(value) {
   return String(value || '').replace(/\s+/g, ' ').trim();
-}
-
-function sanitizeReason(reason) {
-  const clean = normalizeText(reason)
-    .replace(/^from comments:\s*/i, '')
-    .replace(/^from task details:\s*/i, '');
-  if (!clean) return '';
-  if (NON_REASON_VALUES.has(clean.toLowerCase())) return '';
-  return clean;
 }
 
 function formatCommentThreadForPrompt(task) {
@@ -265,26 +322,50 @@ function buildEvidenceReason(task) {
   const informed = withText.filter((c) => delayLike.test(c.text)).slice(0, 2);
 
   if (informed.length > 0) {
-    return informed
-      .map((c) => {
-        const clip = c.text.length > 220 ? `${c.text.slice(0, 217)}…` : c.text;
-        return `${c.author} wrote: ${clip}`;
-      })
-      .join(' ');
+    const paraphraseSnippet = (raw) => {
+      let s = normalizeText(raw).replace(/@\S+/g, '').replace(/\s+/g, ' ').trim();
+      s = s.replace(/^(delay\s*reason\s*:\s*)/i, '').trim();
+      const sentEnd = s.search(/[.!?](\s|$)/);
+      let out =
+        sentEnd > 24 && sentEnd < 320 ? s.slice(0, sentEnd + 1).trim() : s;
+      if (out.length > 200) out = `${out.slice(0, 197)}…`;
+      return out;
+    };
+    const parts = informed.map((c) => paraphraseSnippet(c.text)).filter(Boolean);
+    const technical = parts.join(' ');
+    return `Delay Reason @pm:
+
+1. Summary:
+Comments point to schedule impact from the factors summarized below.
+
+2. Technical:
+${technical}`;
   }
 
   return NEUTRAL_DELAY_REASON;
 }
 
 function isNeutralDelayReasonPhrase(text) {
-  return normalizeText(text).toLowerCase().includes('no clear delay explanation in the comment thread');
+  const t = normalizeText(text).toLowerCase();
+  return (
+    t.includes('no clear delay explanation in the comment thread') ||
+    t.includes('no valid delay reason found from comments')
+  );
 }
 
 /** Accept model delay text unless it is empty, generic, or clearly disconnected from task + comments. */
 function isDelayReasonPlausible(reason, task) {
-  const clean = sanitizeReason(reason);
+  const clean = sanitizeDelayReason(reason);
   if (!clean) return false;
   if (isNeutralDelayReasonPhrase(clean)) return true;
+  if (hasDelayReasonPmFormat(clean) && clean.length >= 48) {
+    if (reasonOverlapsComments(clean, task)) return true;
+    const delayCue =
+      /\b(wait|waiting|blocked|block|delay|delayed|slip|late|pending|review|dependency|resource|issue|bug|fix|eco|hold|stuck|api|infra|timeline|resched|pushed)\b/i.test(
+        clean
+      );
+    if (clean.length >= 120 && delayCue) return true;
+  }
   if (clean.length < 24) return false;
   const lower = clean.toLowerCase();
   if (NON_REASON_VALUES.has(lower)) return false;
@@ -309,7 +390,7 @@ function isDelayReasonPlausible(reason, task) {
 }
 
 function applyGroundedReason(task, classification) {
-  const candidate = sanitizeReason(classification.blockerReason);
+  const candidate = sanitizeDelayReason(classification.blockerReason);
   if (isDelayReasonPlausible(candidate, task)) {
     classification.blockerReason = candidate;
     return classification;
@@ -458,6 +539,10 @@ function buildAnalysisPayload(classifiedDelayedTasks, totalTasksCount) {
 }
 
 async function classifyAllTasks() {
+  const amsDir = path.join('data', 'ams');
+  const amsTasksPath = path.join(amsDir, 'ams_tasks.json');
+  const checkpointPath = path.join(amsDir, 'ams_classified_checkpoint.json');
+
   // Check Ollama is running
   try {
     const ping = await fetch('http://localhost:11434/api/tags');
@@ -469,15 +554,19 @@ async function classifyAllTasks() {
     process.exit(1);
   }
 
-  const tasks = JSON.parse(fs.readFileSync('ams_tasks.json', 'utf-8'));
+  const tasks = JSON.parse(
+    fs.readFileSync(fs.existsSync(amsTasksPath) ? amsTasksPath : 'ams_tasks.json', 'utf-8')
+  );
   const delayedTasks = tasks.filter(isDelayedTask);
   console.log(`🧪 Delayed tasks to classify: ${delayedTasks.length}/${tasks.length}`);
 
   // Resume from checkpoint if exists
   let classified = [];
   let startFrom = 0;
-  if (fs.existsSync('ams_classified_checkpoint.json')) {
-    const checkpoint = JSON.parse(fs.readFileSync('ams_classified_checkpoint.json', 'utf-8'));
+  if (fs.existsSync(checkpointPath) || fs.existsSync('ams_classified_checkpoint.json')) {
+    const checkpoint = JSON.parse(
+      fs.readFileSync(fs.existsSync(checkpointPath) ? checkpointPath : 'ams_classified_checkpoint.json', 'utf-8')
+    );
     if (canResumeFromCheckpoint(delayedTasks, checkpoint)) {
       classified = checkpoint;
       startFrom = Math.min(classified.length, delayedTasks.length);
@@ -500,7 +589,8 @@ async function classifyAllTasks() {
     process.stdout.write(` → Stage ${classification.stage} (${(classification.confidence * 100).toFixed(0)}%)\n`);
 
     if ((i + 1) % 50 === 0) {
-      fs.writeFileSync('ams_classified_checkpoint.json', JSON.stringify(classified, null, 2));
+      fs.mkdirSync(amsDir, { recursive: true });
+      fs.writeFileSync(checkpointPath, JSON.stringify(classified, null, 2));
       console.log(`  💾 Checkpoint saved (${i + 1}/${delayedTasks.length})\n`);
     }
 
@@ -510,40 +600,71 @@ async function classifyAllTasks() {
   return classified;
 }
 
-classifyAllTasks().then(classified => {
-  fs.writeFileSync('ams_classified.json', JSON.stringify(classified, null, 2));
-  const analysisPayload = buildAnalysisPayload(classified, JSON.parse(fs.readFileSync('ams_tasks.json', 'utf-8')).length);
-  fs.writeFileSync('ams_blocker_analysis.json', JSON.stringify(analysisPayload, null, 2));
-  console.log('\n🎉 Classification complete!');
-  console.log('💾 Saved ams_classified.json and ams_blocker_analysis.json');
+const __filename = fileURLToPath(import.meta.url);
+const isMain =
+  process.argv[1] && path.resolve(process.argv[1]) === path.resolve(__filename);
 
-  const byStage = { 1: [], 2: [], 3: [], 4: [], 5: [], 6: [] };
-  classified.forEach((t) => {
-    const s = t.classification?.stage;
-    if (s >= 1 && s <= 6) byStage[s].push(t);
-  });
+export {
+  PIPELINE_STAGES,
+  classifyTask,
+  normalizeClassification,
+  refineStageFromTaskContent,
+  applyGroundedReason,
+  buildEvidenceReason,
+  isDelayedTask,
+  inferStageFromKeywords,
+  buildAnalysisPayload,
+  NEUTRAL_DELAY_REASON,
+};
 
-  console.log('\n📊 Tasks per stage:');
-  PIPELINE_STAGES.forEach(s => {
-    const st = byStage[s.id];
-    const l = st.filter(t => parseLnoFromName(t.name).tier === 'L').length;
-    const n = st.filter(t => parseLnoFromName(t.name).tier === 'N').length;
-    const o = st.filter(t => parseLnoFromName(t.name).tier === 'O').length;
-    console.log(`  Stage ${s.id} — ${s.name}: ${st.length} delayed tasks (L:${l} N:${n} O:${o})`);
-  });
+if (isMain) {
+  classifyAllTasks()
+    .then((classified) => {
+      const amsDir = path.join('data', 'ams');
+      const amsTasksPath = path.join(amsDir, 'ams_tasks.json');
+      fs.mkdirSync(amsDir, { recursive: true });
+      fs.writeFileSync(path.join(amsDir, 'ams_classified.json'), JSON.stringify(classified, null, 2));
+      const analysisPayload = buildAnalysisPayload(
+        classified,
+        JSON.parse(fs.readFileSync(fs.existsSync(amsTasksPath) ? amsTasksPath : 'ams_tasks.json', 'utf-8')).length
+      );
+      fs.writeFileSync(path.join(amsDir, 'ams_blocker_analysis.json'), JSON.stringify(analysisPayload, null, 2));
+      console.log('\n🎉 Classification complete!');
+      console.log('💾 Saved data/ams/ams_classified.json and data/ams/ams_blocker_analysis.json');
 
-  console.log('\n👥 Per member breakdown:');
-  const ms = {};
-  classified.forEach(t => {
-    t.assignees.forEach(a => {
-      if (!ms[a.username]) ms[a.username] = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 };
-      const s = t.classification?.stage;
-      if (s >= 1 && s <= 6) ms[a.username][s]++;
-    });
-  });
-  Object.entries(ms)
-    .sort((a, b) => Object.values(b[1]).reduce((x, y) => x + y, 0) - Object.values(a[1]).reduce((x, y) => x + y, 0))
-    .forEach(([name, stages]) => {
-      console.log(`  ${name}: ${Object.entries(stages).map(([s, c]) => `S${s}:${c}`).join(' ')}`);
-    });
-}).catch(console.error);
+      const byStage = { 1: [], 2: [], 3: [], 4: [], 5: [], 6: [] };
+      classified.forEach((t) => {
+        const s = t.classification?.stage;
+        if (s >= 1 && s <= 6) byStage[s].push(t);
+      });
+
+      console.log('\n📊 Tasks per stage:');
+      PIPELINE_STAGES.forEach((s) => {
+        const st = byStage[s.id];
+        const l = st.filter((t) => parseLnoFromName(t.name).tier === 'L').length;
+        const n = st.filter((t) => parseLnoFromName(t.name).tier === 'N').length;
+        const o = st.filter((t) => parseLnoFromName(t.name).tier === 'O').length;
+        console.log(`  Stage ${s.id} — ${s.name}: ${st.length} delayed tasks (L:${l} N:${n} O:${o})`);
+      });
+
+      console.log('\n👥 Per member breakdown:');
+      const ms = {};
+      classified.forEach((t) => {
+        t.assignees.forEach((a) => {
+          if (!ms[a.username]) ms[a.username] = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 };
+          const s = t.classification?.stage;
+          if (s >= 1 && s <= 6) ms[a.username][s]++;
+        });
+      });
+      Object.entries(ms)
+        .sort(
+          (a, b) =>
+            Object.values(b[1]).reduce((x, y) => x + y, 0) -
+            Object.values(a[1]).reduce((x, y) => x + y, 0)
+        )
+        .forEach(([name, stages]) => {
+          console.log(`  ${name}: ${Object.entries(stages).map(([s, c]) => `S${s}:${c}`).join(' ')}`);
+        });
+    })
+    .catch(console.error);
+}

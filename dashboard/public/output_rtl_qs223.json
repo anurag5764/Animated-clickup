@@ -1,0 +1,255 @@
+{
+  "currentPosition": {
+    "stageNumber": 3,
+    "stageName": "RTL Implementation",
+    "summary": "Currently focused on stage 3 with 10 active tasks."
+  },
+  "stages": [
+    {
+      "stageNumber": 1,
+      "stageName": "Initial Spec Discussion",
+      "status": "active",
+      "taskCount": 6,
+      "tasks": [
+        {
+          "id": "86e0gv8jh",
+          "name": "N3: PL divider",
+          "owner": "Manash Dey",
+          "description": "Why: Post-layout simulation of the serializer\nDeliverable: 3 different Clk Freq. Signal(clk/2, clk/4, clk8) is the Output of this Divider\nRisk: NA\nLimitation: NA\n\nResults: [https://10xar-my.sharepoint.com/:p:/p/shovan/IQAY4DO5aKrgTJQsWRxcjsP3Ad5D\\_QbAOr1Kn6DNuiRokuI?e=sPFRrF](https://10xar-my.sharepoint.com/:p:/p/shovan/IQAY4DO5aKrgTJQsWRxcjsP3Ad5D_QbAOr1Kn6DNuiRokuI?e=sPFRrF)\nThe Divider Ckt. Diagram is in Slide No 3"
+        },
+        {
+          "id": "86dx998wu",
+          "name": "N3: FHSS sync specifications",
+          "owner": "Anirudh Roy",
+          "description": "Why: FHSS sync specifications\nDeliverable: Specification + Algorithm + width + Interface waveform\nRisk: It may risk the digital schedule\nLimitation: NA"
+        },
+        {
+          "id": "86dx998qn",
+          "name": "N3: FHSS controller",
+          "owner": "Anirudh Roy",
+          "description": "Why: FHSS controller specifications\nDeliverable: Specification + Algorithm + width + Interface waveform\nRisk: It may risk the digital schedule\nLimitation: NA"
+        },
+        {
+          "id": "86dx44905",
+          "name": "N3: Top level BER simulation",
+          "owner": "Gulshan Poddar, Samanway Pal, Arka Chowdhury",
+          "description": "Why: Top-level BER sim. Check the functionality of backend and front end in different gain/Bandwidth settings\nDeliverable: BER results across carrier/datarates across process corner.\nRisk: During simulation with process corner, we may get higher BER and we need to debug the same.\nLimitation: Simulation time is 6 hours per sim.\n\n[\n\n10xar-my.sharepoint.com\n\nhttps://10xar-my.sharepoint.com/:x:/r/personal/shovan\\_10xar\\_com/Documents/Tapeout/QS223/Block%20Design/BER\\_SIMS/BER\\_TEST\\_PLAN.xlsx?d=we7a58ec963fe410193ccd998f9b6bc08&csf=1&web=1&e=0S5srY\n\n](https://10xar-my.sharepoint.com/:x:/r/personal/shovan_10xar_com/Documents/Tapeout/QS223/Block%20Design/BER_SIMS/BER_TEST_PLAN.xlsx?d=we7a58ec963fe410193ccd998f9b6bc08&csf=1&web=1&e=0S5srY)"
+        },
+        {
+          "id": "86dx448z4",
+          "name": "QS223 AMS simulations",
+          "owner": "KiritkumarP, sumon",
+          "description": ""
+        },
+        {
+          "id": "86dwxrx7r",
+          "name": "QS223 RTL Design",
+          "owner": "Archisman Ghosh, Sayantan Dey",
+          "description": ""
+        }
+      ]
+    },
+    {
+      "stageNumber": 2,
+      "stageName": "Block Diagram Discussion",
+      "status": "active",
+      "taskCount": 3,
+      "tasks": [
+        {
+          "id": "86e0gv8ar",
+          "name": "N3: Post Layout sim: Serializer",
+          "owner": "Manash Dey",
+          "description": "Why: Post-layout simulation of the serializer (@125M to 1G)\nDeliverable: Timing alignment (set up/hold) of all the stages\nRisk: NA\nLimitation: We can't go beyond 4GHz.\nResult: [https://10xar-my.sharepoint.com/:p:/p/shovan/IQAY4DO5aKrgTJQsWRxcjsP3Ad5D\\_QbAOr1Kn6DNuiRokuI?e=dnHvNM](https://10xar-my.sharepoint.com/:p:/p/shovan/IQAY4DO5aKrgTJQsWRxcjsP3Ad5D_QbAOr1Kn6DNuiRokuI?e=dnHvNM)\nPost Layout Sims are from Slide No 20\n\nSummary:\nThis Serializer will take 8 bit Low Speed Data Input & 4 Clk Input So that It can give 1 bit Fast Data Output.\nOutput Freq.= 8\\*Input Freq."
+        },
+        {
+          "id": "86e0fdf10",
+          "name": "N3: 2 device wrapper step by step debug",
+          "owner": "Charles Adeyanju",
+          "description": "This task is being logged in the following guide: FPGA Emulation: 2 Device on a single FPGA ([https://app.clickup.com/9017196379/docs/8cqezuv-45897/8cqezuv-87457](https://app.clickup.com/9017196379/docs/8cqezuv-45897/8cqezuv-87457))\n### April 3, 2026\nManaged to synthesize a close to full 2 device bitstream including the analog, core, and digital blocks and conducted the following tests:\n*   Device 1 Core-mode ![](https://t9017196379.p.clickup-attachments.com/t9017196379/972fc90c-1668-407e-819a-a4bef7b2e0f2/image.png)\n*   Device 1 Core-bypass mode ![](https://t9017196379.p.clickup-attachments.com/t9017196379/c9d4c178-06bd-4bcb-85fc-f9feb9711cdb/image.png)\n*   Device 2 Core-mode (Debugging...)\n*   Device 2 Core-bypass mode ![](https://t9017196379.p.clickup-attachments.com/t9017196379/eb67e8e0-3308-464f-b616-9574bd47a2c0/image.png)\n**Bitstream + Implementation Checkpoints and Logs**\n\n[full\\_2devices\\_adapter\\_board.zip](https://t9017196379.p.clickup-attachments.com/t9017196379/d92d7867-5e2d-412e-8b83-585c89181b6b/full_2devices_adapter_board.zip)\n\n### April 06, 2026\nThere is an issue with the Cortex-M0 for the **second device**\n*   I am able to attach over SWD but from inspecting the SRAM using the JMem memory viewer, the SRAM isn't being flashed properly\n*   I wasn't able to run neither the `wir_fifo_readback` application nor some of the core peripheral tests like the `dma` test\n*   I scaled back the design once again to an implementation where only 2 cores are implemented\n    *   I was able to then validate a valid region for the second device by running the `dma` test, checking the results with the debugger and the UART prints\n*   Knowing the valid region, I defined a Pblock range for the placement of device 2 and added the WIR components again\n    *   In the most recent bitstream, I generated a Full Single Dev 1 + Digital and core Dev 2\n        *   Passed Device 1 readback tests in both core and core-bypass modes\n        *   I was able to program Device 2's SRAM this time and passed the `dma` test\n        *   With this I flashed the `wir_fifo_readback` test in the second device (a milestone that was not possible in the attached bitstream above)\n        *   In both core and core-bypass modes, the readback test failed in the config read/write step"
+        },
+        {
+          "id": "86e06tjkw",
+          "name": "N3: Obtain code coverage numnber",
+          "owner": "Sharanya Shetty",
+          "description": ""
+        }
+      ]
+    },
+    {
+      "stageNumber": 3,
+      "stageName": "RTL Implementation",
+      "status": "active",
+      "taskCount": 10,
+      "tasks": [
+        {
+          "id": "86e063gkw",
+          "name": "N3: LDO",
+          "owner": "Manash Dey",
+          "description": "LDO Results: [https://10xar-my.sharepoint.com/:p:/p/shovan/IQDUsZno00LvRLHfwsEzRjeZAWTD\\_dS6G7hp0sWhK-xLSrs?e=hmmSHs](https://10xar-my.sharepoint.com/:p:/p/shovan/IQDUsZno00LvRLHfwsEzRjeZAWTD_dS6G7hp0sWhK-xLSrs?e=hmmSHs)\nThis is the LDO Result and PM>60 for i\\_Load <5mA. And it's giving 500mV as LDO\\_Output. For Reference Please check from Slide No 14 Onwards."
+        },
+        {
+          "id": "86e063ex9",
+          "name": "N3: Low level protocol design of CSI-2 controller",
+          "owner": "Dheerajeswar Saluru",
+          "description": ""
+        },
+        {
+          "id": "86e062mmg",
+          "name": "N3: Generating bitstream for core+wir with updated QS223 top netlist: 13th Feb to 6th March",
+          "owner": "Ushasi Das",
+          "description": "All the generated bitstreams are available in this link: [https://10xar-my.sharepoint.com/personal/shovan\\_10xar\\_com/\\_layouts/15/onedrive.aspx?id=%2Fpersonal%2Fshovan%5F10xar%5Fcom%2FDocuments%2FTapeout%2FQS223%2FBlock%20Design%2Ffpga%5Fdebug%2Fbit%5Ffile&viewid=bccb761b%2D5867%2D499c%2D8eed%2D56ad9e4905fa](https://10xar-my.sharepoint.com/personal/shovan_10xar_com/_layouts/15/onedrive.aspx?id=%2Fpersonal%2Fshovan%5F10xar%5Fcom%2FDocuments%2FTapeout%2FQS223%2FBlock%20Design%2Ffpga%5Fdebug%2Fbit%5Ffile&viewid=bccb761b%2D5867%2D499c%2D8eed%2D56ad9e4905fa)\n\nWorking version of single device bitstream for QS223 Top (Core bypass mode FIFO readback test and FIFO readback test with core is working with this bitstream): [https://10xar-my.sharepoint.com/personal/shovan\\_10xar\\_com/\\_layouts/15/onedrive.aspx?id=%2Fpersonal%2Fshovan%5F10xar%5Fcom%2FDocuments%2FTapeout%2FQS223%2FBlock%20Design%2Ffpga%5Fdebug%2Fbit%5Ffile%2Fsingle%5Fdevice%5Fall%5Fgpio%5Fupdated%5Frtl%5Fworking%5Fbitstream%5F5th%5Fmarch&viewid=bccb761b%2D5867%2D499c%2D8eed%2D56ad9e4905fa](https://10xar-my.sharepoint.com/personal/shovan_10xar_com/_layouts/15/onedrive.aspx?id=%2Fpersonal%2Fshovan%5F10xar%5Fcom%2FDocuments%2FTapeout%2FQS223%2FBlock%20Design%2Ffpga%5Fdebug%2Fbit%5Ffile%2Fsingle%5Fdevice%5Fall%5Fgpio%5Fupdated%5Frtl%5Fworking%5Fbitstream%5F5th%5Fmarch&viewid=bccb761b%2D5867%2D499c%2D8eed%2D56ad9e4905fa)\n\nRepo containing FPGA version of all the RTL modules being used to generate bitstream: [https://github.com/Quasistatics/IC-RTL-qs223/tree/qs223\\_fpga\\_sumon/rtl/models\\_fpga/v2](https://github.com/Quasistatics/IC-RTL-qs223/tree/qs223_fpga_sumon/rtl/models_fpga/v2)\nDesign Sources txt file (RTL flist): [https://github.com/Quasistatics/IC-RTL-qs223/blob/qs223\\_fpga\\_sumon/rtl/models\\_fpga/design\\_sources\\_QS223\\_top\\_updated.txt](https://github.com/Quasistatics/IC-RTL-qs223/blob/qs223_fpga_sumon/rtl/models_fpga/design_sources_QS223_top_updated.txt)"
+        },
+        {
+          "id": "86e04evgx",
+          "name": "N3: Updated FIFO documents",
+          "owner": "Sayantan Dey",
+          "description": "Documents include all mentioned below but not restricted to:\nBasic block diagram\nIndiavidual simulation commands\nWorking principle\nInterface\nAny FSM/config , control sequence\nArea/power number.\nA list of flist for sdf/nlp/rtl sim.\nregression script if required\n\nTask is only done when it is reviewed by Archisman/Sumon/FW team.\n\nYou should also point to individual document.\n\nDoc- [https://10xar-my.sharepoint.com/:w:/r/personal/shovan\\_10xar\\_com/Documents/Tapeout/QS223/Docs/Digital/FIFO\\_Bank\\_Controller.docx?d=w064488a346bd4442bcbc7415adcd023f&csf=1&web=1&e=kUPs4Q](https://10xar-my.sharepoint.com/:w:/r/personal/shovan_10xar_com/Documents/Tapeout/QS223/Docs/Digital/FIFO_Bank_Controller.docx?d=w064488a346bd4442bcbc7415adcd023f&csf=1&web=1&e=kUPs4Q)\n\nNote: AI help is alright but must not contain any AI generated misinformation."
+        },
+        {
+          "id": "86e04evfz",
+          "name": "N3: Updated PHY documents",
+          "owner": "Arka Chakraborty",
+          "description": "Documents include all mentioned below but not restricted to:\nBasic block diagram\nIndiavidual simulation commands\nWorking principle\nInterface\nAny FSM/config , control sequence\nArea/power number.\nA list of flist for sdf/nlp/rtl sim.\nregression script if required\n\nTask is only done when it is reviewed by Archisman/Sumon/FW team.\n\nYou should also point to individual document.\n\nNote: AI help is alright but must not contain any AI generated misinformation.\nNote: It should add all the informa\n\n/// ---------------------- ///\nAll documents attached below.\n\nQS223\\_PHY\\_SPECS - [https://10xar-my.sharepoint.com/:w:/p/shovan/IQCm66sKlPSyS5NOkgJgOLIuAdUfz9JZj351EBK81rLIQ4g?e=KjWcEQ](https://10xar-my.sharepoint.com/:w:/p/shovan/IQCm66sKlPSyS5NOkgJgOLIuAdUfz9JZj351EBK81rLIQ4g?e=KjWcEQ)\nPHY Updates by AC - [https://10xar-my.sharepoint.com/:p:/p/shovan/IQDX\\_I8hoc\\_VQ7jIsNQmQ1V6Abz2kM4kQ\\_vlYPRJf7q---U?e=s9huCV](https://10xar-my.sharepoint.com/:p:/p/shovan/IQDX_I8hoc_VQ7jIsNQmQ1V6Abz2kM4kQ_vlYPRJf7q---U?e=s9huCV)\nTX\\_PHY\\_W\\_AES\\_QS223(User Manual)- [https://10xar-my.sharepoint.com/:w:/p/shovan/IQBBTW9Q0v-XQ4OefSyqL4yxAa49aDCfpxADIaiLLE1Nfm8?e=LM8vcc](https://10xar-my.sharepoint.com/:w:/p/shovan/IQBBTW9Q0v-XQ4OefSyqL4yxAa49aDCfpxADIaiLLE1Nfm8?e=LM8vcc)\nRX\\_PHY\\_W\\_AES\\_QS223(User Manual)- [https://10xar-my.sharepoint.com/:w:/r/personal/shovan\\_10xar\\_com/Documents/Tapeout/QS223/Block%20Design/PHY/RX\\_PHY\\_W\\_AES\\_TOP\\_223.docx?d=w1d29a1ea8af34284be85475233a1ba5a&csf=1&web=1&e=Wpr2D4](https://10xar-my.sharepoint.com/:w:/r/personal/shovan_10xar_com/Documents/Tapeout/QS223/Block%20Design/PHY/RX_PHY_W_AES_TOP_223.docx?d=w1d29a1ea8af34284be85475233a1ba5a&csf=1&web=1&e=Wpr2D4)\n\nArea/Power numbers-![](https://t9017196379.p.clickup-attachments.com/t9017196379/03f843c5-ca87-48fb-98a5-2fa2a02bf813/image.png)\nTest Setup-\nTest plan- [https://10xar-my.sharepoint.com/:x:/p/shovan/IQCYqRZuiZn\\_SbBe9oWN6PWLAWCzBfi2HZlWMZTSEi0zrFc?e=wCXHje](https://10xar-my.sharepoint.com/:x:/p/shovan/IQCYqRZuiZn_SbBe9oWN6PWLAWCzBfi2HZlWMZTSEi0zrFc?e=wCXHje)\nFilelist for RTL- [https://github.com/Quasistatics/IC-RTL-qs223/blob/main/vcs/tx\\_rx/script/rtl.flist\\_sim](https://github.com/Quasistatics/IC-RTL-qs223/blob/main/vcs/tx_rx/script/rtl.flist_sim)\nFilelist for SDF- [https://github.com/Quasistatics/IC-RTL-qs223/blob/main/vcs/tx\\_rx\\_sdf/script/rtl.flist\\_sdf](https://github.com/Quasistatics/IC-RTL-qs223/blob/main/vcs/tx_rx_sdf/script/rtl.flist_sdf)\nFilelist for NLP- [https://github.com/Quasistatics/IC-RTL-qs223/blob/main/vcs/tx\\_rx\\_nlp/script/rtl.flist\\_nlp](https://github.com/Quasistatics/IC-RTL-qs223/blob/main/vcs/tx_rx_nlp/script/rtl.flist_nlp)\nRegression script- [https://github.com/Quasistatics/IC-RTL-qs223/blob/main/vcs/tx\\_rx/compile\\_regression\\_phy.sh](https://github.com/Quasistatics/IC-RTL-qs223/blob/main/vcs/tx_rx/compile_regression_phy.sh)"
+        },
+        {
+          "id": "86dzdrd56",
+          "name": "N3: Assertion to 223 testbench for schedule",
+          "owner": "Arka Chakraborty",
+          "description": ""
+        },
+        {
+          "id": "86dzdr8hq",
+          "name": "N3: Normal PS/schedule with front end",
+          "owner": "Arka Chakraborty",
+          "description": ""
+        },
+        {
+          "id": "86dzdr8dy",
+          "name": "N3: normal PS/schedule regression",
+          "owner": "Arka Chakraborty, Sharanya Shetty",
+          "description": ""
+        },
+        {
+          "id": "86dxbvp2v",
+          "name": "QS223 top level RTL Simulation",
+          "owner": "Sharanya Shetty, Arka Chakraborty",
+          "description": "/"
+        },
+        {
+          "id": "86dx53tm1",
+          "name": "QS223 RTL Verification",
+          "owner": "Archisman Ghosh",
+          "description": ""
+        }
+      ]
+    },
+    {
+      "stageNumber": 4,
+      "stageName": "Test Case Creation and Discussion",
+      "status": "upcoming",
+      "taskCount": 0,
+      "tasks": []
+    },
+    {
+      "stageNumber": 5,
+      "stageName": "Lint and CDC Check",
+      "status": "upcoming",
+      "taskCount": 0,
+      "tasks": []
+    },
+    {
+      "stageNumber": 6,
+      "stageName": "Regression and Corner Sim",
+      "status": "upcoming",
+      "taskCount": 0,
+      "tasks": []
+    },
+    {
+      "stageNumber": 7,
+      "stageName": "Code Coverage",
+      "status": "upcoming",
+      "taskCount": 0,
+      "tasks": []
+    },
+    {
+      "stageNumber": 8,
+      "stageName": "Constraints and UPF File Creation",
+      "status": "upcoming",
+      "taskCount": 0,
+      "tasks": []
+    },
+    {
+      "stageNumber": 9,
+      "stageName": "Doc Creation",
+      "status": "active",
+      "taskCount": 4,
+      "tasks": [
+        {
+          "id": "86dy4zb24",
+          "name": "Security exploration",
+          "owner": "Archisman Ghosh",
+          "description": ""
+        },
+        {
+          "id": "86dxqgtgh",
+          "name": "QS223 FPGA",
+          "owner": "Charles Adeyanju",
+          "description": ""
+        },
+        {
+          "id": "86dxn2xmd",
+          "name": "MIPI EXPLORATION",
+          "owner": "Archisman Ghosh, Dheerajeswar Saluru, Manash Dey",
+          "description": ""
+        },
+        {
+          "id": "86dxgmu8m",
+          "name": "QS223 PD",
+          "owner": "sumon",
+          "description": ""
+        }
+      ]
+    },
+    {
+      "stageNumber": 10,
+      "stageName": "Release to PD, Floor Planning",
+      "status": "active",
+      "taskCount": 4,
+      "tasks": [
+        {
+          "id": "86dz9p7z9",
+          "name": "N3: Schedule tests from excel V1",
+          "owner": "Arka Chakraborty, Manav",
+          "description": "Deliverables : BB Schedule Tests from Excel with Renetlist v1\nTest Plan: [https://10xar-my.sharepoint.com/:x:/p/shovan/IQDItw-51OviRq\\_MRiQQ4PPoAZXeJrAc7ecoAUaDm5h11hc?e=021qUf&nav=MTVfezU2RTY5NDRFLUQ5QzktNEE4MC1BNUE2LTc3NzA4Q0Y0MjhBMX0](https://10xar-my.sharepoint.com/:x:/p/shovan/IQDItw-51OviRq_MRiQQ4PPoAZXeJrAc7ecoAUaDm5h11hc?e=021qUf&nav=MTVfezU2RTY5NDRFLUQ5QzktNEE4MC1BNUE2LTc3NzA4Q0Y0MjhBMX0)\nPPT: [https://10xar-my.sharepoint.com/:p:/p/shovan/IQB0MMqHSGhwRIUSulvoPLplAfkmOgppJ5Bivs7WJga1Vd4?e=GAdwJU](https://10xar-my.sharepoint.com/:p:/p/shovan/IQB0MMqHSGhwRIUSulvoPLplAfkmOgppJ5Bivs7WJga1Vd4?e=GAdwJU)"
+        },
+        {
+          "id": "86dz9p7ym",
+          "name": "N3: Bypass PS/normal tests from excel V1",
+          "owner": "Sharanya Shetty, Manav",
+          "description": "Waveform PPT : [https://10xar-my.sharepoint.com/:p:/r/personal/shovan\\_10xar\\_com/\\_layouts/15/Doc.aspx?sourcedoc=%7BEF1A8348-9339-4892-BADE-BE9816190DC6%7D&file=QS223%20-%20basic%20tests.pptx&action=edit&mobileredirect=true](https://10xar-my.sharepoint.com/:p:/r/personal/shovan_10xar_com/_layouts/15/Doc.aspx?sourcedoc=%7BEF1A8348-9339-4892-BADE-BE9816190DC6%7D&file=QS223%20-%20basic%20tests.pptx&action=edit&mobileredirect=true)\nTestplan : [https://10xar-my.sharepoint.com/:x:/r/personal/shovan\\_10xar\\_com/\\_layouts/15/Doc.aspx?sourcedoc=%7BB90FB7C8-EBD4-46E2-AFCC-462410E0F3E8%7D&file=top\\_level\\_sim\\_QS223.xlsx&action=default&mobileredirect=true](https://10xar-my.sharepoint.com/:x:/r/personal/shovan_10xar_com/_layouts/15/Doc.aspx?sourcedoc=%7BB90FB7C8-EBD4-46E2-AFCC-462410E0F3E8%7D&file=top_level_sim_QS223.xlsx&action=default&mobileredirect=true)"
+        },
+        {
+          "id": "86dz9nqkc",
+          "name": "N3: Core + WiR Core tests following excel (peripheral test with TS) ",
+          "owner": "Charles Adeyanju",
+          "description": "Running Tests on Single QS223 Device: [https://10xar-my.sharepoint.com/:x:/r/personal/shovan\\_10xar\\_com/\\_layouts/15/Doc.aspx?sourcedoc=%7BB90FB7C8-EBD4-46E2-AFCC-462410E0F3E8%7D&file=top\\_level\\_sim\\_QS223.xlsx&action=default&mobileredirect=true&DefaultItemOpen=1&wdOrigin=OFFICECOM-WEB.REDIRECT%2CAPPHOME-WEB.FILEBROWSER.RECENT&wdPreviousSession=859744c3-fc3d-4167-9fab-208b5c264e29&wdPreviousSessionSrc=AppHomeWeb&ct=1768517508799](https://10xar-my.sharepoint.com/:x:/r/personal/shovan_10xar_com/_layouts/15/Doc.aspx?sourcedoc=%7BB90FB7C8-EBD4-46E2-AFCC-462410E0F3E8%7D&file=top_level_sim_QS223.xlsx&action=default&mobileredirect=true&DefaultItemOpen=1&wdOrigin=OFFICECOM-WEB.REDIRECT%2CAPPHOME-WEB.FILEBROWSER.RECENT&wdPreviousSession=859744c3-fc3d-4167-9fab-208b5c264e29&wdPreviousSessionSrc=AppHomeWeb&ct=1768517508799)"
+        },
+        {
+          "id": "86dz10jd8",
+          "name": "N3: Core + WIR run v2:: Single device with latest RTL",
+          "owner": "Charles Adeyanju",
+          "description": ""
+        }
+      ]
+    },
+    {
+      "stageNumber": 11,
+      "stageName": "SDF and NLP Sim",
+      "status": "upcoming",
+      "taskCount": 0,
+      "tasks": []
+    }
+  ],
+  "blockers": [],
+  "nextStep": "Complete tasks in \"RTL Implementation\" and prepare for downstream stages."
+}

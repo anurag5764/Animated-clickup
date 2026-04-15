@@ -1,0 +1,158 @@
+{
+  "currentPosition": {
+    "stageNumber": 2,
+    "stageName": "Block Diagram Discussion",
+    "summary": "Currently focused on stage 2 with 5 active tasks."
+  },
+  "stages": [
+    {
+      "stageNumber": 1,
+      "stageName": "Initial Spec Discussion",
+      "status": "active",
+      "taskCount": 3,
+      "tasks": [
+        {
+          "id": "86e0w04nu",
+          "name": "SPI read write - 1M runs.",
+          "owner": "Anish Saha",
+          "description": ""
+        },
+        {
+          "id": "86e0vyywy",
+          "name": "N3: [QS127M Bench] PER test with FG with AGC with start sequence robustness.",
+          "owner": "Anish Saha",
+          "description": "**Why:** Ixana plans to take QS127M into production. \n**Deliverable:**\n**Test Details:**\nRefer to the test#22 here in the list below listed on this clickup page.\n[https://app.clickup.com/9017196379/docs/8cqezuv-60897/8cqezuv-77517](https://app.clickup.com/9017196379/docs/8cqezuv-60897/8cqezuv-77517)\n\n**Description:** It can be find here in the click up page.\n[https://app.clickup.com/9017196379/docs/8cqezuv-60897/8cqezuv-74597](https://app.clickup.com/9017196379/docs/8cqezuv-60897/8cqezuv-74597)\n\n22\\. PER Test with FG with AGC with Start Sequence Robustness\n**Measured Parameters:** Read the packet bytes from Rx FIFO once reception is done and QS\\_MCU\\_IRQ\\_1 received. Repeat for multiple packets.\n**Expectation:** The read data will be the same as the write data.\n### **Config Files**\n1. QS\\_TX\\_OUT\\_ANA | 20M Carrier | AGC enabled | SS Robustness enabled: [schdlr\\_txrx\\_agc\\_ss\\_robustness\\_20m\\_carrier\\_cfg.json](https://10xar-my.sharepoint.com/:u:/p/shovan/IQDmESn1NYp3SZ03gxAY7uqxAanogsErfDMV516wTb-sQyo?e=8VtmlV)\n### **Test operation**\nRefer to this page: FW PER Replication TB for Simulation ([https://app.clickup.com/9017196379/docs/8cqezuv-21857/8cqezuv-66937](https://app.clickup.com/9017196379/docs/8cqezuv-21857/8cqezuv-66937))"
+        },
+        {
+          "id": "86e0udtpy",
+          "name": "N3: [QS127 Bench] Updated AGC trigger timings to be tested for ACKs, multi-packet TX and multi-packet TX+ACKs.",
+          "owner": "Anish Saha, Sayantan Dey",
+          "description": ""
+        }
+      ]
+    },
+    {
+      "stageNumber": 2,
+      "stageName": "Block Diagram Discussion",
+      "status": "active",
+      "taskCount": 5,
+      "tasks": [
+        {
+          "id": "86e0gtf52",
+          "name": "N3: [QS127M Bench] AGC Offset Correction",
+          "owner": "Anish Saha",
+          "description": ""
+        },
+        {
+          "id": "86e0e7efm",
+          "name": "N3: [QS127M Bench] RSSI Plot with and without RSSI offset correction in the schedule for packet sizes of 63,127 and 255 bytes.",
+          "owner": "Vinayak Agrawal, Aryan Jadhav",
+          "description": "Why: Ixana plans to take QS127M into production.\n\nDeliverable / Description :\n\n## **Test operation**\nFor **RSSI Offset Correction steps**, check this page: RSSI Offset Correction ([https://app.clickup.com/9017196379/docs/8cqezuv-60897/8cqezuv-76777](https://app.clickup.com/9017196379/docs/8cqezuv-60897/8cqezuv-76777))\n**Refer to this:**[](https://app.clickup.com/9017196379/v/dc/8cqezuv-60897/8cqezuv-75137?block=block-95a30a23-8df6-4a74-b1d7-9481ceccf6e3)\n1. Power on the chip in normal mode (**QS\\_MCU\\_IO1\\_BYP\\_PS**\\=0V) and write configs\n2. To start schedule operation:\n    1. **`ps_scheduler_start`** = 0➝1 <addr 0x0208\\[5\\]>\n3. Also need to configure the PS descriptors and ADR bits separately as they are not configured by preset\n4. Follow schedule test flow\n5. At the end of every RX slot, check the following status registers:\n    1. **`rssi_val_latched`** <addr {0x0445\\[1:0\\], 0x0444}>\n    2. **`rssi_cal_done_latched`** <addr 0x0445\\[2\\]>\n    3. **`rssi_baseline_val_latched`** <addr {0x0447\\[1:0\\], 0x0446}>\n    4. **`rssi_cal_done_baseline_latched`** <addr 0x0447\\[2\\]>\n6. Config **`ps_cfg_rssi_mode`** <addr 0x0219\\[6\\]> should be 1 for this again.\n    1. NOTE that the RSSI will only trigger on the descriptor index set in **`ps_cfg_rssi_desc`** <addr 0x021A\\[3:0\\]> and RSSI baseline on the descriptor index set in **`ps_cfg_rssi_baseline_desc`** <addr 0x021D\\[6:3\\]>\n        1. this does mean that if there are two back-to-back slots which use the same descriptor, it may overwrite\n        2. see also **`ps_rssi_cal_value_update_slow`** <addr 0x0219\\[1\\]>\n### RSSI Schedule Timings\n**Refer to this:** [https://10xar-my.sharepoint.com/:u:/p/shovan/IQDk13gbXwq5RK1SrbgZRVNmAXqLtO7MmS6ePg1elJLK\\_NI?e=VVOJZF](https://10xar-my.sharepoint.com/:u:/p/shovan/IQDk13gbXwq5RK1SrbgZRVNmAXqLtO7MmS6ePg1elJLK_NI?e=VVOJZF)\n### Debug Signals\n1. To bring out internal RSSI signals, write the following using SPI:\n    1. **`ps_debug_sel`** **\\=** 0x2.\n    2. **`sel_debug_mux0`** = 0xF\n        1. **QS\\_DIG\\_DBG\\_OUT0**: rssi\\_en\n    3. **`sel_debug_mux1`** \\= 0xF\n        1. **QS\\_DIG\\_DBG\\_OUT1**: rssi\\_peak\\_reset\n    4. **`sel_debug_mux2`** \\= 0xF\n        1. **QS\\_DIG\\_DBG\\_OUT2**: rssi\\_cal\\_en\n2. Note: Make sure **`ie_dbg_0`** & **`ie_dbg_1`** are set to 0 for output at **QS\\_DIG\\_DBG\\_OUT0** & **QS\\_DIG\\_DBG\\_OUT1** respectively."
+        },
+        {
+          "id": "86dzwatgd",
+          "name": "N3: [QS127M Bench] RX power measurements",
+          "owner": "Deepthi Kammath, Vinayak Agrawal",
+          "description": "Why: Ixana plans to take QS127M into production. \n\nDeliverable:  measure the power consumption of the IC in Rx mode (outlined in the subtasks below)\n\nDetailed test description is documented here:\n[https://app.clickup.com/9017196379/docs/8cqezuv-60897/8cqezuv-78177](https://app.clickup.com/9017196379/docs/8cqezuv-60897/8cqezuv-78177)\n\nRisks (T,E):\n\nLimitations (Assumptions (A), Constraints (C), Dependency (D))\n\nResults \n\n(T)iger is a risk that everybody understands\n(E)lephant is a risk that I know but others don't think so, yet"
+        },
+        {
+          "id": "86dzwatdz",
+          "name": "N3:[QS127M Bench] TX power measurements",
+          "owner": "Tomin  Jose, Vinayak Agrawal",
+          "description": "**Why:** Ixana plans to take QS127M into production. \n\n**Deliverable:**  Need to measure the power IC consumed during the TX operation (as outlined in the subtaks below)\n\nDetailed test description is documented here:\n[https://app.clickup.com/9017196379/docs/8cqezuv-60897/8cqezuv-78157](https://app.clickup.com/9017196379/docs/8cqezuv-60897/8cqezuv-78157)\n\n**Risks (T,E):**\n\n**Limitations (Assumptions (A), Constraints (C), Dependency (D))**\n\nResults \n\n(T)iger is a risk that everybody understands\n(E)lephant is a risk that I know but others don't think so, yet"
+        },
+        {
+          "id": "86dzwarz2",
+          "name": "N3: [QS127M Bench] Generating RSSI calibration curves with and without RSSI offset correction in non-schedule",
+          "owner": "Vinayak Agrawal, Aryan Jadhav",
+          "description": "Why; Ixana plans to take QS127M to production.\n\nDeliverable / Description:\n## **Test operation**\nFor **RSSI Offset Correction steps**, check this page: RSSI Offset Correction ([https://app.clickup.com/9017196379/docs/8cqezuv-60897/8cqezuv-76777](https://app.clickup.com/9017196379/docs/8cqezuv-60897/8cqezuv-76777))\n### For PER test\n1. Power on the chip in normal mode (**QS\\_MCU\\_IO1\\_BYP\\_PS**\\=0V) and write configs\n2. Send packet from Tx device with same datarate and carrier frequency as set for Rx\n3. Wait for packet reception. When reception is done and packet is successfully received, **QS\\_MCU\\_IRQ\\_1** pin will be asserted\n4. [Read/Clear IRQ1](https://app.clickup.com/9017196379/v/dc/8cqezuv-60897/8cqezuv-83537?block=block-c1b9e8cf-8453-4cbd-a896-57ad4ac79ffc)\n5. [Packet read](https://app.clickup.com/9017196379/v/dc/8cqezuv-60897/8cqezuv-83537?block=block-050738c1-abcb-4216-95cb-82a72b39e4c6) from Rx FIFO\n6. Read status registers\n    1. **`rssi_val_to_status_ps`** <addr {0x044A\\[1:0\\], 0x0449}>\n    2. **`rssi_cal_done_to_status_ps`** <addr 0x044A\\[2\\]>\n    3. **`rssi_value_baseline_to_status`** <addr {0x044C\\[1:0\\], 0x044B}>\n    4. **`rssi_cal_done_to_status_baseline`** <addr 0x044B\\[2\\]>\n7. When running in **QS\\_MCU\\_IO1\\_BYP\\_PS**\\=0, the only bit that controls enabling is **`ps_cfg_rssi_mode`** =1 <addr 0x0219\\[6\\]>\n    1. Note that if this bit is 0 it does not guarantee RSSI block is off, just that it will not be automatically controlled by PS\n### For Schedule Tests\n**Refer to this:**[](https://app.clickup.com/9017196379/v/dc/8cqezuv-60897/8cqezuv-75137?block=block-95a30a23-8df6-4a74-b1d7-9481ceccf6e3)\n1. Power on the chip in normal mode (**QS\\_MCU\\_IO1\\_BYP\\_PS**\\=0V) and write configs\n2. To start schedule operation:\n    1. **`ps_scheduler_start`** = 0➝1 <addr 0x0208\\[5\\]>\n3. Also need to configure the PS descriptors and ADR bits separately as they are not configured by preset\n4. Follow schedule test flow\n5. At the end of every RX slot, check the following status registers:\n    1. **`rssi_val_latched`** <addr {0x0445\\[1:0\\], 0x0444}>\n    2. **`rssi_cal_done_latched`** <addr 0x0445\\[2\\]>\n    3. **`rssi_baseline_val_latched`** <addr {0x0447\\[1:0\\], 0x0446}>\n    4. **`rssi_cal_done_baseline_latched`** <addr 0x0447\\[2\\]>\n6. Config **`ps_cfg_rssi_mode`** <addr 0x0219\\[6\\]> should be 1 for this again.\n    1. NOTE that the RSSI will only trigger on the descriptor index set in **`ps_cfg_rssi_desc`** <addr 0x021A\\[3:0\\]> and RSSI baseline on the descriptor index set in **`ps_cfg_rssi_baseline_desc`** <addr 0x021D\\[6:3\\]>\n        1. this does mean that if there are two back-to-back slots which use the same descriptor, it may overwrite\n        2. see also **`ps_rssi_cal_value_update_slow`** <addr 0x0219\\[1\\]>\n\n### RSSI Manual Measurement **(FW Implementation)**:\n**Refer to this doc:** Manual RSSI Measurement ([https://app.clickup.com/9017196379/docs/8cqezuv-60897/8cqezuv-76797](https://app.clickup.com/9017196379/docs/8cqezuv-60897/8cqezuv-76797))\nFind the JSON reg settings in the linked page.\n### RSSI Schedule Timings\n**Refer to this:** [https://10xar-my.sharepoint.com/:u:/p/shovan/IQDk13gbXwq5RK1SrbgZRVNmAXqLtO7MmS6ePg1elJLK\\_NI?e=VVOJZF](https://10xar-my.sharepoint.com/:u:/p/shovan/IQDk13gbXwq5RK1SrbgZRVNmAXqLtO7MmS6ePg1elJLK_NI?e=VVOJZF)\n### Debug Signals\n1. To bring out internal RSSI signals, write the following using SPI:\n    1. **`ps_debug_sel`** **\\=** 0x2.\n    2. **`sel_debug_mux0`** = 0xF\n        1. **QS\\_DIG\\_DBG\\_OUT0**: rssi\\_en\n    3. **`sel_debug_mux1`** \\= 0xF\n        1. **QS\\_DIG\\_DBG\\_OUT1**: rssi\\_peak\\_reset\n    4. **`sel_debug_mux2`** \\= 0xF\n        1. **QS\\_DIG\\_DBG\\_OUT2**: rssi\\_cal\\_en\n2. Note: Make sure **`ie_dbg_0`** & **`ie_dbg_1`** are set to 0 for output at **QS\\_DIG\\_DBG\\_OUT0** & **QS\\_DIG\\_DBG\\_OUT1** respectively."
+        }
+      ]
+    },
+    {
+      "stageNumber": 3,
+      "stageName": "RTL Implementation",
+      "status": "active",
+      "taskCount": 2,
+      "tasks": [
+        {
+          "id": "86dzwarqt",
+          "name": "N3: [QS127M Bench] PER with FG test with AGC without ecc +crc",
+          "owner": "Vinayak Agrawal",
+          "description": "Why: Ixana plans to take QS127M into production. \n\nDeliverable: \n\nRisks (T,E):\n\nLimitations (Assumptions (A), Constraints (C), Dependency (D))\n\nResults \n\n(T)iger is a risk that everybody understands\n(E)lephant is a risk that I know but others don't think so, yet"
+        },
+        {
+          "id": "86dzwardq",
+          "name": "N3: [QS127M Bench] PLL test using external reference clock.",
+          "owner": "Deepthi Kammath, Anish Saha",
+          "description": "**Why:** Ixana plans to take QS127M into production. \n\n**Deliverable:** \n**Measured Parameters:** Measure the Frequency offset and jitter at the RX PLL clock.\n**Expectation:** Frequency of the observed clock at **QS\\_DIG\\_DBG\\_OUT0** port will be 1.25MHz. The jitter and observed frequency (with frequency offset) values are given in this doc: [https://10xar-my.sharepoint.com/:p:/p/shovan/IQAjcMgSgIeBT7mS8f\\_SbgUHAXljcDwCX2x8fjdoXT6C1CE?e=QFRXW9](https://10xar-my.sharepoint.com/:p:/p/shovan/IQAjcMgSgIeBT7mS8f_SbgUHAXljcDwCX2x8fjdoXT6C1CE?e=QFRXW9)(Refer slide no. 15).\n\nDetailed description of the test is documented here: See #14 PLL test using external reference.\n[https://app.clickup.com/9017196379/docs/8cqezuv-60897/8cqezuv-74597](https://app.clickup.com/9017196379/docs/8cqezuv-60897/8cqezuv-74597)\n\nRisks (T,E):\n\nLimitations (Assumptions (A), Constraints (C), Dependency (D))\n\nResults \n\n(T)iger is a risk that everybody understands\n(E)lephant is a risk that I know but others don't think so, yet"
+        }
+      ]
+    },
+    {
+      "stageNumber": 4,
+      "stageName": "Test Case Creation and Discussion",
+      "status": "upcoming",
+      "taskCount": 0,
+      "tasks": []
+    },
+    {
+      "stageNumber": 5,
+      "stageName": "Lint and CDC Check",
+      "status": "upcoming",
+      "taskCount": 0,
+      "tasks": []
+    },
+    {
+      "stageNumber": 6,
+      "stageName": "Regression and Corner Sim",
+      "status": "upcoming",
+      "taskCount": 0,
+      "tasks": []
+    },
+    {
+      "stageNumber": 7,
+      "stageName": "Code Coverage",
+      "status": "upcoming",
+      "taskCount": 0,
+      "tasks": []
+    },
+    {
+      "stageNumber": 8,
+      "stageName": "Constraints and UPF File Creation",
+      "status": "upcoming",
+      "taskCount": 0,
+      "tasks": []
+    },
+    {
+      "stageNumber": 9,
+      "stageName": "Doc Creation",
+      "status": "upcoming",
+      "taskCount": 0,
+      "tasks": []
+    },
+    {
+      "stageNumber": 10,
+      "stageName": "Release to PD, Floor Planning",
+      "status": "active",
+      "taskCount": 1,
+      "tasks": [
+        {
+          "id": "86dzuruwj",
+          "name": "N3 : [QS127M-ATE] ATE test plan review.",
+          "owner": "sumon, Vinayak Agrawal, Sarat Anumula",
+          "description": "**Why:** Ixana plan to take QS127M (YR23) into production with phase 1 targeting 100K devices.\n\n**Deliverable:** Complete the test plan review with Tessolve and agree upon the test plan and get it approved by both Ixana and Tessolve."
+        }
+      ]
+    },
+    {
+      "stageNumber": 11,
+      "stageName": "SDF and NLP Sim",
+      "status": "upcoming",
+      "taskCount": 0,
+      "tasks": []
+    }
+  ],
+  "blockers": [],
+  "nextStep": "Complete tasks in \"Block Diagram Discussion\" and prepare for downstream stages."
+}

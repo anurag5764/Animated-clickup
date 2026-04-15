@@ -18,14 +18,32 @@
  */
 
 import fs from 'fs';
+import path from 'path';
 import axios from 'axios';
 import dotenv from 'dotenv';
+import { inferWrongViewDelayReason } from './wrong_delay_reason_infer.js';
 
 dotenv.config();
 
-const PROJECTS = [
-  { tasksFile: 'ps_folder_tasks_qs222.json', outputFile: 'output_ps_qs222.json' },
-  { tasksFile: 'ps_folder_tasks_qs223.json', outputFile: 'output_ps_qs223.json' },
+const CURRENT_PROJECTS = [
+  { tasksFile: 'data/extracts/ps_folder_tasks_qs222.json', outputFile: 'data/outputs/output_ps_qs222.json' },
+  { tasksFile: 'data/extracts/ps_folder_tasks_qs223.json', outputFile: 'data/outputs/output_ps_qs223.json' },
+  { tasksFile: 'data/extracts/ps_folder_tasks_qs127.json', outputFile: 'data/outputs/output_ps_qs127.json' },
+];
+
+const WRONG_PROJECTS = [
+  {
+    tasksFile: 'data/extracts/ps_wrong_folder_tasks_qs222.json',
+    outputFile: 'data/outputs/output_ps_wrong_qs222.json',
+  },
+  {
+    tasksFile: 'data/extracts/ps_wrong_folder_tasks_qs223.json',
+    outputFile: 'data/outputs/output_ps_wrong_qs223.json',
+  },
+  {
+    tasksFile: 'data/extracts/ps_wrong_folder_tasks_qs127.json',
+    outputFile: 'data/outputs/output_ps_wrong_qs127.json',
+  },
 ];
 
 const OLLAMA_MODEL = process.env.OLLAMA_MODEL || 'llama3.2';
@@ -36,6 +54,13 @@ const OPENROUTER_KEY = process.env.OPENROUTER_API_KEY;
 const USE_OPENROUTER_FIRST =
   (process.env.PS_USE_OPENROUTER === 'true' || process.env.PS_USE_OPENROUTER === '1') &&
   Boolean(OPENROUTER_KEY);
+
+function resolveInputFile(filePath) {
+  if (fs.existsSync(filePath)) return filePath;
+  const legacy = path.basename(filePath);
+  if (fs.existsSync(legacy)) return legacy;
+  return filePath;
+}
 
 // Progress display utilities
 class ProgressDisplay {
@@ -53,9 +78,11 @@ class ProgressDisplay {
     
     this.intervalId = setInterval(() => {
       this.currentFrame = (this.currentFrame + 1) % this.spinnerFrames.length;
-      process.stdout.clearLine(0);
-      process.stdout.cursorTo(0);
-      process.stdout.write(`${this.spinnerFrames[this.currentFrame]} ${this.lastMessage}`);
+      if (process.stdout.isTTY) {
+        process.stdout.clearLine(0);
+        process.stdout.cursorTo(0);
+        process.stdout.write(`${this.spinnerFrames[this.currentFrame]} ${this.lastMessage}`);
+      }
     }, 80);
   }
 
@@ -68,8 +95,10 @@ class ProgressDisplay {
       clearInterval(this.intervalId);
       this.intervalId = null;
     }
-    process.stdout.clearLine(0);
-    process.stdout.cursorTo(0);
+    if (process.stdout.isTTY) {
+      process.stdout.clearLine(0);
+      process.stdout.cursorTo(0);
+    }
     console.log(`${symbol} ${finalMessage}`);
   }
 }
@@ -80,10 +109,14 @@ function printProgressBar(current, total, label = '') {
   const filled = Math.round((barLength * current) / total);
   const empty = barLength - filled;
   const bar = '█'.repeat(filled) + '░'.repeat(empty);
-  const status = `${label} [${bar}] ${percentage}% (${current}/${total})`;
-  process.stdout.clearLine(0);
-  process.stdout.cursorTo(0);
-  process.stdout.write(status);
+  const statusLine = `${label} [${bar}] ${percentage}% (${current}/${total})`;
+  if (process.stdout.isTTY) {
+    process.stdout.clearLine(0);
+    process.stdout.cursorTo(0);
+    process.stdout.write(statusLine);
+  } else if (current === total) {
+    console.log(statusLine);
+  }
   if (current === total) process.stdout.write('\n');
 }
 
@@ -149,7 +182,7 @@ Keywords to look for:
 - "publish", "datasheet", "customer" → 11
 
 Return format:
-{"assignments":[{"idx":0,"stage":6,"assignee":"Name","detail":"brief summary"},...]}
+{"assignments":[{"idx":0,"stage":6},...]}
 
 IMPORTANT: Return ALL tasks with their idx numbers.`;
 
@@ -258,15 +291,10 @@ function normalizeBatchAssignments(chunk, parsed) {
     // Try to extract stage number
     let sn = num(r.stageNumber, NaN);
     if (!Number.isFinite(sn)) sn = num(r.stage, NaN);
-    if (!Number.isFinite(sn)) sn = num(r.stageNum, NaN);
-    if (!Number.isFinite(sn)) sn = 6; // Default to stage 6 (testing)
-    
+    if (!Number.isFinite(sn)) sn = 6; // default to PS testing
     sn = Math.min(11, Math.max(1, sn));
     
-    const assignee = String(r.assignee ?? r.assigneeName ?? r.owner ?? '').trim();
-    const detail = String(r.detail ?? r.summary ?? r.note ?? r.description ?? '').trim();
-    
-    byIdx.set(idx, { idx, stageNumber: sn, assignee, detail });
+    byIdx.set(idx, { idx, stageNumber: sn });
   }
   
   return Array.from(byIdx.values());
@@ -349,13 +377,21 @@ function chunkArray(arr, size) {
   return out;
 }
 
+function assigneeDisplayFromTask(t) {
+  if (!Array.isArray(t.assignees) || t.assignees.length === 0) return '';
+  return t.assignees
+    .map((a) => (typeof a === 'string' ? a : a?.username || a?.name || ''))
+    .filter(Boolean)
+    .join(', ');
+}
+
 // Create a simple task representation for the LLM
 function simplifyTaskForLLM(task, idx) {
   const text = `${task.name || ''} ${task.description || ''}`.toLowerCase();
-  
+
   // Try to guess stage based on keywords
   let suggestedStage = 6; // Default to testing
-  
+
   if (/\b(define|initial|plan|requirement)\b/.test(text)) suggestedStage = 1;
   else if (/\b(discuss|deliverable|risk|depend)\b/.test(text)) suggestedStage = 2;
   else if (/\b(procedure|github|setup|resource)\b/.test(text)) suggestedStage = 3;
@@ -367,47 +403,19 @@ function simplifyTaskForLLM(task, idx) {
   else if (/\b(report|document|write)\b/.test(text)) suggestedStage = 9;
   else if (/\b(feedback|improve|next-gen)\b/.test(text)) suggestedStage = 10;
   else if (/\b(publish|datasheet|customer|release)\b/.test(text)) suggestedStage = 11;
-  
+
+  const first = Array.isArray(task.assignees) && task.assignees.length > 0 ? task.assignees[0] : null;
+  const assigneeStr =
+    !first ? 'Unassigned' : typeof first === 'string' ? first : first.username || first.name || 'Unassigned';
+
   return {
     idx,
     name: String(task.name || '').slice(0, 100),
-    assignee: Array.isArray(task.assignees) && task.assignees.length > 0 
-      ? task.assignees[0] 
-      : 'Unassigned',
-    suggested: suggestedStage
+    description: String(task.description || '').slice(0, 300),
+    comments: (task.comments || []).map((c) => c.text).join(' ').slice(0, 300),
+    assignee: assigneeStr,
+    suggested: suggestedStage,
   };
-}
-
-function identifyBlockers(slim, assignments) {
-  const blockers = [];
-  const byIdx = new Map();
-  
-  for (const a of assignments) {
-    if (a && Number.isFinite(a.idx)) {
-      byIdx.set(a.idx, a);
-    }
-  }
-  
-  for (let idx = 0; idx < slim.length; idx++) {
-    const task = slim[idx];
-    const assignment = byIdx.get(idx);
-    
-    if (!assignment) continue;
-    
-    const text = `${task.name} ${task.description || ''}`.toLowerCase();
-    const blockerKeywords = ['blocked', 'blocker', 'stuck', 'waiting', 'dependency', 'issue'];
-    
-    if (blockerKeywords.some(kw => text.includes(kw))) {
-      blockers.push({
-        task: task.name,
-        reason: assignment.detail || 'Task appears to be blocked',
-        severity: text.includes('critical') || text.includes('urgent') ? 'high' : 
-                 text.includes('important') ? 'medium' : 'low'
-      });
-    }
-  }
-  
-  return blockers;
 }
 
 function buildFinalOutput(slim, assignments) {
@@ -423,13 +431,14 @@ function buildFinalOutput(slim, assignments) {
     const t = slim[idx];
     const a = byIdx.get(idx);
     const sn = a ? Math.min(11, Math.max(1, num(a.stageNumber, 6))) : 6;
-    const assignee =
-      (a?.assignee && String(a.assignee).trim()) ||
-      (Array.isArray(t.assignees) && t.assignees.length > 0 ? t.assignees.join(', ') : '') ||
-      'Unassigned';
-    const detail =
-      (a?.detail && String(a.detail).trim()) || String(t.description || '').slice(0, 200);
-    byStage[sn - 1].push({ name: t.name, assignee, detail });
+    const assignee = assigneeDisplayFromTask(t) || 'Unassigned';
+    
+    byStage[sn - 1].push({ 
+      id: t.id || `idx-${idx}`, 
+      name: t.name, 
+      owner: assignee, 
+      description: (t.description || '').trim()
+    });
   }
   
   const stageRows = PS_STAGE_NAMES.map((stageName, i) => ({
@@ -464,8 +473,6 @@ function buildFinalOutput(slim, assignments) {
 
   const activeIdx = counts.reduce((best, c, i) => (c > counts[best] ? i : best), 0);
   
-  const blockers = identifyBlockers(slim, assignments);
-  
   return {
     currentPosition: {
       stageNumber: activeIdx + 1,
@@ -473,9 +480,49 @@ function buildFinalOutput(slim, assignments) {
       summary: `Currently focused on stage ${activeIdx + 1} with ${counts[activeIdx]} active task${counts[activeIdx] !== 1 ? 's' : ''}.`,
     },
     stages,
-    blockers,
+    blockers: [],
     nextStep: `Complete tasks in "${PS_STAGE_NAMES[activeIdx]}" and prepare for downstream stages.`,
   };
+}
+
+function commentsForUiFromExtract(comments) {
+  if (!Array.isArray(comments)) return [];
+  return comments.map((c) => ({
+    text: c.text || c.comment || '',
+    author: c.author || c.commentBy || 'Unknown',
+    date: Number(c.date) || 0,
+  }));
+}
+
+/** Enrich stage tasks with delay narrative, dates, and raw extract for dashboard nested delay UI. */
+async function enrichPsWrongTasksFromSlim(parsed, slim) {
+  const byId = new Map(slim.map((t) => [String(t.id), t]));
+  for (const stage of parsed.stages) {
+    for (const task of stage.tasks) {
+      const src = byId.get(String(task.id));
+      if (!src) continue;
+      const commentsUi = commentsForUiFromExtract(src.comments);
+      task.comments = commentsUi;
+      task.blockerReason = await inferWrongViewDelayReason(
+        { ...src, comments: commentsUi, description: src.description || task.description },
+        { team: 'ps' }
+      );
+      task.plannedStartDate = src.plannedStartDate;
+      task.plannedDueDate = src.plannedDueDate;
+      task.actualStartDate = src.actualStartDate;
+      task.actualCompletionDate = src.actualCompletionDate;
+      task.startDate = src.startDate;
+      task.dueDate = src.dueDate;
+      task.dateDone = src.actualCompletionDate;
+      task.delayedLabel = 'Yes';
+      task.delayDetails = 'Yes';
+      task.delayDuration = src.delayDurationDays ?? null;
+      task.projectName = src.listName;
+      task.raw = src;
+    }
+  }
+  parsed.mode = 'completed-delayed';
+  return parsed;
 }
 
 async function mapTasksWithOllamaBatches(slim) {
@@ -492,16 +539,10 @@ async function mapTasksWithOllamaBatches(slim) {
     
     // Create a very simple, clear prompt
     const taskList = chunk.map(t => 
-      `idx:${t.idx} name:"${t.name}" assignee:"${t.assignee}" (suggest stage ${t.suggested})`
+      `idx:${t.idx} name:"${t.name}" desc:"${t.description}"`
     ).join('\n');
     
-    const userMsg = `Map these ${chunk.length} tasks to stages 1-11. Return JSON with this exact format:
-{"assignments":[{"idx":NUMBER,"stage":NUMBER,"assignee":"STRING","detail":"STRING"}]}
-
-Tasks:
-${taskList}
-
-Return ONLY the JSON object, no other text.`;
+    const userMsg = `Map these tasks to workflow stages 1-11 based on task name and description. Return ONLY JSON in this exact format: {"assignments":[{"idx":NUMBER,"stage":NUMBER}]}\n\nTasks:\n${taskList}`;
     
     const progress = new ProgressDisplay();
     progress.start(`Batch ${bi + 1}/${chunks.length}: Processing ${chunk.length} tasks...`);
@@ -539,36 +580,28 @@ Return ONLY the JSON object, no other text.`;
       }
     }
     
-    // Use best attempt if we didn't get full coverage
     if (bestCoverage > 0 && bestCoverage < chunk.length) {
       normalized = bestNormalized;
       progress.stop(
         `Batch ${bi + 1}/${chunks.length}: ⚠ Mapped ${bestCoverage}/${chunk.length} tasks (${chunk.length - bestCoverage} use fallback)`,
         '⚠'
       );
-      
-      // Fill in missing tasks with keyword-based guessing
       const got = new Set(normalized.map(a => a.idx));
       for (const t of chunk) {
         if (!got.has(t.idx)) {
           normalized.push({
             idx: t.idx,
-            stageNumber: t.suggested,
-            assignee: t.assignee,
-            detail: `Auto-mapped to stage ${t.suggested}`
+            stageNumber: t.suggested
           });
         }
       }
     } else if (bestCoverage === 0) {
       progress.stop(`Batch ${bi + 1}/${chunks.length}: ⚠ No valid JSON, using keyword fallback`, '⚠');
       
-      // Fallback: use keyword-based guessing for all tasks
       for (const t of chunk) {
         normalized.push({
           idx: t.idx,
-          stageNumber: t.suggested,
-          assignee: t.assignee,
-          detail: `Keyword-based mapping to stage ${t.suggested}`
+          stageNumber: t.suggested
         });
       }
     }
@@ -593,11 +626,11 @@ async function mapTasksWithOpenRouterBatches(slim) {
     const chunk = chunks[bi];
     
     const taskList = chunk.map(t => 
-      `idx:${t.idx} "${t.name}"`
+      `idx:${t.idx} name:"${t.name}" assignee:"${t.assignee}" desc:"${t.description}" comments:"${t.comments}" (suggest stage ${t.suggested})`
     ).join('\n');
     
-    const userMsg = `Map these tasks to workflow stages 1-11. Return JSON:
-{"assignments":[{"idx":NUMBER,"stage":NUMBER,"assignee":"STRING","detail":"STRING"}]}
+    const userMsg = `Map these tasks to workflow stages 1-11 based on task name and description. Return ONLY JSON in this exact format:
+{"assignments":[{"idx":NUMBER,"stage":NUMBER}]}
 
 Tasks:
 ${taskList}`;
@@ -625,19 +658,23 @@ ${taskList}`;
   return buildFinalOutput(slim, allAssignments);
 }
 
-async function analyzeProject(project) {
+async function analyzeProject(project, kind = 'current') {
   console.log(`\n${'='.repeat(70)}`);
-  console.log(`  📁 Project: ${project.tasksFile}`);
+  console.log(`  📁 ${kind === 'wrong' ? 'WRONG · ' : ''}Project: ${project.tasksFile}`);
   console.log(`  📤 Output:  ${project.outputFile}`);
   console.log(`${'='.repeat(70)}`);
 
   if (!fs.existsSync(project.tasksFile)) {
     console.warn(`⚠️  Skip — file not found: ${project.tasksFile}`);
-    console.warn(`   Run: node extract_ps_folder_tasks.js`);
+    console.warn(
+      kind === 'wrong'
+        ? `   Run: node extract_ps_wrong_folder_tasks.js`
+        : `   Run: node extract_ps_folder_tasks.js`
+    );
     return;
   }
 
-  const raw = JSON.parse(fs.readFileSync(project.tasksFile, 'utf-8'));
+  const raw = JSON.parse(fs.readFileSync(resolveInputFile(project.tasksFile), 'utf-8'));
   const tasks = Array.isArray(raw.tasks) ? raw.tasks : [];
 
   console.log(`📋 Loaded ${tasks.length} task${tasks.length !== 1 ? 's' : ''}`);
@@ -674,17 +711,23 @@ async function analyzeProject(project) {
     }
   }
 
+  if (kind === 'wrong') {
+    console.log('\n🧩 Enriching wrong-view tasks (delay reasons + dates)…');
+    await enrichPsWrongTasksFromSlim(parsed, tasks);
+  }
+
   if (!validatePsWorkflowOutput(parsed)) {
     console.error('❌ Output validation failed.');
     return;
   }
 
   // Write output files
+  fs.mkdirSync(path.dirname(project.outputFile), { recursive: true });
   fs.writeFileSync(project.outputFile, JSON.stringify(parsed, null, 2));
   console.log(`\n✓ Saved ${project.outputFile}`);
 
   // Copy to dashboard public folder
-  const pub = `./dashboard/public/${project.outputFile}`;
+  const pub = `./dashboard/public/${path.basename(project.outputFile)}`;
   try {
     fs.mkdirSync('./dashboard/public', { recursive: true });
     fs.copyFileSync(project.outputFile, pub);
@@ -697,23 +740,23 @@ async function analyzeProject(project) {
   console.log(`\n📊 Summary:`);
   console.log(`   Current Stage: ${parsed.currentPosition.stageNumber} - ${parsed.currentPosition.stageName}`);
   console.log(`   Total Tasks: ${tasks.length}`);
-  
-  const activeTasks = parsed.stages.filter(s => s.status === 'active').reduce((sum, s) => sum + s.taskCount, 0);
-  const completedStages = parsed.stages.filter(s => s.status === 'completed').length;
-  
+
+  const activeTasks = parsed.stages.filter((s) => s.status === 'active').reduce((sum, s) => sum + s.taskCount, 0);
+  const completedStages = parsed.stages.filter((s) => s.status === 'completed').length;
+
   console.log(`   Active Tasks: ${activeTasks}`);
   console.log(`   Completed Stages: ${completedStages}/11`);
-  
+
   if (parsed.blockers.length > 0) {
     console.log(`   ⚠️  Blockers: ${parsed.blockers.length}`);
-    parsed.blockers.slice(0, 3).forEach(b => {
+    parsed.blockers.slice(0, 3).forEach((b) => {
       console.log(`      • ${b.task} (${b.severity})`);
     });
   }
-  
+
   // Show stage distribution
   console.log(`\n   Stage Distribution:`);
-  parsed.stages.forEach(s => {
+  parsed.stages.forEach((s) => {
     if (s.taskCount > 0) {
       const bar = '█'.repeat(Math.min(20, Math.round(s.taskCount / 2)));
       console.log(`   ${s.stageNumber.toString().padStart(2)}. ${s.taskCount.toString().padStart(3)} tasks ${bar}`);
@@ -746,10 +789,21 @@ async function main() {
     console.log(`\n✓ Ollama reachable at ${OLLAMA_URL} (model: ${OLLAMA_MODEL})`);
   }
 
-  // Process each project
-  for (const project of PROJECTS) {
+  for (const project of CURRENT_PROJECTS) {
     try {
-      await analyzeProject(project);
+      await analyzeProject(project, 'current');
+    } catch (err) {
+      console.error(
+        `\n❌ Error processing ${project.tasksFile}:`,
+        err.response?.data || err.cause?.message || err.message
+      );
+    }
+  }
+
+  console.log(`\n${'='.repeat(70)}\n  PS “What went wrong” (completed + delayed)\n${'='.repeat(70)}`);
+  for (const project of WRONG_PROJECTS) {
+    try {
+      await analyzeProject(project, 'wrong');
     } catch (err) {
       console.error(
         `\n❌ Error processing ${project.tasksFile}:`,
@@ -759,7 +813,7 @@ async function main() {
   }
 
   console.log(`\n${'='.repeat(70)}`);
-  console.log('  ✓ PS workflow analysis complete');
+  console.log('  ✓ PS workflow analysis complete (current + wrong)');
   console.log(`${'='.repeat(70)}\n`);
 }
 

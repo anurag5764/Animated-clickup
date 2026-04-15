@@ -2,11 +2,18 @@
   "name": "animated-clickup",
   "version": "1.0.0",
   "type": "module",
-  "main": "member.js",
+  "main": "analyze_ps_workflow.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "extract:ps-folders": "node extract_ps_folder_tasks.js",
-    "analyze:ps": "node analyze_ps_workflow.js"
+    "extract:ps-wrong": "node extract_ps_wrong_folder_tasks.js",
+    "analyze:ps": "node analyze_ps_workflow.js",
+    "extract:rtl-folders": "node extract_rtl_folder_tasks.js",
+    "extract:rtl-wrong": "node extract_rtl_wrong_folder_tasks.js",
+    "analyze:rtl": "node analyze_rtl_workflow.js",
+    "extract:ams-folders": "node extract_ams_folder_tasks.js",
+    "extract:ams-wrong": "node extract_ams_wrong_folder_tasks.js",
+    "analyze:ams": "node analyze_ams_workflow.js"
   },
   "keywords": [],
   "author": "",

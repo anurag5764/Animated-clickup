@@ -1,0 +1,1818 @@
+{
+  "projectId": "rtl1",
+  "projectLabel": "RTL Project 1",
+  "folderId": "90172523095",
+  "extractedAt": "2026-04-14T09:11:02.548Z",
+  "rtlAssigneeFilterCount": 18,
+  "extractMode": "rtl_assignee_and_in_progress",
+  "includeClosedApi": false,
+  "statusWhitelist": null,
+  "taskCount": 81,
+  "tasks": [
+    {
+      "id": "86e0gv8jh",
+      "name": "N3: PL divider",
+      "description": "Why: Post-layout simulation of the serializer\nDeliverable: 3 different Clk Freq. Signal(clk/2, clk/4, clk8) is the Output of this Divider\nRisk: NA\nLimitation: NA\n\nResults: [https://10xar-my.sharepoint.com/:p:/p/shovan/IQAY4DO5aKrgTJQsWRxcjsP3Ad5D\\_QbAOr1Kn6DNuiRokuI?e=sPFRrF](https://10xar-my.sharepoint.com/:p:/p/shovan/IQAY4DO5aKrgTJQsWRxcjsP3Ad5D_QbAOr1Kn6DNuiRokuI?e=sPFRrF)\nThe Divider Ckt. Diagram is in Slide No 3",
+      "assignees": [
+        "Manash Dey"
+      ],
+      "parentId": "86dxn2xmd",
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": [
+        {
+          "text": "@Archisman Ghosh @Pushpal Das\nI have completed this task along with the 8:1 bit Serializer and similarly the review was done on 25th March\nThe Task got delayed because it is closed after the End Date\n",
+          "author": "Manash Dey",
+          "date": "2026-04-07T18:58:57.832Z"
+        }
+      ]
+    },
+    {
+      "id": "86e0gv8ar",
+      "name": "N3: Post Layout sim: Serializer",
+      "description": "Why: Post-layout simulation of the serializer (@125M to 1G)\nDeliverable: Timing alignment (set up/hold) of all the stages\nRisk: NA\nLimitation: We can't go beyond 4GHz.\nResult: [https://10xar-my.sharepoint.com/:p:/p/shovan/IQAY4DO5aKrgTJQsWRxcjsP3Ad5D\\_QbAOr1Kn6DNuiRokuI?e=dnHvNM](https://10xar-my.sharepoint.com/:p:/p/shovan/IQAY4DO5aKrgTJQsWRxcjsP3Ad5D_QbAOr1Kn6DNuiRokuI?e=dnHvNM)\nPost Layout Sims are from Slide No 20\n\nSummary:\nThis Serializer will take 8 bit Low Speed Data Input & 4 Clk Input So that It can give 1 bit Fast Data Output.\nOutput Freq.= 8\\*Input Freq.",
+      "assignees": [
+        "Manash Dey"
+      ],
+      "parentId": "86dxn2xmd",
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": [
+        {
+          "text": "@Pushpal Das @Archisman Ghosh\nI have added the Post layout Sim Results and Please close the task.\nThis task got delayed because It was reviewed on 25th March and it is closed after the deadline\n",
+          "author": "Manash Dey",
+          "date": "2026-04-07T18:51:52.681Z"
+        }
+      ]
+    },
+    {
+      "id": "86e0fdf10",
+      "name": "N3: 2 device wrapper step by step debug",
+      "description": "This task is being logged in the following guide: FPGA Emulation: 2 Device on a single FPGA ([https://app.clickup.com/9017196379/docs/8cqezuv-45897/8cqezuv-87457](https://app.clickup.com/9017196379/docs/8cqezuv-45897/8cqezuv-87457))\n### April 3, 2026\nManaged to synthesize a close to full 2 device bitstream including the analog, core, and digital blocks and conducted the following tests:\n*   Device 1 Core-mode ![](https://t9017196379.p.clickup-attachments.com/t9017196379/972fc90c-1668-407e-819a-a4bef7b2e0f2/image.png)\n*   Device 1 Core-bypass mode ![](https://t9017196379.p.clickup-attachments.com/t9017196379/c9d4c178-06bd-4bcb-85fc-f9feb9711cdb/image.png)\n*   Device 2 Core-mode (Debugging...)\n*   Device 2 Core-bypass mode ![](https://t9017196379.p.clickup-attachments.com/t9017196379/eb67e8e0-3308-464f-b616-9574bd47a2c0/image.png)\n**Bitstream + Implementation Checkpoints and Logs**\n\n[full\\_2devices\\_adapter\\_board.zip](https://t9017196379.p.clickup-attachments.com/t9017196379/d92d7867-5e2d-412e-8b83-585c89181b6b/full_2devices_adapter_board.zip)\n\n### April 06, 2026\nThere is an issue with the Cortex-M0 for the **second device**\n*   I am able to attach over SWD but from inspecting the SRAM using the JMem memory viewer, the SRAM isn't being flashed properly\n*   I wasn't able to run neither the `wir_fifo_readback` application nor some of the core peripheral tests like the `dma` test\n*   I scaled back the design once again to an implementation where only 2 cores are implemented\n    *   I was able to then validate a valid region for the second device by running the `dma` test, checking the results with the debugger and the UART prints\n*   Knowing the valid region, I defined a Pblock range for the placement of device 2 and added the WIR components again\n    *   In the most recent bitstream, I generated a Full Single Dev 1 + Digital and core Dev 2\n        *   Passed Device 1 readback tests in both core and core-bypass modes\n        *   I was able to program Device 2's SRAM this time and passed the `dma` test\n        *   With this I flashed the `wir_fifo_readback` test in the second device (a milestone that was not possible in the attached bitstream above)\n        *   In both core and core-bypass modes, the readback test failed in the config read/write step",
+      "assignees": [
+        "Charles Adeyanju"
+      ],
+      "parentId": "86dxqgtgh",
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": [
+        {
+          "text": "@Pushpal Das Delay Reason: This task is dependent on a new design process that I'm developing and documenting.\n\nTechnical Explanation: The placement of two devices with Vivado's default placer and router setting are not sufficiently robust to successfully do this. We need to do careful floorplanning with pblocks which is being documented in \n",
+          "author": "Charles Adeyanju",
+          "date": "2026-04-07T17:39:28.606Z"
+        }
+      ]
+    },
+    {
+      "id": "86e0e8z8u",
+      "name": "N3: 222 ADR FW flow after sim",
+      "description": "",
+      "assignees": [
+        "Abhishek Sarkar",
+        "Sayantan Dey"
+      ],
+      "parentId": "86e04ca9e",
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": []
+    },
+    {
+      "id": "86e06tjkw",
+      "name": "N3: Obtain code coverage numnber",
+      "description": "",
+      "assignees": [
+        "Sharanya Shetty"
+      ],
+      "parentId": "86dxbvp2v",
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": [
+        {
+          "text": "@Sharanya Shetty",
+          "author": "Archisman Ghosh",
+          "date": "2026-03-24T23:58:43.274Z"
+        },
+        {
+          "text": "Please add start and end date\n",
+          "author": "Archisman Ghosh",
+          "date": "2026-03-16T15:56:27.992Z"
+        },
+        {
+          "text": "@Archisman Ghosh This task is divided between @Manav and me. I have completed the initial setup and provided the analog front-end–enabled testbench along with the initial set of selected tests for code coverage. I have also run the initial pool of testbenches to generate baseline coverage and handed that over to him.\nManav will be adding additional tests to further improve the code coverage, while I will continue working on the simplified coverage activity along with other high‑priority documentation tasks.\n\n@Pushpal Das:  Task is split between @Manav  and me: I completed the initial setup and baseline code‑coverage tests, and he will add more tests while I proceed with simplified coverage and high‑priority documentation.\n",
+          "author": "Sharanya Shetty",
+          "date": "2026-03-10T05:38:02.831Z"
+        }
+      ]
+    },
+    {
+      "id": "86e063gkw",
+      "name": "N3: LDO",
+      "description": "LDO Results: [https://10xar-my.sharepoint.com/:p:/p/shovan/IQDUsZno00LvRLHfwsEzRjeZAWTD\\_dS6G7hp0sWhK-xLSrs?e=hmmSHs](https://10xar-my.sharepoint.com/:p:/p/shovan/IQDUsZno00LvRLHfwsEzRjeZAWTD_dS6G7hp0sWhK-xLSrs?e=hmmSHs)\nThis is the LDO Result and PM>60 for i\\_Load <5mA. And it's giving 500mV as LDO\\_Output. For Reference Please check from Slide No 14 Onwards.",
+      "assignees": [
+        "Manash Dey"
+      ],
+      "parentId": "86dxn2xmd",
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": [
+        {
+          "text": "@Archisman Ghosh\nThe Ckt Diagram is in the Slide no 60. And I copied the same Slide on Page 03. Please have a look on this and can close the task\n",
+          "author": "Manash Dey",
+          "date": "2026-04-07T18:46:43.884Z"
+        },
+        {
+          "text": "Please add ckt diagram, and I will close it aftrewords.\n",
+          "author": "Archisman Ghosh",
+          "date": "2026-03-23T13:10:14.852Z"
+        },
+        {
+          "text": "@Archisman Ghosh @Pushpal Das \nThis task is got delayed Because - This task is completed & reviewed on 25th Feb, 2026, but it is closed after 25th Feb.\n",
+          "author": "Manash Dey",
+          "date": "2026-03-04T11:13:16.867Z"
+        },
+        {
+          "text": "@Archisman Ghosh @Pushpal Das \nThis task is completed & reviewed on 25th Feb, 2026.\nPlease Close the Task\n",
+          "author": "Manash Dey",
+          "date": "2026-03-04T11:12:29.865Z"
+        }
+      ]
+    },
+    {
+      "id": "86e063ey8",
+      "name": "N3: Application and packing layer exploration",
+      "description": "",
+      "assignees": [
+        "Dheerajeswar Saluru"
+      ],
+      "parentId": "86dxn2xmd",
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": []
+    },
+    {
+      "id": "86e063ex9",
+      "name": "N3: Low level protocol design of CSI-2 controller",
+      "description": "",
+      "assignees": [
+        "Dheerajeswar Saluru"
+      ],
+      "parentId": "86dxn2xmd",
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": [
+        {
+          "text": "@Pushpal Das @Archisman Ghosh though this task deadline supposed to be tomorrow (March 20th) \nthere is some high priority task which need to finish before this. so i won't spend any active time till the other tasks are finished and hence @Archisman Ghosh we might need to change the status of this task or adjust the timeline \n",
+          "author": "Dheerajeswar Saluru",
+          "date": "2026-03-19T10:35:56.006Z"
+        }
+      ]
+    },
+    {
+      "id": "86e062mmg",
+      "name": "N3: Generating bitstream for core+wir with updated QS223 top netlist: 13th Feb to 6th March",
+      "description": "All the generated bitstreams are available in this link: [https://10xar-my.sharepoint.com/personal/shovan\\_10xar\\_com/\\_layouts/15/onedrive.aspx?id=%2Fpersonal%2Fshovan%5F10xar%5Fcom%2FDocuments%2FTapeout%2FQS223%2FBlock%20Design%2Ffpga%5Fdebug%2Fbit%5Ffile&viewid=bccb761b%2D5867%2D499c%2D8eed%2D56ad9e4905fa](https://10xar-my.sharepoint.com/personal/shovan_10xar_com/_layouts/15/onedrive.aspx?id=%2Fpersonal%2Fshovan%5F10xar%5Fcom%2FDocuments%2FTapeout%2FQS223%2FBlock%20Design%2Ffpga%5Fdebug%2Fbit%5Ffile&viewid=bccb761b%2D5867%2D499c%2D8eed%2D56ad9e4905fa)\n\nWorking version of single device bitstream for QS223 Top (Core bypass mode FIFO readback test and FIFO readback test with core is working with this bitstream): [https://10xar-my.sharepoint.com/personal/shovan\\_10xar\\_com/\\_layouts/15/onedrive.aspx?id=%2Fpersonal%2Fshovan%5F10xar%5Fcom%2FDocuments%2FTapeout%2FQS223%2FBlock%20Design%2Ffpga%5Fdebug%2Fbit%5Ffile%2Fsingle%5Fdevice%5Fall%5Fgpio%5Fupdated%5Frtl%5Fworking%5Fbitstream%5F5th%5Fmarch&viewid=bccb761b%2D5867%2D499c%2D8eed%2D56ad9e4905fa](https://10xar-my.sharepoint.com/personal/shovan_10xar_com/_layouts/15/onedrive.aspx?id=%2Fpersonal%2Fshovan%5F10xar%5Fcom%2FDocuments%2FTapeout%2FQS223%2FBlock%20Design%2Ffpga%5Fdebug%2Fbit%5Ffile%2Fsingle%5Fdevice%5Fall%5Fgpio%5Fupdated%5Frtl%5Fworking%5Fbitstream%5F5th%5Fmarch&viewid=bccb761b%2D5867%2D499c%2D8eed%2D56ad9e4905fa)\n\nRepo containing FPGA version of all the RTL modules being used to generate bitstream: [https://github.com/Quasistatics/IC-RTL-qs223/tree/qs223\\_fpga\\_sumon/rtl/models\\_fpga/v2](https://github.com/Quasistatics/IC-RTL-qs223/tree/qs223_fpga_sumon/rtl/models_fpga/v2)\nDesign Sources txt file (RTL flist): [https://github.com/Quasistatics/IC-RTL-qs223/blob/qs223\\_fpga\\_sumon/rtl/models\\_fpga/design\\_sources\\_QS223\\_top\\_updated.txt](https://github.com/Quasistatics/IC-RTL-qs223/blob/qs223_fpga_sumon/rtl/models_fpga/design_sources_QS223_top_updated.txt)",
+      "assignees": [
+        "Ushasi Das"
+      ],
+      "parentId": "86dxqgtgh",
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": [
+        {
+          "text": "@Archisman Ghosh @Pushpal Das I have added the deliverables for this task. Currently for the single device bitstream, fifo readback test with core and core bypass mode fifo readback test is passing.\n\nFor the two device bitstream, core bypass mode fifo readback test is passing but FIFO readback test with core is not passing. This task is on hold currently. I will start working on this again after I complete all my documentation tasks.\n",
+          "author": "Ushasi Das",
+          "date": "2026-03-14T07:22:31.015Z"
+        },
+        {
+          "text": "@Ushasi Das please add deliverables\n",
+          "author": "Archisman Ghosh",
+          "date": "2026-03-04T05:40:11.434Z"
+        }
+      ]
+    },
+    {
+      "id": "86e05cj8m",
+      "name": "N3: FW Seq: RSSI offset correction, manual rssi measurement",
+      "description": "",
+      "assignees": [
+        "Sharanya Shetty"
+      ],
+      "parentId": "86e04ca9e",
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": []
+    },
+    {
+      "id": "86e05cj75",
+      "name": "N3: FW Seq: IRX OC, FHSS LUT, AGC OC Step",
+      "description": "",
+      "assignees": [
+        "Sharanya Shetty"
+      ],
+      "parentId": "86e04ca9e",
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": []
+    },
+    {
+      "id": "86e05cj03",
+      "name": "N3: AES document",
+      "description": "Documents include all mentioned below but not restricted to:\nBasic block diagram\nIndiavidual simulation commands\nWorking principle\nInterface\nAny FSM/config , control sequence\nArea/power number.\nA list of flist for sdf/nlp/rtl sim.\nregression script if required\n\nTask is only done when it is reviewed by Archisman/Sumon/FW team.\n\nYou should also point to individual document.\n\nNote: AI help is alright but must not contain any AI generated misinformation.\nNote that how it interacts in top level, has to be part of it.\n\n/// ---------------------- ///\nAll documents attached below.\n\nQS223\\_AES\\_SPECS - [https://10xar-my.sharepoint.com/:p:/p/shovan/IQCHNxw2ZvbOQYZ22erA4FeGART8NnOdoUx1JhCF2o59mYQ?e=jqkDHK](https://10xar-my.sharepoint.com/:p:/p/shovan/IQCHNxw2ZvbOQYZ22erA4FeGART8NnOdoUx1JhCF2o59mYQ?e=jqkDHK)\nAES\\_RTL\\_DESIGN\\_PPT by AC - [https://10xar-my.sharepoint.com/:p:/p/shovan/IQAc2wD8v8U8T5FYHWevu9HDAcvQaNzkPsQxtevsSkUiZ8k?e=RGJVOu](https://10xar-my.sharepoint.com/:p:/p/shovan/IQAc2wD8v8U8T5FYHWevu9HDAcvQaNzkPsQxtevsSkUiZ8k?e=RGJVOu)\nAES\\_256\\_Encrypt- [https://10xar-my.sharepoint.com/:w:/p/shovan/IQDE7vIOqvW0TZqRJXg4cncNATcLW09G3K9FhOg7CqmP5eo?e=lIP1J0](https://10xar-my.sharepoint.com/:w:/p/shovan/IQDE7vIOqvW0TZqRJXg4cncNATcLW09G3K9FhOg7CqmP5eo?e=lIP1J0)\nAES\\_256\\_Decrypt- [https://10xar-my.sharepoint.com/:w:/p/shovan/IQAXHbyhdK3nRaSjkG5kGS5WAe6PfctolPugfFAO79UnF-A?e=J9fGxr](https://10xar-my.sharepoint.com/:w:/p/shovan/IQAXHbyhdK3nRaSjkG5kGS5WAe6PfctolPugfFAO79UnF-A?e=J9fGxr)\n\nArea/Power numbers-![](https://t9017196379.p.clickup-attachments.com/t9017196379/2557b740-947c-423f-b766-c7e50773f2aa/image.png)\nTest Setup-\nTest plan- [https://10xar-my.sharepoint.com/:x:/p/shovan/IQBhhfJ2QNOYRKcKMV8Utc2oAUk9fea4FMaj2vPMUxSbK54?e=SADNdb](https://10xar-my.sharepoint.com/:x:/p/shovan/IQBhhfJ2QNOYRKcKMV8Utc2oAUk9fea4FMaj2vPMUxSbK54?e=SADNdb)\nFilelist for RTL:\nEncrypt- [https://github.com/Quasistatics/IC-RTL-qs223/blob/main/vcs/aes\\_256/regression/rtl\\_encrypt.flist](https://github.com/Quasistatics/IC-RTL-qs223/blob/main/vcs/aes_256/regression/rtl_encrypt.flist)\nDecrypt- [https://github.com/Quasistatics/IC-RTL-qs223/blob/main/vcs/aes\\_256/regression/rtl\\_decrypt.flist](https://github.com/Quasistatics/IC-RTL-qs223/blob/main/vcs/aes_256/regression/rtl_decrypt.flist)\nFilelist for SDF- [https://github.com/Quasistatics/IC-RTL-qs223/blob/main/vcs/aes\\_256/sdf/rtl.flist](https://github.com/Quasistatics/IC-RTL-qs223/blob/main/vcs/aes_256/sdf/rtl.flist)\nFilelist for NLP- NA\nRegression script:\nEncrypt- [https://github.com/Quasistatics/IC-RTL-qs223/blob/main/vcs/aes\\_256/regression/regression\\_script\\_encrypt.sh](https://github.com/Quasistatics/IC-RTL-qs223/blob/main/vcs/aes_256/regression/regression_script_encrypt.sh)\nDecrypt- [https://github.com/Quasistatics/IC-RTL-qs223/blob/main/vcs/aes\\_256/regression/regression\\_script\\_decrypt.sh](https://github.com/Quasistatics/IC-RTL-qs223/blob/main/vcs/aes_256/regression/regression_script_decrypt.sh)",
+      "assignees": [
+        "Arka Chakraborty"
+      ],
+      "parentId": "86e04ca9e",
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": [
+        {
+          "text": "All documents added by 17/03. Waiting for review.\n",
+          "author": "Arka Chakraborty",
+          "date": "2026-03-17T06:51:56.179Z"
+        },
+        {
+          "text": "OOO on March 12 and 13. Starting task on 16/03.\n",
+          "author": "Arka Chakraborty",
+          "date": "2026-03-16T04:05:25.605Z"
+        }
+      ]
+    },
+    {
+      "id": "86e04ew6m",
+      "name": "N3: Top level simulation guide",
+      "description": "",
+      "assignees": [
+        "Sharanya Shetty"
+      ],
+      "parentId": "86e04ca9e",
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": []
+    },
+    {
+      "id": "86e04ew02",
+      "name": "N3: regression list at top level",
+      "description": "",
+      "assignees": [
+        "Sharanya Shetty"
+      ],
+      "parentId": "86e04ca9e",
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": []
+    },
+    {
+      "id": "86e04evq3",
+      "name": "N3: FHSS DVCO Design documentation",
+      "description": "Documents include all mentioned below but not restricted to:\nBasic block diagram\nIndiavidual simulation commands\nWorking principle\nInterface\nAny FSM/config , control sequence\nArea/power number.\nA list of flist for sdf/nlp/rtl sim.\nregression script if required\n\nTask is only done when it is reviewed by Archisman/Sumon/FW team.\n\nYou should also point to individual document.\n\nNote: AI help is alright but must not contain any AI generated misinformation.\n\n/// ---------------------- ///\nAll documents attached below.\n\nFHSS\\_SPECS - FHSS Hop Specs ([https://app.clickup.com/9017196379/docs/8cqezuv-46917/8cqezuv-65057](https://app.clickup.com/9017196379/docs/8cqezuv-46917/8cqezuv-65057))\nPPT by AC:\nDVCO- [https://10xar-my.sharepoint.com/:p:/p/shovan/IQAS-PZf3JVoRZg4\\_Wv2MeBqAYn6YzVr0fCMko5Un8XQEI8?e=Cat7jD](https://10xar-my.sharepoint.com/:p:/p/shovan/IQAS-PZf3JVoRZg4_Wv2MeBqAYn6YzVr0fCMko5Un8XQEI8?e=Cat7jD)\nFHSS- [https://10xar-my.sharepoint.com/:p:/p/shovan/IQCwcJ396agQTodH8waU42inAcZdBSxJrJsrqGXT7ygtBpg?e=RfQf1d](https://10xar-my.sharepoint.com/:p:/p/shovan/IQCwcJ396agQTodH8waU42inAcZdBSxJrJsrqGXT7ygtBpg?e=RfQf1d)\nFHSS (Word Doc)- [https://10xar-my.sharepoint.com/:w:/p/shovan/IQAUKq6jToSPT4slTTKz3ttjAfJk4o9DngHB8Ln9YWBVobU?e=FqSQYf](https://10xar-my.sharepoint.com/:w:/p/shovan/IQAUKq6jToSPT4slTTKz3ttjAfJk4o9DngHB8Ln9YWBVobU?e=FqSQYf)\nDVCO (Word Doc)- [https://10xar-my.sharepoint.com/:w:/p/shovan/IQCeqq-tb8CeToCIqUQJ2O25AdrmD4ibQ2Rdk39DIHdTFNk?e=cDv7i6](https://10xar-my.sharepoint.com/:w:/p/shovan/IQCeqq-tb8CeToCIqUQJ2O25AdrmD4ibQ2Rdk39DIHdTFNk?e=cDv7i6)\n\nArea/Power numbers-![](https://t9017196379.p.clickup-attachments.com/t9017196379/c89ce686-6b4a-490a-b362-185fcbc74694/image.png)\nTest Setup:\nTest plan-\nFHSS- [https://10xar-my.sharepoint.com/:x:/p/shovan/IQDMjmozQJ-OTZgqzg9R2FUUAc5-02TXhGnD\\_zump9rZ-nA?e=tyCGFd](https://10xar-my.sharepoint.com/:x:/p/shovan/IQDMjmozQJ-OTZgqzg9R2FUUAc5-02TXhGnD_zump9rZ-nA?e=tyCGFd)\nDVCO- [https://10xar-my.sharepoint.com/:x:/p/shovan/IQCetR1gKxDrRaKJ1SIgWDjXAWksS2n5B6dUIPoAFOn\\_41E?e=GLXCya](https://10xar-my.sharepoint.com/:x:/p/shovan/IQCetR1gKxDrRaKJ1SIgWDjXAWksS2n5B6dUIPoAFOn_41E?e=GLXCya)\nFilelist for RTL-\nFHSS- [https://github.com/Quasistatics/IC-RTL-qs223/blob/main/vcs/fhss\\_top/verification/rtl.flist](https://github.com/Quasistatics/IC-RTL-qs223/blob/main/vcs/fhss_top/verification/rtl.flist)\nDVCO- [https://github.com/Quasistatics/IC-RTL-qs223/blob/main/vcs/dvco\\_calibration/verification\\_ccm/rtl.flist](https://github.com/Quasistatics/IC-RTL-qs223/blob/main/vcs/dvco_calibration/verification_ccm/rtl.flist)\nFilelist for SDF- [https://github.com/Quasistatics/IC-RTL-qs223/blob/main/vcs/fhss\\_top/sdf/rtl.flist](https://github.com/Quasistatics/IC-RTL-qs223/blob/main/vcs/fhss_top/sdf/rtl.flist)\nFilelist for NLP- [https://github.com/Quasistatics/IC-RTL-qs223/blob/main/vcs/fhss\\_top/nlp/rtl.flist](https://github.com/Quasistatics/IC-RTL-qs223/blob/main/vcs/fhss_top/nlp/rtl.flist)\nRegression script- NA",
+      "assignees": [
+        "Arka Chakraborty"
+      ],
+      "parentId": "86e04ca9e",
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": [
+        {
+          "text": "@Archisman Ghosh @sumon the documents are added here in the descriptions\n",
+          "author": "Arka Chakraborty",
+          "date": "2026-03-18T12:05:06.683Z"
+        },
+        {
+          "text": "All required docs added by 11/03. Waiting for Review.\n",
+          "author": "Arka Chakraborty",
+          "date": "2026-03-11T07:35:29.857Z"
+        },
+        {
+          "text": "Started working on 10/03.\n",
+          "author": "Arka Chakraborty",
+          "date": "2026-03-10T07:25:38.834Z"
+        }
+      ]
+    },
+    {
+      "id": "86e04evka",
+      "name": "N3: I2C document",
+      "description": "Documents include all mentioned below but not restricted to:\nBasic block diagram\nIndiavidual simulation commands\nWorking principle\nInterface\nAny FSM/config , control sequence\nArea/power number.\nA list of flist for sdf/nlp/rtl sim.\nregression script if required\n\nTask is only done when it is reviewed by Archisman/Sumon/FW team.\n\nYou should also point to individual document.\n\nNote: AI help is alright but must not contain any AI generated misinformation.",
+      "assignees": [
+        "Sharanya Shetty"
+      ],
+      "parentId": "86e04ca9e",
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": []
+    },
+    {
+      "id": "86e04evhz",
+      "name": "N3: PS document",
+      "description": "Documents include all mentioned below but not restricted to:\nBasic block diagram\nIndiavidual simulation commands\nWorking principle\nInterface\nAny FSM/config , control sequence\nArea/power number.\nA list of flist for sdf/nlp/rtl sim.\nregression script if required\n\nTask is only done when it is reviewed by Archisman/Sumon/FW team.\n\nYou should also point to individual document.\n\nDoc- [https://10xar-my.sharepoint.com/:w:/p/shovan/IQCowKilOIsKS6K6kq3kwHBTAQCqekQkfV-qfh1Y8KIiDxo?e=b8LEiR](https://10xar-my.sharepoint.com/:w:/p/shovan/IQCowKilOIsKS6K6kq3kwHBTAQCqekQkfV-qfh1Y8KIiDxo?e=b8LEiR)\n\nNote: AI help is alright but must not contain any AI generated misinformation.",
+      "assignees": [
+        "Sayantan Dey"
+      ],
+      "parentId": "86e04ca9e",
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": [
+        {
+          "text": "@Archisman Ghosh  have added the document link here. Done on 16/03/2026.\n",
+          "author": "Sayantan Dey",
+          "date": "2026-03-16T12:30:23.412Z"
+        },
+        {
+          "text": "@Archisman Ghosh @Pushpal Das  this will be delayed due to 222 debugs and 127s sims, which are priority to unblock others. Will start on 16/03, better to change the start date\n",
+          "author": "Sayantan Dey",
+          "date": "2026-03-09T12:28:28.176Z"
+        }
+      ]
+    },
+    {
+      "id": "86e04evgx",
+      "name": "N3: Updated FIFO documents",
+      "description": "Documents include all mentioned below but not restricted to:\nBasic block diagram\nIndiavidual simulation commands\nWorking principle\nInterface\nAny FSM/config , control sequence\nArea/power number.\nA list of flist for sdf/nlp/rtl sim.\nregression script if required\n\nTask is only done when it is reviewed by Archisman/Sumon/FW team.\n\nYou should also point to individual document.\n\nDoc- [https://10xar-my.sharepoint.com/:w:/r/personal/shovan\\_10xar\\_com/Documents/Tapeout/QS223/Docs/Digital/FIFO\\_Bank\\_Controller.docx?d=w064488a346bd4442bcbc7415adcd023f&csf=1&web=1&e=kUPs4Q](https://10xar-my.sharepoint.com/:w:/r/personal/shovan_10xar_com/Documents/Tapeout/QS223/Docs/Digital/FIFO_Bank_Controller.docx?d=w064488a346bd4442bcbc7415adcd023f&csf=1&web=1&e=kUPs4Q)\n\nNote: AI help is alright but must not contain any AI generated misinformation.",
+      "assignees": [
+        "Sayantan Dey"
+      ],
+      "parentId": "86e04ca9e",
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": [
+        {
+          "text": "@Archisman Ghosh have added the doc link\n",
+          "author": "Sayantan Dey",
+          "date": "2026-03-16T07:34:12.770Z"
+        },
+        {
+          "text": "@Archisman Ghosh @Pushpal Das  this will be delayed due to 222 debugs and 127s sims, which are priority to unblock others. Will start on 16/03.\n",
+          "author": "Sayantan Dey",
+          "date": "2026-03-09T12:26:34.759Z"
+        }
+      ]
+    },
+    {
+      "id": "86e04evfz",
+      "name": "N3: Updated PHY documents",
+      "description": "Documents include all mentioned below but not restricted to:\nBasic block diagram\nIndiavidual simulation commands\nWorking principle\nInterface\nAny FSM/config , control sequence\nArea/power number.\nA list of flist for sdf/nlp/rtl sim.\nregression script if required\n\nTask is only done when it is reviewed by Archisman/Sumon/FW team.\n\nYou should also point to individual document.\n\nNote: AI help is alright but must not contain any AI generated misinformation.\nNote: It should add all the informa\n\n/// ---------------------- ///\nAll documents attached below.\n\nQS223\\_PHY\\_SPECS - [https://10xar-my.sharepoint.com/:w:/p/shovan/IQCm66sKlPSyS5NOkgJgOLIuAdUfz9JZj351EBK81rLIQ4g?e=KjWcEQ](https://10xar-my.sharepoint.com/:w:/p/shovan/IQCm66sKlPSyS5NOkgJgOLIuAdUfz9JZj351EBK81rLIQ4g?e=KjWcEQ)\nPHY Updates by AC - [https://10xar-my.sharepoint.com/:p:/p/shovan/IQDX\\_I8hoc\\_VQ7jIsNQmQ1V6Abz2kM4kQ\\_vlYPRJf7q---U?e=s9huCV](https://10xar-my.sharepoint.com/:p:/p/shovan/IQDX_I8hoc_VQ7jIsNQmQ1V6Abz2kM4kQ_vlYPRJf7q---U?e=s9huCV)\nTX\\_PHY\\_W\\_AES\\_QS223(User Manual)- [https://10xar-my.sharepoint.com/:w:/p/shovan/IQBBTW9Q0v-XQ4OefSyqL4yxAa49aDCfpxADIaiLLE1Nfm8?e=LM8vcc](https://10xar-my.sharepoint.com/:w:/p/shovan/IQBBTW9Q0v-XQ4OefSyqL4yxAa49aDCfpxADIaiLLE1Nfm8?e=LM8vcc)\nRX\\_PHY\\_W\\_AES\\_QS223(User Manual)- [https://10xar-my.sharepoint.com/:w:/r/personal/shovan\\_10xar\\_com/Documents/Tapeout/QS223/Block%20Design/PHY/RX\\_PHY\\_W\\_AES\\_TOP\\_223.docx?d=w1d29a1ea8af34284be85475233a1ba5a&csf=1&web=1&e=Wpr2D4](https://10xar-my.sharepoint.com/:w:/r/personal/shovan_10xar_com/Documents/Tapeout/QS223/Block%20Design/PHY/RX_PHY_W_AES_TOP_223.docx?d=w1d29a1ea8af34284be85475233a1ba5a&csf=1&web=1&e=Wpr2D4)\n\nArea/Power numbers-![](https://t9017196379.p.clickup-attachments.com/t9017196379/03f843c5-ca87-48fb-98a5-2fa2a02bf813/image.png)\nTest Setup-\nTest plan- [https://10xar-my.sharepoint.com/:x:/p/shovan/IQCYqRZuiZn\\_SbBe9oWN6PWLAWCzBfi2HZlWMZTSEi0zrFc?e=wCXHje](https://10xar-my.sharepoint.com/:x:/p/shovan/IQCYqRZuiZn_SbBe9oWN6PWLAWCzBfi2HZlWMZTSEi0zrFc?e=wCXHje)\nFilelist for RTL- [https://github.com/Quasistatics/IC-RTL-qs223/blob/main/vcs/tx\\_rx/script/rtl.flist\\_sim](https://github.com/Quasistatics/IC-RTL-qs223/blob/main/vcs/tx_rx/script/rtl.flist_sim)\nFilelist for SDF- [https://github.com/Quasistatics/IC-RTL-qs223/blob/main/vcs/tx\\_rx\\_sdf/script/rtl.flist\\_sdf](https://github.com/Quasistatics/IC-RTL-qs223/blob/main/vcs/tx_rx_sdf/script/rtl.flist_sdf)\nFilelist for NLP- [https://github.com/Quasistatics/IC-RTL-qs223/blob/main/vcs/tx\\_rx\\_nlp/script/rtl.flist\\_nlp](https://github.com/Quasistatics/IC-RTL-qs223/blob/main/vcs/tx_rx_nlp/script/rtl.flist_nlp)\nRegression script- [https://github.com/Quasistatics/IC-RTL-qs223/blob/main/vcs/tx\\_rx/compile\\_regression\\_phy.sh](https://github.com/Quasistatics/IC-RTL-qs223/blob/main/vcs/tx_rx/compile_regression_phy.sh)",
+      "assignees": [
+        "Arka Chakraborty"
+      ],
+      "parentId": "86e04ca9e",
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": [
+        {
+          "text": "Finished up with the documentation by 10/03. Review pending.\n",
+          "author": "Arka Chakraborty",
+          "date": "2026-03-10T07:21:41.817Z"
+        },
+        {
+          "text": "06/03 spent entirely on PHY-FIFO-QSPI NLP sims, need to adjust timeline accordingly @Archisman Ghosh. Need atleast till 10/03 for QS222 style word doc user manual.\n",
+          "author": "Arka Chakraborty",
+          "date": "2026-03-09T01:56:28.438Z"
+        }
+      ]
+    },
+    {
+      "id": "86dzfyhab",
+      "name": "N3: SSP DMA exploration and check",
+      "description": "",
+      "assignees": [
+        "Archisman Ghosh"
+      ],
+      "parentId": "86dwxrx7r",
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": [
+        {
+          "text": "Will be deferred. \n",
+          "author": "Archisman Ghosh",
+          "date": "2026-02-10T03:42:56.648Z"
+        }
+      ]
+    },
+    {
+      "id": "86dzdrkef",
+      "name": "N3: RX Decode",
+      "description": "Why: Post-layout simulation of the Decoder\nDeliverable: This Module will give Flip Rotation, Polarity\nRisk: NA\nLimitation: NA\nResults: [https://10xar-my.sharepoint.com/:p:/p/shovan/IQDqbE7GGF2FSawuuK8TkcSNAa53E8Ep9dr4EA8Zb-hWm04?e=tPFtN0](https://10xar-my.sharepoint.com/:p:/p/shovan/IQDqbE7GGF2FSawuuK8TkcSNAa53E8Ep9dr4EA8Zb-hWm04?e=tPFtN0)",
+      "assignees": [
+        "Manash Dey"
+      ],
+      "parentId": "86dxn2xmd",
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": [
+        {
+          "text": "@Pushpal Das @Archisman Ghosh\nPlease change the Task Name to Post Layout Sim of Rx Decoder. Rx Decoder Schematic Task is already in the Click up. I have Integrated the Rx Decoder with Clk_rec, Calibration, Retimer Module and then Added the Post Layout Sim Results.\nPlease add the Start Date 11Feb, End Date: 25Feb\n",
+          "author": "Manash Dey",
+          "date": "2026-04-07T19:28:53.280Z"
+        }
+      ]
+    },
+    {
+      "id": "86dzdrk8j",
+      "name": "N3: LP TX predriver",
+      "description": "Why: To drive the Driver and also give the Differential Inputs to the Driver from 1 bit\nDeliverable: Differential Signal of the Serializer Input\nRisk: NA\nLimitation: NA\nResults: [https://10xar-my.sharepoint.com/:p:/p/shovan/IQCmBE1ndg3NT55ek8uYXxUVAQ\\_VwgSCRizLpCBaw3nL\\_U0?e=wMUxYW](https://10xar-my.sharepoint.com/:p:/p/shovan/IQCmBE1ndg3NT55ek8uYXxUVAQ_VwgSCRizLpCBaw3nL_U0?e=wMUxYW)",
+      "assignees": [
+        "Manash Dey"
+      ],
+      "parentId": "86dxn2xmd",
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": [
+        {
+          "text": "@Pushpal Das @Archisman Ghosh\nPlease change the Task Name. It is HS Tx PreDriver, which we will use in D PHY Tx. And The Start Date was 23 Feb and End Date was 27 March. This task didn't took much time but I was working with Multiple tasks like - TOP Level Schematic, And Driver. And This time includes the Schematic & Post Layout taks Both.\n",
+          "author": "Manash Dey",
+          "date": "2026-04-07T19:15:11.191Z"
+        }
+      ]
+    },
+    {
+      "id": "86dzdrjz4",
+      "name": "N3: L and PL: HS AFE imtegration",
+      "description": "",
+      "assignees": [
+        "Manash Dey"
+      ],
+      "parentId": "86dxn2xmd",
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": []
+    },
+    {
+      "id": "86dzdrjpw",
+      "name": "N3: L and PL: LP AFE integration",
+      "description": "",
+      "assignees": [
+        "Manash Dey"
+      ],
+      "parentId": "86dxn2xmd",
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": []
+    },
+    {
+      "id": "86dzdrjj2",
+      "name": "N3: L and PL: LP TX AFE",
+      "description": "",
+      "assignees": [
+        "Manash Dey"
+      ],
+      "parentId": "86dxn2xmd",
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": []
+    },
+    {
+      "id": "86dzdrjbx",
+      "name": "N3: L and PL: retimer, LP comparator",
+      "description": "",
+      "assignees": [
+        "Manash Dey"
+      ],
+      "parentId": "86dxn2xmd",
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": [
+        {
+          "text": "@Pushpal Das @Archisman Ghosh\nThis task was started on 26 March. The LP Comparator is completed and For Retimer we have done the Post Layout Sims but there is one Change in Retimer so that after Data state change, the Clk_edge will come.\nThe Layout will be given by Irappa and after that I will run the Post Layout Sim.\nPlease add the Start Date:26 March, add the end Date: 15 April(not sure about Irappa's availability)\n",
+          "author": "Manash Dey",
+          "date": "2026-04-07T19:05:13.622Z"
+        }
+      ]
+    },
+    {
+      "id": "86dzdrhuz",
+      "name": "N3: layout and post layout comparator",
+      "description": "",
+      "assignees": [
+        "Manash Dey"
+      ],
+      "parentId": "86dxn2xmd",
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": [
+        {
+          "text": "@Archisman Ghosh @Pushpal Das\nCurrently working on this. Start Date is 17/March/26\nEnd Date is 27/March/26\nPlease add the Dates\nAnd add Ayash as assignee also, because he is helping in the Comparator differential part.\n",
+          "author": "Manash Dey",
+          "date": "2026-03-23T12:38:24.892Z"
+        }
+      ]
+    },
+    {
+      "id": "86dzdrd56",
+      "name": "N3: Assertion to 223 testbench for schedule",
+      "description": "",
+      "assignees": [
+        "Arka Chakraborty"
+      ],
+      "parentId": "86dxbvp2v",
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": [
+        {
+          "text": "@Arka Chakraborty please update\n",
+          "author": "Archisman Ghosh",
+          "date": "2026-03-16T15:57:14.949Z"
+        },
+        {
+          "text": "This task was done by @Arka Chakraborty, as I was working on simplified BR and UWB \n",
+          "author": "Sharanya Shetty",
+          "date": "2026-03-06T07:19:08.165Z"
+        },
+        {
+          "text": "@Sharanya Shetty  update? \n",
+          "author": "Archisman Ghosh",
+          "date": "2026-02-10T03:51:27.096Z"
+        }
+      ]
+    },
+    {
+      "id": "86dzdrd10",
+      "name": "N3: Non schedule regression and waveform based sim",
+      "description": "",
+      "assignees": [
+        "Manav"
+      ],
+      "parentId": "86dxbvp2v",
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": [
+        {
+          "text": "@Manav update? \n",
+          "author": "Archisman Ghosh",
+          "date": "2026-02-10T03:51:55.507Z"
+        }
+      ]
+    },
+    {
+      "id": "86dzdr8hq",
+      "name": "N3: Normal PS/schedule with front end",
+      "description": "",
+      "assignees": [
+        "Arka Chakraborty"
+      ],
+      "parentId": "86dxbvp2v",
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": [
+        {
+          "text": "@Archisman Ghosh can you please add @Sharanya Shetty  and @Manav to the task\n",
+          "author": "Arka Chakraborty",
+          "date": "2026-03-09T01:57:36.623Z"
+        },
+        {
+          "text": "@Arka Chakraborty please add comment here. This includes UWB/BR path\n",
+          "author": "Archisman Ghosh",
+          "date": "2026-03-04T06:03:43.598Z"
+        }
+      ]
+    },
+    {
+      "id": "86dzdr8dy",
+      "name": "N3: normal PS/schedule regression",
+      "description": "",
+      "assignees": [
+        "Arka Chakraborty",
+        "Sharanya Shetty"
+      ],
+      "parentId": "86dxbvp2v",
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": [
+        {
+          "text": "@Archisman Ghosh : please add manav he later on took this task and completed it\n",
+          "author": "Sharanya Shetty",
+          "date": "2026-03-06T07:27:08.889Z"
+        },
+        {
+          "text": "@Archisman Ghosh : This task is mostly done by @Arka Chakraborty, I am just helping with presets \n",
+          "author": "Sharanya Shetty",
+          "date": "2026-02-02T04:20:43.133Z"
+        }
+      ]
+    },
+    {
+      "id": "86dz9p9h2",
+      "name": "N3: Spec out Kyber tasks for Angik's software",
+      "description": "",
+      "assignees": [
+        "Archisman Ghosh"
+      ],
+      "parentId": "86dy4zb24",
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": []
+    },
+    {
+      "id": "86dz9p7z9",
+      "name": "N3: Schedule tests from excel V1",
+      "description": "Deliverables : BB Schedule Tests from Excel with Renetlist v1\nTest Plan: [https://10xar-my.sharepoint.com/:x:/p/shovan/IQDItw-51OviRq\\_MRiQQ4PPoAZXeJrAc7ecoAUaDm5h11hc?e=021qUf&nav=MTVfezU2RTY5NDRFLUQ5QzktNEE4MC1BNUE2LTc3NzA4Q0Y0MjhBMX0](https://10xar-my.sharepoint.com/:x:/p/shovan/IQDItw-51OviRq_MRiQQ4PPoAZXeJrAc7ecoAUaDm5h11hc?e=021qUf&nav=MTVfezU2RTY5NDRFLUQ5QzktNEE4MC1BNUE2LTc3NzA4Q0Y0MjhBMX0)\nPPT: [https://10xar-my.sharepoint.com/:p:/p/shovan/IQB0MMqHSGhwRIUSulvoPLplAfkmOgppJ5Bivs7WJga1Vd4?e=GAdwJU](https://10xar-my.sharepoint.com/:p:/p/shovan/IQB0MMqHSGhwRIUSulvoPLplAfkmOgppJ5Bivs7WJga1Vd4?e=GAdwJU)",
+      "assignees": [
+        "Arka Chakraborty",
+        "Manav"
+      ],
+      "parentId": "86dxbvp2v",
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": [
+        {
+          "text": "Regression runs passed till 20M data rate by 30/01\n",
+          "author": "Arka Chakraborty",
+          "date": "2026-01-31T07:27:59.381Z"
+        },
+        {
+          "text": "Multiple bugs in PS, leading to sanity fails. TB updated to involve SPI PREP TIME\n",
+          "author": "Arka Chakraborty",
+          "date": "2026-01-31T07:26:48.619Z"
+        },
+        {
+          "text": "Task started on 26/01.\n",
+          "author": "Arka Chakraborty",
+          "date": "2026-01-31T07:25:34.159Z"
+        }
+      ]
+    },
+    {
+      "id": "86dz9p7ym",
+      "name": "N3: Bypass PS/normal tests from excel V1",
+      "description": "Waveform PPT : [https://10xar-my.sharepoint.com/:p:/r/personal/shovan\\_10xar\\_com/\\_layouts/15/Doc.aspx?sourcedoc=%7BEF1A8348-9339-4892-BADE-BE9816190DC6%7D&file=QS223%20-%20basic%20tests.pptx&action=edit&mobileredirect=true](https://10xar-my.sharepoint.com/:p:/r/personal/shovan_10xar_com/_layouts/15/Doc.aspx?sourcedoc=%7BEF1A8348-9339-4892-BADE-BE9816190DC6%7D&file=QS223%20-%20basic%20tests.pptx&action=edit&mobileredirect=true)\nTestplan : [https://10xar-my.sharepoint.com/:x:/r/personal/shovan\\_10xar\\_com/\\_layouts/15/Doc.aspx?sourcedoc=%7BB90FB7C8-EBD4-46E2-AFCC-462410E0F3E8%7D&file=top\\_level\\_sim\\_QS223.xlsx&action=default&mobileredirect=true](https://10xar-my.sharepoint.com/:x:/r/personal/shovan_10xar_com/_layouts/15/Doc.aspx?sourcedoc=%7BB90FB7C8-EBD4-46E2-AFCC-462410E0F3E8%7D&file=top_level_sim_QS223.xlsx&action=default&mobileredirect=true)",
+      "assignees": [
+        "Sharanya Shetty",
+        "Manav"
+      ],
+      "parentId": "86dxbvp2v",
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": [
+        {
+          "text": "@Archisman Ghosh, this task was compleetd before tapeout week .\nIt required few tests like shallow_sleep, adc_inll_dnl , idle mode fhigh frequency clocks and some core_pll & core_pll_ldo  tests changes in analog models. which needed tbandwidth from Sayantan & Sumon . These tests were kept on hold., and baseband_Schedule tests verification were given more priority  as asked by Sumon Sir.\n\n@Pushpal Das non-technical summary\nMost part of the tasks were done in  January . Few tests of the task was remaining which required updates and bandwidth from Sayantan & Sumon. This task took 4 days in february last week ( week before tapeout). This task was  put on hold and I was asked to work on very high priority task :  QS223- baseband schedule tests & debugging.\n",
+          "author": "Manav",
+          "date": "2026-04-08T12:16:21.540Z"
+        },
+        {
+          "text": "@Manav please update non tech details. I will accordingly close/update the task. \n",
+          "author": "Archisman Ghosh",
+          "date": "2026-02-10T03:49:35.769Z"
+        },
+        {
+          "text": "@Archisman Ghosh, this task is done by @Manav, please add him, I have just helped with presets related debugs. \n",
+          "author": "Sharanya Shetty",
+          "date": "2026-02-02T04:20:06.575Z"
+        },
+        {
+          "text": "@Manav should be added to this task I believe, he was mostly assigned to do this\n",
+          "author": "Arka Chakraborty",
+          "date": "2026-01-31T07:30:24.491Z"
+        }
+      ]
+    },
+    {
+      "id": "86dz9p46q",
+      "name": "N3: Renetlist v3 + sanity",
+      "description": "",
+      "assignees": [
+        "Arka Chakraborty"
+      ],
+      "parentId": "86dxbvp2v",
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": []
+    },
+    {
+      "id": "86dz9nqkc",
+      "name": "N3: Core + WiR Core tests following excel (peripheral test with TS) ",
+      "description": "Running Tests on Single QS223 Device: [https://10xar-my.sharepoint.com/:x:/r/personal/shovan\\_10xar\\_com/\\_layouts/15/Doc.aspx?sourcedoc=%7BB90FB7C8-EBD4-46E2-AFCC-462410E0F3E8%7D&file=top\\_level\\_sim\\_QS223.xlsx&action=default&mobileredirect=true&DefaultItemOpen=1&wdOrigin=OFFICECOM-WEB.REDIRECT%2CAPPHOME-WEB.FILEBROWSER.RECENT&wdPreviousSession=859744c3-fc3d-4167-9fab-208b5c264e29&wdPreviousSessionSrc=AppHomeWeb&ct=1768517508799](https://10xar-my.sharepoint.com/:x:/r/personal/shovan_10xar_com/_layouts/15/Doc.aspx?sourcedoc=%7BB90FB7C8-EBD4-46E2-AFCC-462410E0F3E8%7D&file=top_level_sim_QS223.xlsx&action=default&mobileredirect=true&DefaultItemOpen=1&wdOrigin=OFFICECOM-WEB.REDIRECT%2CAPPHOME-WEB.FILEBROWSER.RECENT&wdPreviousSession=859744c3-fc3d-4167-9fab-208b5c264e29&wdPreviousSessionSrc=AppHomeWeb&ct=1768517508799)",
+      "assignees": [
+        "Charles Adeyanju"
+      ],
+      "parentId": "86dxqgtgh",
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": [
+        {
+          "text": "@Pushpal Das Delay Reason: Haven't gotten to starting this task due to working on the 2 device implementation task\n\n I will be starting this task in parallel to 86e0fdf10 as there are some wait times\n",
+          "author": "Charles Adeyanju",
+          "date": "2026-04-07T17:49:45.466Z"
+        },
+        {
+          "text": "@Pushpal Das This task can be closed.\nDelayed Reason: I've been distracted with some other FPGA implementation tasks with Shovan. @Archisman Ghosh will work on creating these tasks and I can add the details of my work\n",
+          "author": "Charles Adeyanju",
+          "date": "2026-03-04T21:56:54.291Z"
+        }
+      ]
+    },
+    {
+      "id": "86dz9npw1",
+      "name": "N3: Core+WiR WiR SPI QSPI tests following the excel",
+      "description": "",
+      "assignees": [
+        "Ushasi Das"
+      ],
+      "parentId": "86dxqgtgh",
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": [
+        {
+          "text": "@Archisman Ghosh for the simplified QS223 setup in FPGA, the WiR tests were run from 20th Jan to 30th Jan. The updated QS223 FPGA hardware setup was created on 9th March and WiR fifo readback test with spi was done on 11th March for single device. I was mostly focussing on core test with updated QS223 FPGA setup\n",
+          "author": "Ushasi Das",
+          "date": "2026-03-20T13:26:09.305Z"
+        },
+        {
+          "text": "@Archisman Ghosh @Pushpal Das I had run WiR tests for the simplified WiR setup in FPGA (spi read write, qspi read write, fifo readback with spi and qspi, schedule tests). For the full QS223 setup in FPGA, I had done fifo readback test with spi\n",
+          "author": "Ushasi Das",
+          "date": "2026-03-20T13:15:24.391Z"
+        },
+        {
+          "text": "@Ushasi Das did you work on this? \n",
+          "author": "Archisman Ghosh",
+          "date": "2026-03-19T18:07:22.971Z"
+        },
+        {
+          "text": "@Ushasi Das I think you did this task. Can you please update start and end date?\n",
+          "author": "Archisman Ghosh",
+          "date": "2026-03-16T15:51:01.407Z"
+        }
+      ]
+    },
+    {
+      "id": "86dz2uf74",
+      "name": "N3: DPHY RX verif",
+      "description": "",
+      "assignees": [
+        "Dheerajeswar Saluru"
+      ],
+      "parentId": "86dxn2xmd",
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": [
+        {
+          "text": "@Archisman Ghosh @Pushpal Das \nthis task should remain OPEN as its design is on hold.\nthis task will depend on whether we are going to design the DPHY Rx or not. Will confirm after today's sync up meeting with Professor Tawfiq\n",
+          "author": "Dheerajeswar Saluru",
+          "date": "2026-02-23T09:38:35.651Z"
+        },
+        {
+          "text": "Gentle reminder:\n@Archisman Ghosh @Pushpal Das \nI am currently active with the DPHY Tx verification task, once it is completed, I will start with new task DPHY RX design,\nso once both the tasks are completed, I will start with this task\nThe planned start date and end date were set way earlier, and so we might need to change the dates accordingly\n",
+          "author": "Dheerajeswar Saluru",
+          "date": "2026-02-17T18:13:58.374Z"
+        },
+        {
+          "text": "@Archisman Ghosh @Pushpal Das \nI am currently active with the DPHY Tx verification task, once it is completed, I will start with new task DPHY RX design,\nso once both the tasks are completed, I will start with this task\nThe planned start date and end date were set way earlier, and so we might need to change the dates accordingly\n",
+          "author": "Dheerajeswar Saluru",
+          "date": "2026-02-11T06:20:42.673Z"
+        }
+      ]
+    },
+    {
+      "id": "86dz2uf43",
+      "name": "N3: DPHY RX Design",
+      "description": "Part 1:\nDo all the blocks:\n(Ex: Data sampler, Escape decoder)\nSanity check\nLint CDC of each bock\nTry to finish Part 1 by 5 working days\n\nPart 2:\nIntegrate all of them\nDo sanity\n\nDeliverable: PPT for all the subtasks",
+      "assignees": [
+        "Dheerajeswar Saluru"
+      ],
+      "parentId": "86dxn2xmd",
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": [
+        {
+          "text": "Deferred this task\n",
+          "author": "Archisman Ghosh",
+          "date": "2026-03-04T09:43:13.580Z"
+        },
+        {
+          "text": "@Archisman Ghosh @Pushpal Das \ntoday i started this task, but not sure whether our chiplet will be consisting of this design or not?\nthis task will be OPEN for now, once me and @Archisman Ghosh are completely confirmed by Professor Tawfiq's end, we will get to know to continue this or not\nI won't spend any active time until then on this task\n",
+          "author": "Dheerajeswar Saluru",
+          "date": "2026-02-23T09:35:51.192Z"
+        },
+        {
+          "text": "@Archisman Ghosh @Pushpal Das \nthe previous task DPHY Tx Verif task is completed, now I can start this task but before that\nI would like to spend some time for organizing the RTL code well with comments which should have been done earlier, but could not get much time to spend on it.\nOnce that is completed, i will prepare the constraints document for the DPHY tx (this was discussed earlier with AG) \nSo mostly I will start this task from Monday - 23rd Feb\n",
+          "author": "Dheerajeswar Saluru",
+          "date": "2026-02-20T12:25:33.775Z"
+        },
+        {
+          "text": "@Archisman Ghosh @Pushpal Das \ni am still spending on DPHY Tx Verif task\nPlanning to start this task by 20th Feb 2nd session\n",
+          "author": "Dheerajeswar Saluru",
+          "date": "2026-02-17T18:13:20.644Z"
+        },
+        {
+          "text": "Gentle reminder:\n@Archisman Ghosh @Pushpal Das \ni started with the task \"DPHY TX Verif\"\nthis task will be started once i complete the previous task\n",
+          "author": "Dheerajeswar Saluru",
+          "date": "2026-02-11T06:18:22.371Z"
+        },
+        {
+          "text": "Gentle reminder:\n@Archisman Ghosh @Pushpal Das \ni started with the task \"DPHY TX Verif\"\nthis task will be started once i complete the previous task\n",
+          "author": "Dheerajeswar Saluru",
+          "date": "2026-02-04T12:00:25.391Z"
+        },
+        {
+          "text": "@Archisman Ghosh @Pushpal Das \ni am currently working with \"DPHY TX Design\" task, once it is completed, i will be starting with another new task \"DPHY TX Verif\",\nthis task will be started once i am completing those\n",
+          "author": "Dheerajeswar Saluru",
+          "date": "2026-01-23T17:31:34.901Z"
+        }
+      ]
+    },
+    {
+      "id": "86dz2u5g4",
+      "name": "N3: Spec out Dilithium for software ",
+      "description": "",
+      "assignees": [
+        "Archisman Ghosh"
+      ],
+      "parentId": "86dy4zb24",
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": []
+    },
+    {
+      "id": "86dz10jd8",
+      "name": "N3: Core + WIR run v2:: Single device with latest RTL",
+      "description": "",
+      "assignees": [
+        "Charles Adeyanju"
+      ],
+      "parentId": "86dxqgtgh",
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": [
+        {
+          "text": "Obtained the latest rtl and was able to generate single device bitstreams to run fifo_readback tests for firmware with the Ambiq board in core and core-bypass modes.\n\n@Pushpal Das This task can be closed.\nDelayed Reason: I've been distracted with some other FPGA implementation tasks with Shovan, mainly implementing a two device design on a single FPGA. @Archisman Ghosh will work on creating these tasks and I can add more details of my work there\n",
+          "author": "Charles Adeyanju",
+          "date": "2026-03-04T21:56:28.617Z"
+        },
+        {
+          "text": "We should move to today's netlist soon. Testbench could be rehauled. \n",
+          "author": "Archisman Ghosh",
+          "date": "2026-01-15T23:11:23.703Z"
+        }
+      ]
+    },
+    {
+      "id": "86dz05gyu",
+      "name": "N3: CSI 2 controller spec study review",
+      "description": "",
+      "assignees": [
+        "Archisman Ghosh"
+      ],
+      "parentId": "86dxn2xmd",
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": []
+    },
+    {
+      "id": "86dyz1yg1",
+      "name": "N3: Core import waveform review",
+      "description": "",
+      "assignees": [
+        "Archisman Ghosh"
+      ],
+      "parentId": "86dxbvp2v",
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": [
+        {
+          "text": "This task can be delayed based on FPGA. \n",
+          "author": "Archisman Ghosh",
+          "date": "2025-12-22T16:25:54.875Z"
+        }
+      ]
+    },
+    {
+      "id": "86dyxa95j",
+      "name": "N3: DVCO FHSS test with new PS V1 on netlist V1",
+      "description": "deliverable:\n1. Run with new PS: yes, this was with final netlist\n2. Waveform review PPT: [IC-RTL-qs223/test\\_report\\_qs223/UWB/2026-03-03\\_07-57-36 at main · Quasistatics/IC-RTL-qs223](https://github.com/Quasistatics/IC-RTL-qs223/tree/main/test_report_qs223/UWB/2026-03-03_07-57-36) (python generated waveform as looking at dvco frequency is hard to visualize)\n3. review recoding: Was reviewed in RTL sync up (2nd march)\nShould run all the tests from testlist.\n\nRisk: dependent on PS. PS may have bugs\n\n[\n\n10xar-my.sharepoint.com\n\nhttps://10xar-my.sharepoint.com/:p:/r/personal/shovan\\_10xar\\_com/Documents/Tapeout/QS223/Block%20Design/FHSS\\_verification/PS%20block%20level%20FHSS%20related%20signal%20verification.pptx?d=wddacd239e5704e8e8a18686263215c60&csf=1&web=1&e=nxbkgz\n\n](https://10xar-my.sharepoint.com/:p:/r/personal/shovan_10xar_com/Documents/Tapeout/QS223/Block%20Design/FHSS_verification/PS%20block%20level%20FHSS%20related%20signal%20verification.pptx?d=wddacd239e5704e8e8a18686263215c60&csf=1&web=1&e=nxbkgz)",
+      "assignees": [
+        "Sharanya Shetty"
+      ],
+      "parentId": "86dxbvp2v",
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": [
+        {
+          "text": "@Archisman Ghosh, @Pushpal Das  this was later pushed for version 3 , and the waveform\nand report link is added in description\n",
+          "author": "Sharanya Shetty",
+          "date": "2026-03-06T07:26:14.557Z"
+        },
+        {
+          "text": "@Sharanya Shetty  please let me know when we can start this in teh updated netlist. Can be done after higher priority ones\n",
+          "author": "Archisman Ghosh",
+          "date": "2026-02-10T03:48:16.620Z"
+        },
+        {
+          "text": "This task will start next week. \n",
+          "author": "Archisman Ghosh",
+          "date": "2026-01-23T17:51:04.418Z"
+        },
+        {
+          "text": "This task will be changed and will be done in updated netlist\n",
+          "author": "Archisman Ghosh",
+          "date": "2026-01-16T00:22:29.071Z"
+        },
+        {
+          "text": "GUI is higher priority, I will adjust date here\n",
+          "author": "Archisman Ghosh",
+          "date": "2025-12-30T01:19:12.945Z"
+        },
+        {
+          "text": "@Pushpal Das Hey! I see you’ve assigned the start and end dates, but I’ll be working on presets and GUI today and will be on leave until next Monday. I’ll start this task on Tuesday (30/12/2025) and aim to complete it by Monday (05/01/2026), which gives me three working days.\n\n@Archisman Ghosh please confirm this \n",
+          "author": "Sharanya Shetty",
+          "date": "2025-12-24T04:40:13.988Z"
+        }
+      ]
+    },
+    {
+      "id": "86dyfq6db",
+      "name": "N3: I2C standalone SDF NLP sim",
+      "description": "###############################################################################\n# N3: I2C standalone SDF NLP sim (10-12-2025)\n\n**Netlist:**\n/home/aditya-keenheads/work/scratchpad\\_QS223/apb\\_i2c\\_controller\\_dec08/pnr/run\\_Dec\\_8/apb\\_to\\_i2c\\_controller.v\n\n**SDF File path:**\n/home/aditya-keenheads/work/scratchpad\\_QS223/apb\\_i2c\\_controller\\_dec08/sta/pt/sdf/sdf\\_generation/generated\\_sdf/\\*\n\n**Testbench: (Modify this with sdf)**\n/home/SharanyaShetty/digital/qs223/IC-RTL-qs223/test/apb2i2c\\_controller/sdf/testbench\\_for\\_sdf.v\n\n**PPT:** [APBI2C.pptx](https://10xar-my.sharepoint.com/:p:/r/personal/sharanya_shetty_ixana_ai/Documents/I2C/APBI2C.pptx?d=w26c694fd9f3b40f4a0a2dd13c834e3e8&csf=1&web=1&e=q0G7KG&nav=eyJzSWQiOjMzMywiY0lkIjozNzM2NTUyMzQyfQ) (includes respected waveform for the test) I have added display and checker! ping me if anything Fails \n\n**SDF ppt requirement:** \n1.  show all the waveform for each test, and the pass statement (you will know which signal to plot from PPT, I have written the display statement well enough)\n2. show the output delay with reference to clk for all 5 corners \n\n## Timeline\n**Task Progress Summary** [@Archisman Ghosh](#user_mention#96272410)\n**10/12/2025:** Modified the testbench for SDF and provided to Manav\n**17/12/2025:** Debugged the reason for timing violations\n**23/12/2025:** Debugged the reason for timing violations\n\n**Non-technical summary** [@Pushpal Das](#user_mention#89199382)\n**Day 1:** Gave the setup to Manav to Run the simulation\n**Day 2:** This task had too many to and fro with PD, hence I debugged the reason for the error to prevent further delay\n**Day 3:** Manav wasnt able to debug the error hence I spend few hours debugging and presenting the solution to Sumon and Archisman",
+      "assignees": [
+        "Sharanya Shetty",
+        "Manav"
+      ],
+      "parentId": "86dxgmua2",
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": [
+        {
+          "text": "@Archisman Ghosh : didn't receive SDF of this to continue\n",
+          "author": "Sharanya Shetty",
+          "date": "2026-03-06T07:19:37.197Z"
+        },
+        {
+          "text": "I will debug this after some high priority task in core. \n",
+          "author": "Archisman Ghosh",
+          "date": "2025-12-26T14:23:07.001Z"
+        },
+        {
+          "text": "@Manav / @Sharanya Shetty please check this and unblock PD\n",
+          "author": "Archisman Ghosh",
+          "date": "2025-12-22T16:28:44.023Z"
+        },
+        {
+          "text": "PD gave the updated netlist on Dec 19 (Friday).\nTiming violations are still occuring. Need to figure out the error.\nAsked @Sharanya Shetty  to help me to for the same.\n",
+          "author": "Manav",
+          "date": "2025-12-22T09:38:40.191Z"
+        },
+        {
+          "text": "@Pushpal Das Debugged an error in design  which was causing timing violations. That was fixed on 17/12/2025.\nThe updated design has been provided to PD.\n",
+          "author": "Manav",
+          "date": "2025-12-18T06:03:53.038Z"
+        },
+        {
+          "text": "Timeline\nTask Progress Summary @Archisman Ghosh \n10/12/2025:  Modified the testbench for SDF and provided to Manav\n17/12/2025: Debugged the reason for timing violations \n23/12/2025: Debugged the reason for timing violations \n \nNon-technical summary @Pushpal Das \nDay 1: Gave the setup to Manav to Run the simulation\nDay 2: This task had too many to and fro with PD, hence I debugged the reason for the error to prevent further delay\nDay 3: Manav wasn't able to debug the error hence I spend few hours debugging and presenting the solution to Sumon and Archisman\n",
+          "author": "Sharanya Shetty",
+          "date": "2025-12-18T01:03:48.390Z"
+        },
+        {
+          "text": "PD provided the updated netlist on Dec 15 . Timing violations are still there. Reported to PD on Dec 15 regarding the same. \n\nDebugging with Sharnaya for testbench and rtl for sdf violations .\n",
+          "author": "Manav",
+          "date": "2025-12-17T07:46:41.797Z"
+        },
+        {
+          "text": "I started working on this task from Dec 10 .\nThere will be delay because of dependency on PD team.\nThere are timing violations in SDF sims.\nIt was reported to PD team on Dec 10. I will resume the work once they correct &  provide the  updated netlist,\n",
+          "author": "Manav",
+          "date": "2025-12-11T13:13:31.909Z"
+        },
+        {
+          "text": "@Archisman Ghosh, @Pushpal Das : The task is scheduled to start on 04 Dec, but I haven’t received the SDF from PD yet. Just wanted to keep you informed.\n",
+          "author": "Sharanya Shetty",
+          "date": "2025-12-04T06:23:52.442Z"
+        },
+        {
+          "text": "Dependency on PD\n",
+          "author": "Pushpal Das",
+          "date": "2025-12-02T11:43:17.249Z"
+        }
+      ]
+    },
+    {
+      "id": "86dy6nv34",
+      "name": "N3: Keccak functionality presentation",
+      "description": "Deliverable:\nkeccak functions description and presentations",
+      "assignees": [
+        "Arka Chakraborty"
+      ],
+      "parentId": "86dy4zb24",
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": [
+        {
+          "text": "This task will be open till @Arka Chakraborty is available. \n",
+          "author": "Archisman Ghosh",
+          "date": "2025-11-17T15:05:58.201Z"
+        }
+      ]
+    },
+    {
+      "id": "86dy525eb",
+      "name": "N3: Reply to FW team on Interrupt",
+      "description": "",
+      "assignees": [
+        "Archisman Ghosh"
+      ],
+      "parentId": "86dwwm60t",
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": [
+        {
+          "text": "No spec changes will be done. If something comes up in RTL debug will be taken care of. So new task will be created under verif and debug\n",
+          "author": "Archisman Ghosh",
+          "date": "2025-11-18T17:22:01.323Z"
+        },
+        {
+          "text": "Not actively working on it. \n",
+          "author": "Archisman Ghosh",
+          "date": "2025-11-14T16:49:48.252Z"
+        },
+        {
+          "text": "This is still pending\n",
+          "author": "Archisman Ghosh",
+          "date": "2025-11-05T23:28:51.368Z"
+        },
+        {
+          "text": "Will be slightly delayed as unblocking RTL team and PD team\n",
+          "author": "Archisman Ghosh",
+          "date": "2025-10-27T23:00:55.936Z"
+        }
+      ]
+    },
+    {
+      "id": "86dy4zb24",
+      "name": "Security exploration",
+      "description": "",
+      "assignees": [
+        "Archisman Ghosh"
+      ],
+      "parentId": null,
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": []
+    },
+    {
+      "id": "86dy0rpfy",
+      "name": "N3: Running M0 simulations in ASIC tool",
+      "description": "",
+      "assignees": [
+        "Charles Adeyanju"
+      ],
+      "parentId": "86dxqgtgh",
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": [
+        {
+          "text": "@Pushpal Das @Archisman Ghosh has taken over this task so I think it can be closed. It is an open task so no delay reason.\n",
+          "author": "Charles Adeyanju",
+          "date": "2026-04-07T17:36:01.251Z"
+        },
+        {
+          "text": "I did the task , tracked separately. \n",
+          "author": "Archisman Ghosh",
+          "date": "2026-03-19T18:04:01.427Z"
+        },
+        {
+          "text": "@Pushpal Das Archisman has taken over this task\n",
+          "author": "Charles Adeyanju",
+          "date": "2026-03-04T21:54:01.091Z"
+        },
+        {
+          "text": "I am doing it under separate task. \n",
+          "author": "Archisman Ghosh",
+          "date": "2026-01-12T18:11:21.679Z"
+        }
+      ]
+    },
+    {
+      "id": "86dxvhbnt",
+      "name": "Top-Level sim",
+      "description": "",
+      "assignees": [
+        "Abhishek Sarkar",
+        "Sharanya Shetty",
+        "Archisman Ghosh"
+      ],
+      "parentId": "86dxbvp2v",
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": []
+    },
+    {
+      "id": "86dxuncv6",
+      "name": "DCO SDF + NLP sim",
+      "description": "",
+      "assignees": [
+        "Arka Chakraborty"
+      ],
+      "parentId": "86dxgmua2",
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": []
+    },
+    {
+      "id": "86dxu9kaw",
+      "name": "N3: Top level testbench understanding and documentation",
+      "description": "",
+      "assignees": [
+        "Souptik Dolui"
+      ],
+      "parentId": "86dwxrx7r",
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": [
+        {
+          "text": "Priority of the task is changed. So I may reallocate. Keeping it open. \n",
+          "author": "Archisman Ghosh",
+          "date": "2025-09-29T15:25:18.755Z"
+        },
+        {
+          "text": "Wednesday (1st Oct) and Thursday (2nd Oct) are holidays in India office. I will be OOO from 3rd Oct to 10th Oct\n",
+          "author": "Souptik Dolui",
+          "date": "2025-09-29T15:23:55.503Z"
+        }
+      ]
+    },
+    {
+      "id": "86dxqnm8g",
+      "name": "N3: SSP Tb",
+      "description": "",
+      "assignees": [
+        "Archisman Ghosh"
+      ],
+      "parentId": "86dwxrx7r",
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": [
+        {
+          "text": "This is covered by UD. This task will be discontinued\n",
+          "author": "Archisman Ghosh",
+          "date": "2025-09-22T20:07:48.127Z"
+        }
+      ]
+    },
+    {
+      "id": "86dxqgvbx",
+      "name": "N3: Synopsys reply with Geeta if required",
+      "description": "Discussed with Geeta and software team.\nWe need to do primetime run with netlist, sdf enabled.\nVCD: /home/ArchismanGhosh/digital/qs222\\_new/IC-RTL-qs222-25Feb/vcs/offset\\_correction/ofc.vcd\nRisk: Keenheads out of office for entire week.",
+      "assignees": [
+        "Archisman Ghosh"
+      ],
+      "parentId": "86dwxrx7r",
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": [
+        {
+          "text": "Provided vcd to Geeta for run. \n",
+          "author": "Archisman Ghosh",
+          "date": "2025-11-04T21:35:05.967Z"
+        },
+        {
+          "text": "Archisman: Dependent on synopsys and Keenheads. Vct was delivered before time. If they need anything we can reply. \n",
+          "author": "Pushpal Das",
+          "date": "2025-10-28T14:15:14.764Z"
+        }
+      ]
+    },
+    {
+      "id": "86dxqgtgh",
+      "name": "QS223 FPGA",
+      "description": "",
+      "assignees": [
+        "Charles Adeyanju"
+      ],
+      "parentId": null,
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": [
+        {
+          "text": "@Pushpal Das This project due date will have to be updated as more tasks are constantly being added from the initial project creation\n",
+          "author": "Charles Adeyanju",
+          "date": "2025-12-19T16:40:15.916Z"
+        },
+        {
+          "text": "Recurring tasks are added, hence difficult to add the due date. \n",
+          "author": "Pushpal Das",
+          "date": "2025-12-04T14:32:33.801Z"
+        },
+        {
+          "text": "We need to change the due date \n",
+          "author": "Pushpal Das",
+          "date": "2025-11-25T12:16:12.079Z"
+        }
+      ]
+    },
+    {
+      "id": "86dxn2xmd",
+      "name": "MIPI EXPLORATION",
+      "description": "",
+      "assignees": [
+        "Archisman Ghosh",
+        "Dheerajeswar Saluru",
+        "Manash Dey"
+      ],
+      "parentId": null,
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": [
+        {
+          "text": "@Pushpal Das @Archisman Ghosh \nPlease add 3 sub Tasks D PHY HS Tx, 8 to 1 bit Serializer, and D PHY Driver\n",
+          "author": "Manash Dey",
+          "date": "2026-02-03T10:27:29.540Z"
+        },
+        {
+          "text": "@Pushpal Das @Archisman Ghosh Please change the Due Date and please add the Layout tasks\n",
+          "author": "Manash Dey",
+          "date": "2026-01-20T13:29:12.428Z"
+        },
+        {
+          "text": "@Archisman Ghosh Can you reschedule Some Tasks\nAFE Integration is very hard to complete within 3 Days because We have made a Change in Architect For the Half Rate. Then The Retimer and Timing of the Clocks and Outputs of the Registers are taking a bit more time to implement and moreover Can't give my full bandwidth in MIPI for Some Days.\n\nAnd For Continuous Type Comparator, We have spent time for through Analysis(Bias, Noise, Offset, Monte Carlo) and spent some Time to Model in System Verilog at that course of Time\n",
+          "author": "Manash Dey",
+          "date": "2025-11-05T16:01:44.036Z"
+        }
+      ]
+    },
+    {
+      "id": "86dxj5yta",
+      "name": "RS SDF Simulation",
+      "description": "Why? We need to check timing simulation\nAES data path should be checked.\nSDF Path: SDF Path : <To be UPdated>\n\nDeliverable: a) Few test cases with all corner SDF simulation b) Waveform PPT for all corners c) 15 mnt call as soo as it is done.",
+      "assignees": [
+        "Souptik Dolui"
+      ],
+      "parentId": "86dxgmua2",
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": [
+        {
+          "text": "It will be open as PD will not have BW. We will directly do it in PHY level. \n",
+          "author": "Archisman Ghosh",
+          "date": "2025-10-31T15:45:08.438Z"
+        },
+        {
+          "text": "RS SDF Simulation will not be conducted separately. Since the previous RS SDF, RS RTL has been changed. PD too has no resources for 223 SDF generation. This will be covered in PHY SDF Simulation itself. @Archisman Ghosh please take appropriate action for this task\n",
+          "author": "Souptik Dolui",
+          "date": "2025-10-31T14:35:14.015Z"
+        }
+      ]
+    },
+    {
+      "id": "86dxheuqw",
+      "name": "N3: I2C Finalize with Synopsys",
+      "description": "",
+      "assignees": [
+        "Archisman Ghosh"
+      ],
+      "parentId": "86dwwm60t",
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": [
+        {
+          "text": "Extending as depends on Synopsys and Angik\n",
+          "author": "Archisman Ghosh",
+          "date": "2025-08-26T16:12:54.786Z"
+        }
+      ]
+    },
+    {
+      "id": "86dxgmu8m",
+      "name": "QS223 PD",
+      "description": "",
+      "assignees": [
+        "sumon"
+      ],
+      "parentId": null,
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": [
+        {
+          "text": "Updated based on PD's current speed. 5 din extra kept, we may need to do rePD\n",
+          "author": "Archisman Ghosh",
+          "date": "2025-11-18T16:00:36.839Z"
+        }
+      ]
+    },
+    {
+      "id": "86dxdrmwe",
+      "name": "N3: Synopsys follow-up on QSPI",
+      "description": "",
+      "assignees": [
+        "Archisman Ghosh"
+      ],
+      "parentId": "86dwwm60t",
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": [
+        {
+          "text": "This task will be open @Shovan Maity as this is dependent on Angik\n",
+          "author": "Archisman Ghosh",
+          "date": "2025-08-28T16:02:00.057Z"
+        },
+        {
+          "text": "Followed up already. \n",
+          "author": "Archisman Ghosh",
+          "date": "2025-08-26T16:12:20.858Z"
+        },
+        {
+          "text": "I am also busy with core finalization as well as spec out. It will take till 22nd/25th Aug possibly \n",
+          "author": "Archisman Ghosh",
+          "date": "2025-08-14T15:21:35.058Z"
+        },
+        {
+          "text": "Synopsys should reply with all the data books. It takes 1-2 days to receive single comment and receive data book, slide etc. \n",
+          "author": "Archisman Ghosh",
+          "date": "2025-08-14T15:20:01.730Z"
+        }
+      ]
+    },
+    {
+      "id": "86dxbvp2v",
+      "name": "QS223 top level RTL Simulation",
+      "description": "/",
+      "assignees": [
+        "Sharanya Shetty",
+        "Arka Chakraborty"
+      ],
+      "parentId": null,
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": [
+        {
+          "text": "subtasks defining is req for @Arka Chakraborty if he is added now \n",
+          "author": "Pushpal Das",
+          "date": "2025-12-02T08:39:21.092Z"
+        },
+        {
+          "text": "More task will be updated. 23rd Dec will be absolute deadline\n",
+          "author": "Archisman Ghosh",
+          "date": "2025-11-18T16:02:15.774Z"
+        },
+        {
+          "text": "We could not start as analog spec is not properly conveyed. It can only start when this is clear. It will take 1 month from start date\n",
+          "author": "Archisman Ghosh",
+          "date": "2025-10-28T18:31:41.047Z"
+        }
+      ]
+    },
+    {
+      "id": "86dxbvmdk",
+      "name": "N3: PHY verification: Filler task will be divided after testplan",
+      "description": "",
+      "assignees": [
+        "Souptik Dolui"
+      ],
+      "parentId": "86dx53tm1",
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": []
+    },
+    {
+      "id": "86dxbv0hq",
+      "name": "N3: Replicating all models for QS223",
+      "description": "",
+      "assignees": [
+        "Himanshu Shaw"
+      ],
+      "parentId": "86dxajmb7",
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": [
+        {
+          "text": "I'm involved with QS127S testing on FPGA\n",
+          "author": "Himanshu Shaw",
+          "date": "2025-08-21T16:03:29.636Z"
+        },
+        {
+          "text": "@Himanshu Shaw please let us know what are the other priorities you are involved with \n",
+          "author": "Pushpal Das",
+          "date": "2025-08-21T15:13:00.937Z"
+        },
+        {
+          "text": "Right now, I am working on other priorities ,there are other parallel tasks I'm associated with\n",
+          "author": "Himanshu Shaw",
+          "date": "2025-08-21T12:11:12.526Z"
+        }
+      ]
+    },
+    {
+      "id": "86dxbv043",
+      "name": "N3: Running all the tests in FPGA",
+      "description": "",
+      "assignees": [
+        "Himanshu Shaw"
+      ],
+      "parentId": "86dxajmb7",
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": [
+        {
+          "text": "I'm right now working on QS127S testing\n",
+          "author": "Himanshu Shaw",
+          "date": "2025-08-19T10:58:23.714Z"
+        }
+      ]
+    },
+    {
+      "id": "86dxajmhf",
+      "name": "N3: Replicating environment, FPGA setup and emulation with FW",
+      "description": "**Why:** Ixana plans to expedite pre silicon validation. bangalore team needs separate setup. Aneesh's KT should b e ported to team smoothly.\n**Deliverable:** a) PPt with QS222 block diagram b) Demo with FPGA simulation c) FPGA setup d) Demo with FPGA and current FW.\n**Risks (T,E):**\n(T) Dependent on FPGA availability.\n(E) Some of the feedback might need time. Need help from Abhishek\n**Limitations** (Assumptions (A), Constraints (C), Dependency (D))\n(A) NA\n(C) NA\n(D) NA\n**Results** (to be updated after task is complete):\na) PPt with QS222 block diagram\nb) Demo with FPGA simulation\nc) FPGA setup: Github link;\nd) Demo with FPGA and current FW.\n\n**Results:**\na) PPT- [https://10xar-my.sharepoint.com/:p:/g/personal/himanshu\\_shaw\\_ixana\\_ai/EYAXSK\\_AXTtMvd3oVgyEIvMBJ-\\_oLpPdWOUb3lfL1wc1-Q?e=gcSdVI](https://10xar-my.sharepoint.com/:p:/g/personal/himanshu_shaw_ixana_ai/EYAXSK_AXTtMvd3oVgyEIvMBJ-_oLpPdWOUb3lfL1wc1-Q?e=gcSdVI)\nb) PPT- [https://10xar-my.sharepoint.com/:p:/r/personal/himanshu\\_shaw\\_ixana\\_ai/Documents/FPGA\\_sim\\_demo.pptx?d=wbae33b6aef2e477fac7787d0502ff210&csf=1&web=1&e=gqdtaU](https://10xar-my.sharepoint.com/:p:/r/personal/himanshu_shaw_ixana_ai/Documents/FPGA_sim_demo.pptx?d=wbae33b6aef2e477fac7787d0502ff210&csf=1&web=1&e=gqdtaU)",
+      "assignees": [
+        "Himanshu Shaw"
+      ],
+      "parentId": "86dxajmb7",
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": [
+        {
+          "text": "Archishman: @Himanshu Shaw got pulled into other task. \n",
+          "author": "Pushpal Das",
+          "date": "2025-08-12T14:18:54.260Z"
+        },
+        {
+          "text": "The assumption was that the FPGA will be available before 25th July, but it got stuck in airport customs and not yet delivered. Hence it is OPEN\n",
+          "author": "Himanshu Shaw",
+          "date": "2025-08-04T09:48:03.524Z"
+        },
+        {
+          "text": "This will be on hold unlessFPGA is back. @Himanshu Shaw is moved to 127s setup. \n",
+          "author": "Archisman Ghosh",
+          "date": "2025-08-01T15:29:34.540Z"
+        }
+      ]
+    },
+    {
+      "id": "86dxabybz",
+      "name": "N3: Understanding architecture and spec of DVCO calibration loop",
+      "description": "",
+      "assignees": [
+        "Ushasi Das"
+      ],
+      "parentId": "86dwxrx7r",
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": [
+        {
+          "text": "Reason for delay - I did not do the RTL design for DVCO so I did not spend any time for this task. This task was marked open by @Archisman Ghosh. @Pushpal Das I am not sure why this task is marked as delayed.\n",
+          "author": "Ushasi Das",
+          "date": "2025-11-06T08:50:33.852Z"
+        },
+        {
+          "text": "Archisman: Coarse of this task has been changed. This task will be open. @Ushasi Das  will not be spending any active time. \n",
+          "author": "Pushpal Das",
+          "date": "2025-08-14T15:14:27.989Z"
+        },
+        {
+          "text": "Ushasi: Not sure why this has been assigned \n",
+          "author": "Pushpal Das",
+          "date": "2025-08-14T13:04:07.320Z"
+        }
+      ]
+    },
+    {
+      "id": "86dx998wu",
+      "name": "N3: FHSS sync specifications",
+      "description": "Why: FHSS sync specifications\nDeliverable: Specification + Algorithm + width + Interface waveform\nRisk: It may risk the digital schedule\nLimitation: NA",
+      "assignees": [
+        "Anirudh Roy"
+      ],
+      "parentId": "86dww2m3m",
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": []
+    },
+    {
+      "id": "86dx998qn",
+      "name": "N3: FHSS controller",
+      "description": "Why: FHSS controller specifications\nDeliverable: Specification + Algorithm + width + Interface waveform\nRisk: It may risk the digital schedule\nLimitation: NA",
+      "assignees": [
+        "Anirudh Roy"
+      ],
+      "parentId": "86dww2m3m",
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": []
+    },
+    {
+      "id": "86dx8wu8y",
+      "name": "N3: Verification task: Dheeraj",
+      "description": "Training task link: [https://10xar-my.sharepoint.com/:b:/g/personal/archisman\\_ghosh\\_ixana\\_ai/ESUHInwKMY9Jo6pmvdRC53QBdIQoVlkygYVW764HnY1GXw?e=iE5POU](https://10xar-my.sharepoint.com/:b:/g/personal/archisman_ghosh_ixana_ai/ESUHInwKMY9Jo6pmvdRC53QBdIQoVlkygYVW764HnY1GXw?e=iE5POU)\nDeliverable:\na) Presentation with verification architecture + test plan:\nb) Github link.\nc) PPT with final code coverage as well as waveform:\n\nTake help from SD/UD/SS in case of questions.",
+      "assignees": [
+        "Dheerajeswar Saluru"
+      ],
+      "parentId": "86dx53tm1",
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": [
+        {
+          "text": "delay reason: this was training task, due to misinterpretation in documentation and unawareness of many things, it got delayed initially and i could not actively spending on it, as new tasks has high priority\n",
+          "author": "Dheerajeswar Saluru",
+          "date": "2025-11-06T07:40:15.011Z"
+        },
+        {
+          "text": "He is not spending active on it. \n",
+          "author": "Archisman Ghosh",
+          "date": "2025-08-26T16:15:55.467Z"
+        },
+        {
+          "text": "Task delayed due to misinterpretation in documentation about capture type (analog vs digital) and unawareness of CDC/Lint scope within design, causing a hold on verification too.\n",
+          "author": "Dheerajeswar Saluru",
+          "date": "2025-08-04T09:55:04.167Z"
+        }
+      ]
+    },
+    {
+      "id": "86dx8wt7v",
+      "name": "N3: Verification task: Manav",
+      "description": "Training task link: [https://10xar-my.sharepoint.com/:b:/g/personal/archisman\\_ghosh\\_ixana\\_ai/ESUHInwKMY9Jo6pmvdRC53QBdIQoVlkygYVW764HnY1GXw?e=iE5POU](https://10xar-my.sharepoint.com/:b:/g/personal/archisman_ghosh_ixana_ai/ESUHInwKMY9Jo6pmvdRC53QBdIQoVlkygYVW764HnY1GXw?e=iE5POU)\nDeliverable:\na) Presentation with verification architecture + test plan:\nb) Github link.\nc) PPT with final code coverage as well as waveform:\n\nTake help from SD/UD/SS in case of questions.",
+      "assignees": [
+        "Manav"
+      ],
+      "parentId": "86dx53tm1",
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": [
+        {
+          "text": "@Pushpal Das I was working on agc_offset_correction veriifcation , Python code was needed to be made for veriifcation as it was a new module added in qs-223 (additional task) . So I gave priority to that  task .\nI will resume this task from tmrw.\n",
+          "author": "Manav",
+          "date": "2025-09-09T15:42:44.411Z"
+        },
+        {
+          "text": "I was asked to give priority on adiiabtaic verification as it was a deadline to be released to PD team. It was completetd today morning . I will resume work on this task from today.\n",
+          "author": "Manav",
+          "date": "2025-08-27T11:10:47.661Z"
+        },
+        {
+          "text": "Also, I am working in parallel on another task regarding adiabatic verification.\n",
+          "author": "Manav",
+          "date": "2025-08-19T11:25:36.572Z"
+        },
+        {
+          "text": "Last week (14/08/25) design of control module was completed. \nDheeraj's control module design was also completed on 14/08/25.\nTest plans (part of verification task ) were made on 13/08/25 and got reviewed from RTL team meeting on 13/08/25. \n Then we (Dheeraj & me) got KT and detailed understanding regarding how to do verification of Dheeraj's control module design from Sharanya Shetty on 18/08/25 (Mon) as it was our first time to do verification.\n",
+          "author": "Manav",
+          "date": "2025-08-19T11:23:23.062Z"
+        },
+        {
+          "text": "Verification task can start only when Dheeraj's design task is completed. \n",
+          "author": "Manav",
+          "date": "2025-08-05T13:55:49.175Z"
+        }
+      ]
+    },
+    {
+      "id": "86dx5dkrr",
+      "name": "N3: Bluetooth Spec exploration in terms of security exploration review and decision",
+      "description": "**Why:** Ixana plans to integrate security feature. AG needs to check and discuss with Shovan/ Shreyas with current security feature.\n\n**Deliverable:** a) A slide deck capturing all these points from Prama. b) Final Protocol diagram PPT to Shovan and Shreyas c) At least one meeting and convey it to RTL team. d) Feedback to Prama if needed or meeting.\n\n**Risks (T,E):**\n(T)\n(E) I am busy with other stuff as well. For example, if we go ahead with MIPI or other stuff.\n**Limitations** (Assumptions (A), Constraints (C), Dependency (D))\n(A) NA\n(C) Blocks RTL design\n(D) NA\n**Results** (to be updated after task is complete):\nPPT:\n\n(T)iger is a risk that everybody understands\n(E)lephant is a risk that I know but others don't think so, yet\n\n\\*Another task may be created based on feedback if major changes required.",
+      "assignees": [
+        "Archisman Ghosh"
+      ],
+      "parentId": "86dwwm60t",
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": [
+        {
+          "text": "Not yet started, but should have been started by July 14\n",
+          "author": "Pushpal Das",
+          "date": "2025-07-22T14:28:18.152Z"
+        }
+      ]
+    },
+    {
+      "id": "86dx53tm1",
+      "name": "QS223 RTL Verification",
+      "description": "",
+      "assignees": [
+        "Archisman Ghosh"
+      ],
+      "parentId": null,
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": [
+        {
+          "text": "Old PS and FIFO Lint CDC will be taken care of later when SD available. So will be delayed, we are not spending active time on this. \n",
+          "author": "Archisman Ghosh",
+          "date": "2025-11-25T17:25:46.515Z"
+        },
+        {
+          "text": "a) FIFO Lint check probably be unblocked when @Sayantan Dey is available. b) Preliminary PS is okay, but final PS will come when SD is available. c) verif schedule task is delayed as well. \n",
+          "author": "Archisman Ghosh",
+          "date": "2025-11-25T17:25:25.824Z"
+        },
+        {
+          "text": "Dependent on RTL Design. Every delay impacts here\n",
+          "author": "Archisman Ghosh",
+          "date": "2025-11-19T20:19:12.544Z"
+        },
+        {
+          "text": "Dependent on RTL Design. Every delay impacts here\n",
+          "author": "Archisman Ghosh",
+          "date": "2025-10-28T18:30:35.892Z"
+        },
+        {
+          "text": "ABC\n",
+          "author": "Pushpal Das",
+          "date": "2025-08-11T20:16:29.827Z"
+        }
+      ]
+    },
+    {
+      "id": "86dx47xuc",
+      "name": "N3: RS algorithm and architecture finalize",
+      "description": "Details to be added",
+      "assignees": [
+        "Sayantan Dey"
+      ],
+      "parentId": "86dwwm60t",
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": []
+    },
+    {
+      "id": "86dx44905",
+      "name": "N3: Top level BER simulation",
+      "description": "Why: Top-level BER sim. Check the functionality of backend and front end in different gain/Bandwidth settings\nDeliverable: BER results across carrier/datarates across process corner.\nRisk: During simulation with process corner, we may get higher BER and we need to debug the same.\nLimitation: Simulation time is 6 hours per sim.\n\n[\n\n10xar-my.sharepoint.com\n\nhttps://10xar-my.sharepoint.com/:x:/r/personal/shovan\\_10xar\\_com/Documents/Tapeout/QS223/Block%20Design/BER\\_SIMS/BER\\_TEST\\_PLAN.xlsx?d=we7a58ec963fe410193ccd998f9b6bc08&csf=1&web=1&e=0S5srY\n\n](https://10xar-my.sharepoint.com/:x:/r/personal/shovan_10xar_com/Documents/Tapeout/QS223/Block%20Design/BER_SIMS/BER_TEST_PLAN.xlsx?d=we7a58ec963fe410193ccd998f9b6bc08&csf=1&web=1&e=0S5srY)",
+      "assignees": [
+        "Gulshan Poddar",
+        "Samanway Pal",
+        "Arka Chowdhury"
+      ],
+      "parentId": null,
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": [
+        {
+          "text": "Delay reason:\nBR path sensitivity was about 800 uv and we wanted to bring it down to 300 uv, this required changes in BR LPF, mixer (main reason) \nAfter BR LPF layout changes, the sensitivity was approximately 400 uv, require changes in the BR LPF \nBR path BER verification with CDR (sdf) is due, hence we need to complete it \nBR path BER verification with AGC(cdl) is due\n",
+          "author": "Pushpal Das",
+          "date": "2026-02-20T11:29:18.721Z"
+        },
+        {
+          "text": "@KiritkumarP @Pushpal Das  the dates need to be adjusted as final cdl files are still not available to start the post layout sims\n",
+          "author": "Samanway Pal",
+          "date": "2026-02-10T06:38:46.823Z"
+        },
+        {
+          "text": "@KiritkumarP @Pushpal Das we are observing that if we make RF freq > LO freq the BER is good but if the RF freq < LO freq The BER is bad so the sub task 86dzfe4nt is still going on\n",
+          "author": "Samanway Pal",
+          "date": "2026-02-05T05:04:54.733Z"
+        },
+        {
+          "text": "@KiritkumarP sir and @Pushpal Das  da this task has not yet started ,the due date needs to be changed\n",
+          "author": "Samanway Pal",
+          "date": "2025-12-18T07:56:30.598Z"
+        },
+        {
+          "text": "Dependent on PD\n",
+          "author": "Pushpal Das",
+          "date": "2025-11-28T08:37:25.085Z"
+        },
+        {
+          "text": "We need to reschedule it @KiritkumarP ",
+          "author": "Pushpal Das",
+          "date": "2025-11-28T07:49:28.739Z"
+        },
+        {
+          "text": "@KiritkumarP this task has a planned start date of 15/11, it has not started yet as the whole FE + AGC setup is not tested yet due to multiple debugs, can you reschedule it\n",
+          "author": "Arka Chowdhury",
+          "date": "2025-11-25T12:54:33.872Z"
+        }
+      ]
+    },
+    {
+      "id": "86dx448z4",
+      "name": "QS223 AMS simulations",
+      "description": "",
+      "assignees": [
+        "KiritkumarP",
+        "sumon"
+      ],
+      "parentId": null,
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": []
+    },
+    {
+      "id": "86dx0y556",
+      "name": "N3: MIPI Interface check for DSI and spec out",
+      "description": "**Why:** Ixana plans to integrate Video Codec for its display. This understanding will help to talk to 3rd party IPs and if they are adequately following MIPI spec or not. For example, 85% time of the Effinix IP is just MIPI transaction. This could be unacceptable.\n**Deliverable:** a) Understanding DSI TX Spec in depth. Only Interface is fine, No need to check internal signals. b) A PPT/clickup with possible block diagram/architecture. image could be AI-generated or handdrawn in time crunch, but interfaces/configs and memory requirements should be clear with arithmetic calculation. c) Task is completed when Shreyas and Shovan receives b. d) Deliverable contains locally downloaded Spec/understanding PPT with snippets from Effinix FPGA\n**Risks (T,E):**\n(T) Reading Spec could be time consuming. Might employ one of the junior.\n(E) Might read to very bottom of Spec.\n**Limitations** (Assumptions (A), Constraints (C), Dependency (D))\n(A) NA\n(C) AG will also work on MJPEG /MJPEG XL or MJPEG 2000 Python development/ understanding and preliminary computations.\n(D) Might spend some time to check document or unblock Aneesh on FPGA setup\n**Results** (to be updated after task is complete):\na. PPT/doc link:  \n\n(T)iger is a risk that everybody understands\n(E)lephant is a risk that I know but others don't think so, yet",
+      "assignees": [
+        "Archisman Ghosh"
+      ],
+      "parentId": "86dwwm60t",
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": [
+        {
+          "text": "MIPI JPEG is slightly deprioretized as we di not have clarity on chiplet yet. I will update start date when clarity will be there between me, @Shovan Maity and @Shreyas Sen ",
+          "author": "Archisman Ghosh",
+          "date": "2025-07-14T14:58:25.416Z"
+        }
+      ]
+    },
+    {
+      "id": "86dx0y51x",
+      "name": "N3: MIPI Interface check for CSI study and spec out",
+      "description": "**Why:** Ixana plans to integrate Video Codec for its display. This understanding will help to talk to 3rd party IPs and if they are adequately following MIPI spec or not. For example, 85% time of the Effinix IP is just MIPI transaction. This could be unacceptable.\n**Deliverable:** a) Understanding CSI RX Spec in depth. Only Interface is fine, No need to check internal signals. b) A PPT/clickup with possible block diagram/architecture. image could be AI-generated or handdrawn in time crunch, but interfaces/configs and memory requirements should be clear with arithmetic calculation. c) Task is completed when Shreyas and Shovan receives b. d) Deliverable contains locally downloaded Spec/understanding PPT with snippets from Effinix FPGA\n**Risks (T,E):**\n(T) Reading Spec could be time consuming. Might employ one of the junior.\n(E) Might read to very bottom of Spec.\n**Limitations** (Assumptions (A), Constraints (C), Dependency (D))\n(A) NA\n(C) AG will also work on MJPEG /MJPEG XL or MJPEG 2000 Python development/ understanding and preliminary computations.\n(D) Might spend some time to check document or unblock Aneesh on FPGA setup\n**Results** (to be updated after task is complete):\na. PPT/doc link:  \n\n(T)iger is a risk that everybody understands\n(E)lephant is a risk that I know but others don't think so, yet",
+      "assignees": [
+        "Archisman Ghosh"
+      ],
+      "parentId": "86dwwm60t",
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": [
+        {
+          "text": "example task which has come late: 86dx75wnz\n",
+          "author": "Archisman Ghosh",
+          "date": "2025-07-08T20:48:29.108Z"
+        },
+        {
+          "text": "This task is getting delayed as 1. I need to catch up with other tasks progress and feedback. 2. create task for RTL in terms of PHY and FIFO  3. I am more focused on Core + AES. 4. Did not spend more than 2 hrs till 8th July\n",
+          "author": "Archisman Ghosh",
+          "date": "2025-07-08T20:31:00.749Z"
+        }
+      ]
+    },
+    {
+      "id": "86dx0y4vr",
+      "name": "N3: Motion JPEG 2000 study (Encoding+Decoding) and Spec out",
+      "description": "**Why:** Ixana plans to integrate Video Codec for its display.\n**Deliverable:** a) A Python code with no build in function. This will help to understand all the blocks and memory requirement and take further call. b) A PPT/clickup with possible block diagram/architecture. image could be AI-generated or handdrawn in time crunch, but interfaces/configs and memory requirements should be clear with arithmetic calculation. c) Task is completed when Shreyas and Shovan receives b. d) In case of blocker, a clear ppt explaining so.\n**Risks (T,E):**\n(T) Availability of good research paper. understanding some documents might have unprecedented delay.\n(E) My python skills. However, more confident because of perplexity.\n**Limitations** (Assumptions (A), Constraints (C), Dependency (D))\n(A) NA\n(C) Ag will have limited access to laptop/Internet July 4 weekend\n(D) Might spend some time to check document or unblock Aneesh on FPGA setup\n**Results** (to be updated after task is complete):\na. Python repo link:\nb. PPT/doc link:  \n\n(T)iger is a risk that everybody understands\n(E)lephant is a risk that I know but others don't think so, yet",
+      "assignees": [
+        "Archisman Ghosh"
+      ],
+      "parentId": "86dwwm60t",
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": [
+        {
+          "text": "MIPI JPEG is slightly deprioretized as we di not have clarity on chiplet yet. I will update start date when clarity will be there between me, @Shovan Maity and @Shreyas Sen ",
+          "author": "Archisman Ghosh",
+          "date": "2025-07-14T14:58:19.154Z"
+        }
+      ]
+    },
+    {
+      "id": "86dx0y4tg",
+      "name": "N3: Motion JPEG XL study (Encoding+ Decoding) and Spec out",
+      "description": "**Why:** Ixana plans to integrate Video Codec for its display.\n**Deliverable:** a) A Python code with no build in function. This will help to understand all the blocks and memory requirement and take further call. b) A PPT/clickup with possible block diagram/architecture. image could be AI-generated or handdrawn in time crunch, but interfaces/configs and memory requirements should be clear with arithmetic calculation. c) Task is completed when Shreyas and Shovan receives b. d) In case of blocker, a clear ppt explaining so.\n**Risks (T,E):**\n(T) Availability of good research paper. understanding some documents might have unprecedented delay.\n(E) My python skills. However, more confident because of perplexity.\n**Limitations** (Assumptions (A), Constraints (C), Dependency (D))\n(A) NA\n(C) NA\n(D) Might spend some time to check document or unblock Aneesh on FPGA setup\n**Results** (to be updated after task is complete):\na. Python repo link:\nb. PPT/doc link:  \n\n(T)iger is a risk that everybody understands\n(E)lephant is a risk that I know but others don't think so, yet",
+      "assignees": [
+        "Archisman Ghosh"
+      ],
+      "parentId": "86dwwm60t",
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": [
+        {
+          "text": "MIPI JPEG is slightly deprioretized as we di not have clarity on chiplet yet. I will update start date when clarity will be there between me, @Shovan Maity and @Shreyas Sen ",
+          "author": "Archisman Ghosh",
+          "date": "2025-07-14T14:58:14.646Z"
+        }
+      ]
+    },
+    {
+      "id": "86dx0y4ku",
+      "name": "N3: Motion JPEG Study Encoding+Decoding and Spec out",
+      "description": "**Why:** Ixana plans to integrate Video Codec for its display.\n**Deliverable:** a) A Python code with no build in function. This will help to understand all the blocks and memory requirement and take further call. b) A PPT/clickup with possible block diagram/architecture. image could be AI-generated or handdrawn in time crunch, but interfaces/configs and memory requirements should be clear with arithmetic calculation. c) Task is completed when Shreyas and Shovan receives b. d) In case of blocker, a clear ppt explaining so.\n**Risks (T,E):**\n(T) Availability of good research paper. understanding some documents might have unprecedented delay.\n(E) My python skills. However, more confident because of perplexity.\n**Limitations** (Assumptions (A), Constraints (C), Dependency (D))\n(A) NA\n(C) NA\n(D) Might spend some time to check document or unblock Aneesh on FPGA setup\n**Results** (to be updated after task is complete):\na. Python repo link: [https://github.com/Quasistatics/IC-RTL-qs223/blob/main/python\\_tb/JPEG\\_RnD/JPEG\\_compression.ipynb](https://github.com/Quasistatics/IC-RTL-qs223/blob/main/python_tb/JPEG_RnD/JPEG_compression.ipynb)\nb. PPT/doc link:   [https://10xar-my.sharepoint.com/:p:/g/personal/archisman\\_ghosh\\_ixana\\_ai/EUwRMyZGkz9Ek8\\_gp2bmXYwB3jDFmgFaQPPPFq0734w\\_eg?e=Iwsoc0](https://10xar-my.sharepoint.com/:p:/g/personal/archisman_ghosh_ixana_ai/EUwRMyZGkz9Ek8_gp2bmXYwB3jDFmgFaQPPPFq0734w_eg?e=Iwsoc0)\n\n(T)iger is a risk that everybody understands\n(E)lephant is a risk that I know but others don't think so, yet",
+      "assignees": [
+        "Archisman Ghosh"
+      ],
+      "parentId": "86dwwm60t",
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": [
+        {
+          "text": "MIPI JPEG is slightly deprioretized as we di not have clarity on chiplet yet. I will update start date when clarity will be there between me, @Shovan Maity and @Shreyas Sen ",
+          "author": "Archisman Ghosh",
+          "date": "2025-07-14T14:58:06.904Z"
+        }
+      ]
+    },
+    {
+      "id": "86dwxrx7r",
+      "name": "QS223 RTL Design",
+      "description": "",
+      "assignees": [
+        "Archisman Ghosh",
+        "Sayantan Dey"
+      ],
+      "parentId": null,
+      "listId": "901704846537",
+      "listName": "QS223 TO",
+      "comments": [
+        {
+          "text": "@Pushpal Das I am not sure of the Open tasks under this task. But overall this task is still remaining mainly due to discussions continuing about the different Power Modes for the IC as well as Core Interactions\n",
+          "author": "Sayantan Dey",
+          "date": "2026-01-13T08:00:38.347Z"
+        },
+        {
+          "text": "Old PS and FIFO Lint CDC will be taken care of later when SD available. So will be delayed, we are not spending active time on this. \n",
+          "author": "Archisman Ghosh",
+          "date": "2025-11-25T17:24:36.280Z"
+        },
+        {
+          "text": "a) FIFO Lint check probably be unblocked when @Sayantan Dey is available. b) Preliminary PS is okay, but final PS will come when SD is available. c) verif schedule task is delayed as well. \n",
+          "author": "Archisman Ghosh",
+          "date": "2025-11-25T17:16:03.823Z"
+        },
+        {
+          "text": "Further 1 week delayed as a) FIFO Lint check etc dependent on SD where he is busy with 127M, b) Few things are dependent on SD like AGC gain looping, PS is the final task c) Not related to RTL design but core RTL might change a bit, but will be taken care of in verification and debug task. \n",
+          "author": "Archisman Ghosh",
+          "date": "2025-11-19T20:18:42.927Z"
+        },
+        {
+          "text": "Delayed by 7-15 days as a) new blocks like uwb dsss b) changes in mem controller c) apb support etc came. SD is fully focused on 127M, so FIFO etc got slightly delayed. FHSS sync controller took time and conveyed on time. Moreover, we are making almost full-fledged uC. \n",
+          "author": "Archisman Ghosh",
+          "date": "2025-10-28T18:30:02.060Z"
+        }
+      ]
+    }
+  ]
+}

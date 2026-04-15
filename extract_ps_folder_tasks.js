@@ -42,8 +42,24 @@ const PS_ASSIGNEES = [
 ];
 
 const PROJECTS = [
-  { id: 'qs222', label: 'QS222', folderId: '90172530829', outFile: 'ps_folder_tasks_qs222.json' },
-  { id: 'qs223', label: 'QS223', folderId: '90172523095', outFile: 'ps_folder_tasks_qs223.json' },
+  {
+    id: 'qs222',
+    label: 'QS222',
+    folderId: '90172530829',
+    outFile: 'data/extracts/ps_folder_tasks_qs222.json',
+  },
+  {
+    id: 'qs223',
+    label: 'QS223',
+    folderId: '90172523095',
+    outFile: 'data/extracts/ps_folder_tasks_qs223.json',
+  },
+  {
+    id: 'qs127',
+    label: 'QS127',
+    folderId: '90172600045',
+    outFile: 'data/extracts/ps_folder_tasks_qs127.json',
+  },
 ];
 
 const sleep = (ms) => new Promise((res) => setTimeout(res, ms));
@@ -58,6 +74,7 @@ const STATUS_WHITELIST = (process.env.PS_EXTRACT_STATUSES || '')
   .filter(Boolean);
 
 const DONE_STATUS_NAME = /^(complete|completed|done|closed|cancelled|canceled)$/i;
+const IN_PROGRESS_STATUS_NAME = /^in[\s-]?progress$/i;
 
 function taskMatchesPsMember(task) {
   const assignees = task.assignees || [];
@@ -110,7 +127,8 @@ function isInProgressTask(task) {
     return STATUS_WHITELIST.includes(name.toLowerCase());
   }
 
-  return true;
+  // Default strict mode: keep only explicit "In Progress" tasks.
+  return IN_PROGRESS_STATUS_NAME.test(name);
 }
 
 async function fetchWithRetry(url, options = {}, retries = 3) {
@@ -230,6 +248,8 @@ async function extractFolder(project) {
           name: task.name,
           description,
           assignees: (task.assignees || []).map((a) => a.username || '').filter(Boolean),
+          /** Needed for dashboard member-stats (same Delayed field as AMS / wrong pipeline). */
+          custom_fields: task.custom_fields || [],
           parentId: task.parent ?? null,
           listId: list.id,
           listName: list.name,
@@ -273,6 +293,7 @@ async function main() {
       taskCount: tasks.length,
       tasks,
     };
+    fs.mkdirSync('data/extracts', { recursive: true });
     fs.writeFileSync(project.outFile, JSON.stringify(payload, null, 2));
     console.log(`\n💾 ${tasks.length} task(s) → ${project.outFile}`);
     summary[project.id] = tasks.length;

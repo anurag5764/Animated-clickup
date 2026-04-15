@@ -1,0 +1,1043 @@
+{
+  "generatedAt": "2026-04-14T22:25:21.046Z",
+  "mode": "current-in-progress",
+  "project": "qs127",
+  "totalTasks": 3,
+  "delayedTasksClassified": 1,
+  "stageSummary": [
+    {
+      "stageNumber": 1,
+      "stageName": "Initial Module Spec",
+      "total": 0,
+      "delayed": 0,
+      "lnoLeverage": 0,
+      "lnoNeutral": 0,
+      "lnoOverhead": 0,
+      "lnoUnparsed": 0
+    },
+    {
+      "stageNumber": 2,
+      "stageName": "Mathematical Modeling",
+      "total": 0,
+      "delayed": 0,
+      "lnoLeverage": 0,
+      "lnoNeutral": 0,
+      "lnoOverhead": 0,
+      "lnoUnparsed": 0
+    },
+    {
+      "stageNumber": 3,
+      "stageName": "Mathematical Sim in Python",
+      "total": 2,
+      "delayed": 0,
+      "lnoLeverage": 0,
+      "lnoNeutral": 2,
+      "lnoOverhead": 0,
+      "lnoUnparsed": 0
+    },
+    {
+      "stageNumber": 4,
+      "stageName": "Circuit Implementation and Sim",
+      "total": 1,
+      "delayed": 1,
+      "lnoLeverage": 0,
+      "lnoNeutral": 1,
+      "lnoOverhead": 0,
+      "lnoUnparsed": 0
+    },
+    {
+      "stageNumber": 5,
+      "stageName": "Layout",
+      "total": 0,
+      "delayed": 0,
+      "lnoLeverage": 0,
+      "lnoNeutral": 0,
+      "lnoOverhead": 0,
+      "lnoUnparsed": 0
+    },
+    {
+      "stageNumber": 6,
+      "stageName": "Post Layout Sim",
+      "total": 0,
+      "delayed": 0,
+      "lnoLeverage": 0,
+      "lnoNeutral": 0,
+      "lnoOverhead": 0,
+      "lnoUnparsed": 0
+    }
+  ],
+  "blockerTypeBreakdown": {
+    "dependency": 0,
+    "technical": 1,
+    "review": 0,
+    "resource": 0,
+    "requirement": 0,
+    "unknown": 2
+  },
+  "tasks": [
+    {
+      "id": "86e0rcfz7",
+      "name": "N3: Debug why jitter is more",
+      "description": "Why: Simulate Flash PLL with LDO and DC-DC and investigate why we are seeing more jitter in post-silicon\nDeliverable: Investigate the source of jitter and how to reduce it.\nRisk: We may have to change the PLL design\nLImitation: NA",
+      "status": "in progress",
+      "statusType": "custom",
+      "assignees": [
+        {
+          "id": 89169275,
+          "username": "Aniruddh CHoudhary",
+          "email": "aniruddh.choudhary@10xar.com"
+        }
+      ],
+      "creator": "KiritkumarP",
+      "plannedStartDate": null,
+      "plannedDueDate": "1775514600000",
+      "actualStartDate": "1775428200000",
+      "actualCompletionDate": null,
+      "dueDate": "1775514600000",
+      "startDate": "1775428200000",
+      "dateCreated": "1775471969384",
+      "dateUpdated": "1775556482320",
+      "tags": [],
+      "parent": "86e0ra0yj",
+      "subtasks": [],
+      "dependencies": [],
+      "linkedTasks": [],
+      "customFields": [
+        {
+          "id": "e58c79fe-4069-46b0-a30f-4ba56787a244",
+          "name": "Category",
+          "type": "drop_down",
+          "type_config": {
+            "sorting": "manual",
+            "options": [
+              {
+                "id": "098f883a-07e6-4046-a1bc-d88bad403d8f",
+                "name": "R&D",
+                "color": null,
+                "orderindex": 0
+              },
+              {
+                "id": "58bee295-dc72-43a6-a8bf-2bfe45372485",
+                "name": "Demo/Product",
+                "color": null,
+                "orderindex": 1
+              },
+              {
+                "id": "d982ff35-9b83-4f36-aa89-beb419b5910c",
+                "name": "Internal Process",
+                "color": null,
+                "orderindex": 2
+              },
+              {
+                "id": "a1ac4d8a-ae73-41da-b650-fa9cbd40ce96",
+                "name": "Chip Development",
+                "color": null,
+                "orderindex": 3
+              }
+            ]
+          },
+          "date_created": "1740605766735",
+          "hide_from_guests": false,
+          "required": false
+        },
+        {
+          "id": "c5d4e6c7-0fd0-4e7e-8f78-889b7f2d16dc",
+          "name": "DELAY DURATION",
+          "type": "formula",
+          "type_config": {
+            "simple": false,
+            "formula": "DAYS(TASK_DONE,TASK_DUE_DATE)",
+            "version": "1.12",
+            "reset_at": 1770895087014,
+            "is_dynamic": false,
+            "return_types": [
+              "number"
+            ],
+            "calculation_state": "ready"
+          },
+          "date_created": "1752683547856",
+          "hide_from_guests": false,
+          "required": false
+        },
+        {
+          "id": "da2e7823-83fb-4f03-96ff-2f335337dad1",
+          "name": "Delayed",
+          "type": "drop_down",
+          "type_config": {
+            "sorting": "manual",
+            "options": [
+              {
+                "id": "839471bd-322e-4e8e-a985-6f266de2738e",
+                "name": "Yes",
+                "color": "#800000",
+                "orderindex": 0
+              },
+              {
+                "id": "7c707fd8-fad7-404b-aca0-83074ae55ff4",
+                "name": "No",
+                "color": "#2ecd6f",
+                "orderindex": 1
+              }
+            ]
+          },
+          "date_created": "1720598447591",
+          "hide_from_guests": false,
+          "required": false
+        },
+        {
+          "id": "c1aa2df0-34b9-4480-9e48-a737185c59ae",
+          "name": "LNO",
+          "type": "drop_down",
+          "type_config": {
+            "sorting": "manual",
+            "options": [
+              {
+                "id": "870fcf08-23d6-4885-a153-04b033ec419a",
+                "name": "L",
+                "color": "#e50000",
+                "orderindex": 0
+              },
+              {
+                "id": "0fb23ef2-6adf-4ca9-a83d-b32a3cb3e2d6",
+                "name": "N",
+                "color": "#f9d900",
+                "orderindex": 1
+              },
+              {
+                "id": "78a5be0a-21e4-4fe1-83de-82535bb8b50e",
+                "name": "O",
+                "color": "#04A9F4",
+                "orderindex": 2
+              }
+            ]
+          },
+          "date_created": "1741980130797",
+          "hide_from_guests": false,
+          "required": false
+        },
+        {
+          "id": "49f72fee-f709-4ad0-a4ed-cd45b94b4b76",
+          "name": "Planned Due date",
+          "type": "date",
+          "type_config": {},
+          "date_created": "1719403519049",
+          "hide_from_guests": false,
+          "value": "1775514600000",
+          "value_richtext": null,
+          "required": false
+        },
+        {
+          "id": "dfcad46f-fce3-40c2-848e-4e5e8bc1575e",
+          "name": "Planned Start Date",
+          "type": "date",
+          "type_config": {},
+          "date_created": "1746302335140",
+          "hide_from_guests": false,
+          "required": false
+        },
+        {
+          "id": "baa57bb6-5ce4-4700-9e69-9430b2f5cc2d",
+          "name": "Planned Start date",
+          "type": "date",
+          "type_config": {},
+          "date_created": "1712239533217",
+          "hide_from_guests": false,
+          "value": "1775428200000",
+          "value_richtext": null,
+          "required": false
+        },
+        {
+          "id": "1d032a56-1d84-4ce2-ac10-ba77817cf110",
+          "name": "Project Phase",
+          "type": "drop_down",
+          "type_config": {
+            "default": 0,
+            "placeholder": null,
+            "options": [
+              {
+                "id": "56674654-41b2-43c3-aab2-1df7f9bc2b82",
+                "name": "Phase 1",
+                "color": "#81B1FF",
+                "orderindex": 0
+              },
+              {
+                "id": "d9756577-4f12-45cb-9e7a-c9bd91812250",
+                "name": "Phase 2",
+                "color": "#3397dd",
+                "orderindex": 1
+              },
+              {
+                "id": "cbe3541f-2f2b-404b-a7f4-b268d5852d65",
+                "name": "Phase 3",
+                "color": "#3082B7",
+                "orderindex": 2
+              },
+              {
+                "id": "f94b6c62-358b-4f7c-bbf4-757163c21fe4",
+                "name": "Phase 4",
+                "color": "#9b59b6",
+                "orderindex": 3
+              }
+            ]
+          },
+          "date_created": "1750430774043",
+          "hide_from_guests": false,
+          "required": false
+        },
+        {
+          "id": "70bd1d18-c23e-4817-8d28-f74c43c6ea37",
+          "name": "Quality",
+          "type": "drop_down",
+          "type_config": {
+            "sorting": "manual",
+            "options": [
+              {
+                "id": "6299066c-0887-4958-aeb5-b446b1af5c50",
+                "name": "1: High",
+                "color": "#e50000",
+                "orderindex": 0
+              },
+              {
+                "id": "4c57ab31-435f-40ee-ac97-9ffddd196d94",
+                "name": "2: Medium High",
+                "color": "#E65100",
+                "orderindex": 1
+              },
+              {
+                "id": "e32f6ff7-c7fd-4793-824d-27b53a20054d",
+                "name": "3: Medium",
+                "color": "#f9d900",
+                "orderindex": 2
+              },
+              {
+                "id": "93da7581-89a1-4ce9-b52c-d30a25a7a1a5",
+                "name": "4: Medium Low",
+                "color": "#2ecd6f",
+                "orderindex": 3
+              },
+              {
+                "id": "359d1a62-3d26-49e2-a874-80898413be62",
+                "name": "5: Low",
+                "color": "#04A9F4",
+                "orderindex": 4
+              }
+            ]
+          },
+          "date_created": "1741980345142",
+          "hide_from_guests": false,
+          "required": false
+        },
+        {
+          "id": "2f729288-8f7e-4571-804f-fc0e6a38be83",
+          "name": "Team",
+          "type": "labels",
+          "type_config": {
+            "sorting": "manual",
+            "options": [
+              {
+                "id": "d8d315b5-2edd-475a-8d66-d8e1e3ce4d54",
+                "label": "FW",
+                "color": null,
+                "orderindex": 0
+              },
+              {
+                "id": "52906635-84c9-404d-88ac-88481e7cd631",
+                "label": "HW",
+                "color": null,
+                "orderindex": 1
+              },
+              {
+                "id": "7d01f1b9-009d-4e3b-943b-f47b0849cbdc",
+                "label": "IC",
+                "color": null,
+                "orderindex": 2
+              },
+              {
+                "id": "f95ca21a-a187-47ee-8654-d983db9c8c3c",
+                "label": "Protocol",
+                "color": null,
+                "orderindex": 3
+              }
+            ]
+          },
+          "date_created": "1741954726937",
+          "hide_from_guests": false,
+          "required": false
+        }
+      ],
+      "delayedFlag": "unknown",
+      "delayDurationDays": null,
+      "listId": "901705133623",
+      "listName": "QS127M_TO",
+      "comments": [],
+      "classification": {
+        "stage": 3,
+        "stageName": "Mathematical Sim in Python",
+        "confidence": 0.45,
+        "reasoning": "Keyword routing (task not marked Delayed = Yes)",
+        "isBlocker": false,
+        "blockerType": "unknown",
+        "blockerReason": "Delay Reason @pm:\n\n1. Summary:\nNo valid delay reason found from comments.\n\n2. Technical:\nNo work-related delay cause could be inferred from the comment thread."
+      }
+    },
+    {
+      "id": "86e0ra0yj",
+      "name": "N3: Flash PLL debug",
+      "description": "",
+      "status": "in progress",
+      "statusType": "custom",
+      "assignees": [
+        {
+          "id": 89169275,
+          "username": "Aniruddh CHoudhary",
+          "email": "aniruddh.choudhary@10xar.com"
+        },
+        {
+          "id": 89241490,
+          "username": "KiritkumarP",
+          "email": "kiritkumar.panchal@ixana.ai"
+        }
+      ],
+      "creator": "KiritkumarP",
+      "plannedStartDate": null,
+      "plannedDueDate": null,
+      "actualStartDate": null,
+      "actualCompletionDate": null,
+      "dueDate": null,
+      "startDate": null,
+      "dateCreated": "1775469507214",
+      "dateUpdated": "1775471976600",
+      "tags": [],
+      "parent": null,
+      "subtasks": [],
+      "dependencies": [],
+      "linkedTasks": [],
+      "customFields": [
+        {
+          "id": "e58c79fe-4069-46b0-a30f-4ba56787a244",
+          "name": "Category",
+          "type": "drop_down",
+          "type_config": {
+            "sorting": "manual",
+            "options": [
+              {
+                "id": "098f883a-07e6-4046-a1bc-d88bad403d8f",
+                "name": "R&D",
+                "color": null,
+                "orderindex": 0
+              },
+              {
+                "id": "58bee295-dc72-43a6-a8bf-2bfe45372485",
+                "name": "Demo/Product",
+                "color": null,
+                "orderindex": 1
+              },
+              {
+                "id": "d982ff35-9b83-4f36-aa89-beb419b5910c",
+                "name": "Internal Process",
+                "color": null,
+                "orderindex": 2
+              },
+              {
+                "id": "a1ac4d8a-ae73-41da-b650-fa9cbd40ce96",
+                "name": "Chip Development",
+                "color": null,
+                "orderindex": 3
+              }
+            ]
+          },
+          "date_created": "1740605766735",
+          "hide_from_guests": false,
+          "required": false
+        },
+        {
+          "id": "c5d4e6c7-0fd0-4e7e-8f78-889b7f2d16dc",
+          "name": "DELAY DURATION",
+          "type": "formula",
+          "type_config": {
+            "simple": false,
+            "formula": "DAYS(TASK_DONE,TASK_DUE_DATE)",
+            "version": "1.12",
+            "reset_at": 1770895087014,
+            "is_dynamic": false,
+            "return_types": [
+              "number"
+            ],
+            "calculation_state": "ready"
+          },
+          "date_created": "1752683547856",
+          "hide_from_guests": false,
+          "required": false
+        },
+        {
+          "id": "da2e7823-83fb-4f03-96ff-2f335337dad1",
+          "name": "Delayed",
+          "type": "drop_down",
+          "type_config": {
+            "sorting": "manual",
+            "options": [
+              {
+                "id": "839471bd-322e-4e8e-a985-6f266de2738e",
+                "name": "Yes",
+                "color": "#800000",
+                "orderindex": 0
+              },
+              {
+                "id": "7c707fd8-fad7-404b-aca0-83074ae55ff4",
+                "name": "No",
+                "color": "#2ecd6f",
+                "orderindex": 1
+              }
+            ]
+          },
+          "date_created": "1720598447591",
+          "hide_from_guests": false,
+          "required": false
+        },
+        {
+          "id": "c1aa2df0-34b9-4480-9e48-a737185c59ae",
+          "name": "LNO",
+          "type": "drop_down",
+          "type_config": {
+            "sorting": "manual",
+            "options": [
+              {
+                "id": "870fcf08-23d6-4885-a153-04b033ec419a",
+                "name": "L",
+                "color": "#e50000",
+                "orderindex": 0
+              },
+              {
+                "id": "0fb23ef2-6adf-4ca9-a83d-b32a3cb3e2d6",
+                "name": "N",
+                "color": "#f9d900",
+                "orderindex": 1
+              },
+              {
+                "id": "78a5be0a-21e4-4fe1-83de-82535bb8b50e",
+                "name": "O",
+                "color": "#04A9F4",
+                "orderindex": 2
+              }
+            ]
+          },
+          "date_created": "1741980130797",
+          "hide_from_guests": false,
+          "required": false
+        },
+        {
+          "id": "49f72fee-f709-4ad0-a4ed-cd45b94b4b76",
+          "name": "Planned Due date",
+          "type": "date",
+          "type_config": {},
+          "date_created": "1719403519049",
+          "hide_from_guests": false,
+          "required": false
+        },
+        {
+          "id": "dfcad46f-fce3-40c2-848e-4e5e8bc1575e",
+          "name": "Planned Start Date",
+          "type": "date",
+          "type_config": {},
+          "date_created": "1746302335140",
+          "hide_from_guests": false,
+          "required": false
+        },
+        {
+          "id": "baa57bb6-5ce4-4700-9e69-9430b2f5cc2d",
+          "name": "Planned Start date",
+          "type": "date",
+          "type_config": {},
+          "date_created": "1712239533217",
+          "hide_from_guests": false,
+          "required": false
+        },
+        {
+          "id": "1d032a56-1d84-4ce2-ac10-ba77817cf110",
+          "name": "Project Phase",
+          "type": "drop_down",
+          "type_config": {
+            "default": 0,
+            "placeholder": null,
+            "options": [
+              {
+                "id": "56674654-41b2-43c3-aab2-1df7f9bc2b82",
+                "name": "Phase 1",
+                "color": "#81B1FF",
+                "orderindex": 0
+              },
+              {
+                "id": "d9756577-4f12-45cb-9e7a-c9bd91812250",
+                "name": "Phase 2",
+                "color": "#3397dd",
+                "orderindex": 1
+              },
+              {
+                "id": "cbe3541f-2f2b-404b-a7f4-b268d5852d65",
+                "name": "Phase 3",
+                "color": "#3082B7",
+                "orderindex": 2
+              },
+              {
+                "id": "f94b6c62-358b-4f7c-bbf4-757163c21fe4",
+                "name": "Phase 4",
+                "color": "#9b59b6",
+                "orderindex": 3
+              }
+            ]
+          },
+          "date_created": "1750430774043",
+          "hide_from_guests": false,
+          "required": false
+        },
+        {
+          "id": "70bd1d18-c23e-4817-8d28-f74c43c6ea37",
+          "name": "Quality",
+          "type": "drop_down",
+          "type_config": {
+            "sorting": "manual",
+            "options": [
+              {
+                "id": "6299066c-0887-4958-aeb5-b446b1af5c50",
+                "name": "1: High",
+                "color": "#e50000",
+                "orderindex": 0
+              },
+              {
+                "id": "4c57ab31-435f-40ee-ac97-9ffddd196d94",
+                "name": "2: Medium High",
+                "color": "#E65100",
+                "orderindex": 1
+              },
+              {
+                "id": "e32f6ff7-c7fd-4793-824d-27b53a20054d",
+                "name": "3: Medium",
+                "color": "#f9d900",
+                "orderindex": 2
+              },
+              {
+                "id": "93da7581-89a1-4ce9-b52c-d30a25a7a1a5",
+                "name": "4: Medium Low",
+                "color": "#2ecd6f",
+                "orderindex": 3
+              },
+              {
+                "id": "359d1a62-3d26-49e2-a874-80898413be62",
+                "name": "5: Low",
+                "color": "#04A9F4",
+                "orderindex": 4
+              }
+            ]
+          },
+          "date_created": "1741980345142",
+          "hide_from_guests": false,
+          "required": false
+        },
+        {
+          "id": "2f729288-8f7e-4571-804f-fc0e6a38be83",
+          "name": "Team",
+          "type": "labels",
+          "type_config": {
+            "sorting": "manual",
+            "options": [
+              {
+                "id": "d8d315b5-2edd-475a-8d66-d8e1e3ce4d54",
+                "label": "FW",
+                "color": null,
+                "orderindex": 0
+              },
+              {
+                "id": "52906635-84c9-404d-88ac-88481e7cd631",
+                "label": "HW",
+                "color": null,
+                "orderindex": 1
+              },
+              {
+                "id": "7d01f1b9-009d-4e3b-943b-f47b0849cbdc",
+                "label": "IC",
+                "color": null,
+                "orderindex": 2
+              },
+              {
+                "id": "f95ca21a-a187-47ee-8654-d983db9c8c3c",
+                "label": "Protocol",
+                "color": null,
+                "orderindex": 3
+              }
+            ]
+          },
+          "date_created": "1741954726937",
+          "hide_from_guests": false,
+          "required": false
+        }
+      ],
+      "delayedFlag": "unknown",
+      "delayDurationDays": null,
+      "listId": "901705133623",
+      "listName": "QS127M_TO",
+      "comments": [],
+      "classification": {
+        "stage": 3,
+        "stageName": "Mathematical Sim in Python",
+        "confidence": 0.45,
+        "reasoning": "Keyword routing (task not marked Delayed = Yes)",
+        "isBlocker": false,
+        "blockerType": "unknown",
+        "blockerReason": "Delay Reason @pm:\n\n1. Summary:\nNo valid delay reason found from comments.\n\n2. Technical:\nNo work-related delay cause could be inferred from the comment thread."
+      }
+    },
+    {
+      "id": "86dzuruwj",
+      "name": "N3 : [QS127M-ATE] ATE test plan review.",
+      "description": "**Why:** Ixana plan to take QS127M (YR23) into production with phase 1 targeting 100K devices.\n\n**Deliverable:** Complete the test plan review with Tessolve and agree upon the test plan and get it approved by both Ixana and Tessolve.",
+      "status": "in progress",
+      "statusType": "custom",
+      "assignees": [
+        {
+          "id": 89154620,
+          "username": "sumon",
+          "email": "sumon.bose@10xar.com"
+        },
+        {
+          "id": 89176838,
+          "username": "Vinayak Agrawal",
+          "email": "vinayak.agrawal@ixana.ai"
+        },
+        {
+          "id": 95155864,
+          "username": "Sarat Anumula",
+          "email": "sarat.anumula@ixana.ai"
+        }
+      ],
+      "creator": "Sarat Anumula",
+      "plannedStartDate": null,
+      "plannedDueDate": "1774564200000",
+      "actualStartDate": "1771194600000",
+      "actualCompletionDate": null,
+      "dueDate": "1774564200000",
+      "startDate": "1771194600000",
+      "dateCreated": "1771228448087",
+      "dateUpdated": "1776158854180",
+      "tags": [],
+      "parent": null,
+      "subtasks": [],
+      "dependencies": [],
+      "linkedTasks": [],
+      "customFields": [
+        {
+          "id": "e58c79fe-4069-46b0-a30f-4ba56787a244",
+          "name": "Category",
+          "type": "drop_down",
+          "type_config": {
+            "sorting": "manual",
+            "options": [
+              {
+                "id": "098f883a-07e6-4046-a1bc-d88bad403d8f",
+                "name": "R&D",
+                "color": null,
+                "orderindex": 0
+              },
+              {
+                "id": "58bee295-dc72-43a6-a8bf-2bfe45372485",
+                "name": "Demo/Product",
+                "color": null,
+                "orderindex": 1
+              },
+              {
+                "id": "d982ff35-9b83-4f36-aa89-beb419b5910c",
+                "name": "Internal Process",
+                "color": null,
+                "orderindex": 2
+              },
+              {
+                "id": "a1ac4d8a-ae73-41da-b650-fa9cbd40ce96",
+                "name": "Chip Development",
+                "color": null,
+                "orderindex": 3
+              }
+            ]
+          },
+          "date_created": "1740605766735",
+          "hide_from_guests": false,
+          "required": false
+        },
+        {
+          "id": "c5d4e6c7-0fd0-4e7e-8f78-889b7f2d16dc",
+          "name": "DELAY DURATION",
+          "type": "formula",
+          "type_config": {
+            "simple": false,
+            "formula": "DAYS(TASK_DONE,TASK_DUE_DATE)",
+            "version": "1.12",
+            "reset_at": 1770895087014,
+            "is_dynamic": false,
+            "return_types": [
+              "number"
+            ],
+            "calculation_state": "ready"
+          },
+          "date_created": "1752683547856",
+          "hide_from_guests": false,
+          "required": false
+        },
+        {
+          "id": "da2e7823-83fb-4f03-96ff-2f335337dad1",
+          "name": "Delayed",
+          "type": "drop_down",
+          "type_config": {
+            "sorting": "manual",
+            "options": [
+              {
+                "id": "839471bd-322e-4e8e-a985-6f266de2738e",
+                "name": "Yes",
+                "color": "#800000",
+                "orderindex": 0
+              },
+              {
+                "id": "7c707fd8-fad7-404b-aca0-83074ae55ff4",
+                "name": "No",
+                "color": "#2ecd6f",
+                "orderindex": 1
+              }
+            ]
+          },
+          "date_created": "1720598447591",
+          "hide_from_guests": false,
+          "value": 0,
+          "value_richtext": "",
+          "required": false
+        },
+        {
+          "id": "c1aa2df0-34b9-4480-9e48-a737185c59ae",
+          "name": "LNO",
+          "type": "drop_down",
+          "type_config": {
+            "sorting": "manual",
+            "options": [
+              {
+                "id": "870fcf08-23d6-4885-a153-04b033ec419a",
+                "name": "L",
+                "color": "#e50000",
+                "orderindex": 0
+              },
+              {
+                "id": "0fb23ef2-6adf-4ca9-a83d-b32a3cb3e2d6",
+                "name": "N",
+                "color": "#f9d900",
+                "orderindex": 1
+              },
+              {
+                "id": "78a5be0a-21e4-4fe1-83de-82535bb8b50e",
+                "name": "O",
+                "color": "#04A9F4",
+                "orderindex": 2
+              }
+            ]
+          },
+          "date_created": "1741980130797",
+          "hide_from_guests": false,
+          "required": false
+        },
+        {
+          "id": "49f72fee-f709-4ad0-a4ed-cd45b94b4b76",
+          "name": "Planned Due date",
+          "type": "date",
+          "type_config": {},
+          "date_created": "1719403519049",
+          "hide_from_guests": false,
+          "value": "1774564200000",
+          "value_richtext": null,
+          "required": false
+        },
+        {
+          "id": "dfcad46f-fce3-40c2-848e-4e5e8bc1575e",
+          "name": "Planned Start Date",
+          "type": "date",
+          "type_config": {},
+          "date_created": "1746302335140",
+          "hide_from_guests": false,
+          "required": false
+        },
+        {
+          "id": "baa57bb6-5ce4-4700-9e69-9430b2f5cc2d",
+          "name": "Planned Start date",
+          "type": "date",
+          "type_config": {},
+          "date_created": "1712239533217",
+          "hide_from_guests": false,
+          "value": "1771194600000",
+          "value_richtext": null,
+          "required": false
+        },
+        {
+          "id": "1d032a56-1d84-4ce2-ac10-ba77817cf110",
+          "name": "Project Phase",
+          "type": "drop_down",
+          "type_config": {
+            "default": 0,
+            "placeholder": null,
+            "options": [
+              {
+                "id": "56674654-41b2-43c3-aab2-1df7f9bc2b82",
+                "name": "Phase 1",
+                "color": "#81B1FF",
+                "orderindex": 0
+              },
+              {
+                "id": "d9756577-4f12-45cb-9e7a-c9bd91812250",
+                "name": "Phase 2",
+                "color": "#3397dd",
+                "orderindex": 1
+              },
+              {
+                "id": "cbe3541f-2f2b-404b-a7f4-b268d5852d65",
+                "name": "Phase 3",
+                "color": "#3082B7",
+                "orderindex": 2
+              },
+              {
+                "id": "f94b6c62-358b-4f7c-bbf4-757163c21fe4",
+                "name": "Phase 4",
+                "color": "#9b59b6",
+                "orderindex": 3
+              }
+            ]
+          },
+          "date_created": "1750430774043",
+          "hide_from_guests": false,
+          "required": false
+        },
+        {
+          "id": "70bd1d18-c23e-4817-8d28-f74c43c6ea37",
+          "name": "Quality",
+          "type": "drop_down",
+          "type_config": {
+            "sorting": "manual",
+            "options": [
+              {
+                "id": "6299066c-0887-4958-aeb5-b446b1af5c50",
+                "name": "1: High",
+                "color": "#e50000",
+                "orderindex": 0
+              },
+              {
+                "id": "4c57ab31-435f-40ee-ac97-9ffddd196d94",
+                "name": "2: Medium High",
+                "color": "#E65100",
+                "orderindex": 1
+              },
+              {
+                "id": "e32f6ff7-c7fd-4793-824d-27b53a20054d",
+                "name": "3: Medium",
+                "color": "#f9d900",
+                "orderindex": 2
+              },
+              {
+                "id": "93da7581-89a1-4ce9-b52c-d30a25a7a1a5",
+                "name": "4: Medium Low",
+                "color": "#2ecd6f",
+                "orderindex": 3
+              },
+              {
+                "id": "359d1a62-3d26-49e2-a874-80898413be62",
+                "name": "5: Low",
+                "color": "#04A9F4",
+                "orderindex": 4
+              }
+            ]
+          },
+          "date_created": "1741980345142",
+          "hide_from_guests": false,
+          "required": false
+        },
+        {
+          "id": "2f729288-8f7e-4571-804f-fc0e6a38be83",
+          "name": "Team",
+          "type": "labels",
+          "type_config": {
+            "sorting": "manual",
+            "options": [
+              {
+                "id": "d8d315b5-2edd-475a-8d66-d8e1e3ce4d54",
+                "label": "FW",
+                "color": null,
+                "orderindex": 0
+              },
+              {
+                "id": "52906635-84c9-404d-88ac-88481e7cd631",
+                "label": "HW",
+                "color": null,
+                "orderindex": 1
+              },
+              {
+                "id": "7d01f1b9-009d-4e3b-943b-f47b0849cbdc",
+                "label": "IC",
+                "color": null,
+                "orderindex": 2
+              },
+              {
+                "id": "f95ca21a-a187-47ee-8654-d983db9c8c3c",
+                "label": "Protocol",
+                "color": null,
+                "orderindex": 3
+              }
+            ]
+          },
+          "date_created": "1741954726937",
+          "hide_from_guests": false,
+          "required": false
+        }
+      ],
+      "delayedFlag": "yes",
+      "delayDurationDays": null,
+      "listId": "901712898823",
+      "listName": "QS127M_PS_ATE",
+      "comments": [
+        {
+          "text": "Received the multi site schematic on 23-March evening. A design review is planned with Tessolve on 25-March at 1pm.\n",
+          "author": "Sarat Anumula",
+          "date": "1774327701896"
+        },
+        {
+          "text": "Single site load board schematic review is completed.\nAll the feedback has been captured here in the click up page.\n\nDocument preview 8cqezuv-86217\n",
+          "author": "Sarat Anumula",
+          "date": "1774254116292"
+        },
+        {
+          "text": "Changing the due date to 19-Mar as the latest round of the technical revealed few more opens and need help from Tessolve in fixingit.  \n",
+          "author": "Sarat Anumula",
+          "date": "1773655265756"
+        },
+        {
+          "text": "Changed the due date to 16-march - as we needed more time to review the test plan with Tessolve. \n",
+          "author": "Sarat Anumula",
+          "date": "1773061758353"
+        },
+        {
+          "text": "@Sarat Anumula we need to change the due date \n",
+          "author": "Pushpal Das",
+          "date": "1772530758720"
+        },
+        {
+          "text": "Technical discussion completed on 19-Feb. Followup action items captured and Ixana and Tessolve will work on the items. \n",
+          "author": "Sarat Anumula",
+          "date": "1771497222991"
+        },
+        {
+          "text": "Discussion completed with Tessolve on 16-Feb. captured the open items and follow up discussions scheduled. \n",
+          "author": "Sarat Anumula",
+          "date": "1771497134124"
+        }
+      ],
+      "classification": {
+        "stage": 4,
+        "stageName": "Circuit Implementation and Sim",
+        "confidence": 0.82,
+        "reasoning": "The delay is due to the need for a design review with Tessolve on 25-March at 1pm, which was planned after receiving the multi-site schematic on 23-March evening.",
+        "isBlocker": true,
+        "blockerType": "technical",
+        "blockerReason": "Delay Reason @pm:\n\n1. Summary:\nIxana plan to take QS127M into production with phase 1 targeting 100K devices.\n\n2. Technical:\nThe delay is caused by the need for a design review with Tessolve, which was planned after receiving the multi-site schematic on 23-March evening."
+      }
+    }
+  ]
+}

@@ -7,6 +7,7 @@ dotenv.config();
 
 import axios from 'axios';
 import fs from 'fs';
+import path from 'path';
 
 const API_TOKEN = process.env.CLICKUP_API_TOKEN;
 const FOLDER_ID = '90172523095';
@@ -218,8 +219,10 @@ async function getAllTasksInFolder() {
 getAllTasksInFolder()
   .then((tasks) => {
     console.log(`\n🎉 Total AMS completed tasks fetched: ${tasks.length} (in-progress / open excluded)`);
-    fs.writeFileSync('ams_tasks.json', JSON.stringify(tasks, null, 2));
-    console.log('💾 Saved to ams_tasks.json');
+    const outDir = path.join('data', 'ams');
+    fs.mkdirSync(outDir, { recursive: true });
+    fs.writeFileSync(path.join(outDir, 'ams_tasks.json'), JSON.stringify(tasks, null, 2));
+    console.log('💾 Saved to data/ams/ams_tasks.json');
 
     const byMember = {};
     tasks.forEach(t => {

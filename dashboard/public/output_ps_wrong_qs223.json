@@ -1,0 +1,2453 @@
+{
+  "currentPosition": {
+    "stageNumber": 7,
+    "stageName": "Results review with Design/Architect",
+    "summary": "Currently focused on stage 7 with 3 active tasks."
+  },
+  "stages": [
+    {
+      "stageNumber": 1,
+      "stageName": "Initial test definition",
+      "status": "upcoming",
+      "taskCount": 0,
+      "tasks": []
+    },
+    {
+      "stageNumber": 2,
+      "stageName": "Test procedure details discussions (Deliverables, Risks, Dependencies)",
+      "status": "upcoming",
+      "taskCount": 0,
+      "tasks": []
+    },
+    {
+      "stageNumber": 3,
+      "stageName": "Test procedure creation (GitHub, lab HW resources)",
+      "status": "upcoming",
+      "taskCount": 0,
+      "tasks": []
+    },
+    {
+      "stageNumber": 4,
+      "stageName": "Firmware coding (if needed)",
+      "status": "upcoming",
+      "taskCount": 0,
+      "tasks": []
+    },
+    {
+      "stageNumber": 5,
+      "stageName": "Automation steps (if needed)",
+      "status": "upcoming",
+      "taskCount": 0,
+      "tasks": []
+    },
+    {
+      "stageNumber": 6,
+      "stageName": "Testing on silicon",
+      "status": "active",
+      "taskCount": 1,
+      "tasks": [
+        {
+          "id": "86dyxw03r",
+          "name": "N3: Spectrum sensor",
+          "owner": "sumon, Ayash Ashraf",
+          "description": "",
+          "comments": [
+            {
+              "text": "Kirit: There were more changes than expected. \n",
+              "author": "KiritkumarP",
+              "date": 1767331040150
+            },
+            {
+              "text": "Kirit: The contractor took two extra days and there were holidays on Dec-31 and Jan 1. The contractor was released on DEc-31. \n",
+              "author": "KiritkumarP",
+              "date": 1767330890425
+            }
+          ],
+          "blockerReason": "Delay Reason @pm:\n1. Summary: The contractor's extended timeline was caused by additional holidays and a premature release.\n2. Technical: Holidays on Dec-31 and Jan 1 impacted the project schedule.",
+          "plannedStartDate": null,
+          "plannedDueDate": "1767911400000",
+          "actualStartDate": "1766701800000",
+          "actualCompletionDate": "1767951951412",
+          "startDate": "1766701800000",
+          "dueDate": "1767911400000",
+          "dateDone": "1767951951412",
+          "delayedLabel": "Yes",
+          "delayDetails": "Yes",
+          "delayDuration": 1,
+          "projectName": "QS223 TO",
+          "raw": {
+            "id": "86dyxw03r",
+            "name": "N3: Spectrum sensor",
+            "description": "",
+            "status": "complete",
+            "statusType": "closed",
+            "assignees": [
+              {
+                "id": 89154620,
+                "username": "sumon",
+                "email": "sumon.bose@10xar.com"
+              },
+              {
+                "id": 170610197,
+                "username": "Ayash Ashraf",
+                "email": "ayash.ashraf@ixana.ai"
+              }
+            ],
+            "creator": "KiritkumarP",
+            "plannedStartDate": null,
+            "plannedDueDate": "1767911400000",
+            "actualStartDate": "1766701800000",
+            "actualCompletionDate": "1767951951412",
+            "dueDate": "1767911400000",
+            "startDate": "1766701800000",
+            "dateCreated": "1766123535057",
+            "dateUpdated": "1776158595549",
+            "tags": [],
+            "parent": "86dwyv49z",
+            "subtasks": [],
+            "dependencies": [],
+            "linkedTasks": [],
+            "customFields": [
+              {
+                "id": "e58c79fe-4069-46b0-a30f-4ba56787a244",
+                "name": "Category",
+                "type": "drop_down",
+                "type_config": {
+                  "sorting": "manual",
+                  "options": [
+                    {
+                      "id": "098f883a-07e6-4046-a1bc-d88bad403d8f",
+                      "name": "R&D",
+                      "color": null,
+                      "orderindex": 0
+                    },
+                    {
+                      "id": "58bee295-dc72-43a6-a8bf-2bfe45372485",
+                      "name": "Demo/Product",
+                      "color": null,
+                      "orderindex": 1
+                    },
+                    {
+                      "id": "d982ff35-9b83-4f36-aa89-beb419b5910c",
+                      "name": "Internal Process",
+                      "color": null,
+                      "orderindex": 2
+                    },
+                    {
+                      "id": "a1ac4d8a-ae73-41da-b650-fa9cbd40ce96",
+                      "name": "Chip Development",
+                      "color": null,
+                      "orderindex": 3
+                    }
+                  ]
+                },
+                "date_created": "1740605766735",
+                "hide_from_guests": false,
+                "required": false
+              },
+              {
+                "id": "c5d4e6c7-0fd0-4e7e-8f78-889b7f2d16dc",
+                "name": "DELAY DURATION",
+                "type": "formula",
+                "type_config": {
+                  "simple": false,
+                  "formula": "DAYS(TASK_DONE,TASK_DUE_DATE)",
+                  "version": "1.12",
+                  "reset_at": 1770895087014,
+                  "is_dynamic": false,
+                  "return_types": [
+                    "number"
+                  ],
+                  "calculation_state": "ready"
+                },
+                "date_created": "1752683547856",
+                "hide_from_guests": false,
+                "value": "1",
+                "value_richtext": null,
+                "required": false
+              },
+              {
+                "id": "da2e7823-83fb-4f03-96ff-2f335337dad1",
+                "name": "Delayed",
+                "type": "drop_down",
+                "type_config": {
+                  "sorting": "manual",
+                  "options": [
+                    {
+                      "id": "839471bd-322e-4e8e-a985-6f266de2738e",
+                      "name": "Yes",
+                      "color": "#800000",
+                      "orderindex": 0
+                    },
+                    {
+                      "id": "7c707fd8-fad7-404b-aca0-83074ae55ff4",
+                      "name": "No",
+                      "color": "#2ecd6f",
+                      "orderindex": 1
+                    }
+                  ]
+                },
+                "date_created": "1720598447591",
+                "hide_from_guests": false,
+                "value": 0,
+                "value_richtext": "",
+                "required": false
+              },
+              {
+                "id": "c1aa2df0-34b9-4480-9e48-a737185c59ae",
+                "name": "LNO",
+                "type": "drop_down",
+                "type_config": {
+                  "sorting": "manual",
+                  "options": [
+                    {
+                      "id": "870fcf08-23d6-4885-a153-04b033ec419a",
+                      "name": "L",
+                      "color": "#e50000",
+                      "orderindex": 0
+                    },
+                    {
+                      "id": "0fb23ef2-6adf-4ca9-a83d-b32a3cb3e2d6",
+                      "name": "N",
+                      "color": "#f9d900",
+                      "orderindex": 1
+                    },
+                    {
+                      "id": "78a5be0a-21e4-4fe1-83de-82535bb8b50e",
+                      "name": "O",
+                      "color": "#04A9F4",
+                      "orderindex": 2
+                    }
+                  ]
+                },
+                "date_created": "1741980130797",
+                "hide_from_guests": false,
+                "required": false
+              },
+              {
+                "id": "a94a8470-c1c5-4f89-ada6-a785e8ceffba",
+                "name": "List Type",
+                "type": "drop_down",
+                "type_config": {
+                  "ai": {
+                    "prompt": "",
+                    "source": "categorize"
+                  },
+                  "sorting": "manual",
+                  "options": [
+                    {
+                      "id": "b5746eb4-6875-4eae-9617-80debbcb1f53",
+                      "name": "QS222 Analog design",
+                      "color": "#FF4081",
+                      "orderindex": 0
+                    },
+                    {
+                      "id": "02efc3ac-f592-4d13-8386-59fa32f65619",
+                      "name": "Null",
+                      "color": "#FF7FAB",
+                      "orderindex": 1
+                    },
+                    {
+                      "id": "68ed2a4a-8ea1-4930-bce3-044773b2f545",
+                      "name": "QS222 Analog Layout",
+                      "color": "#81B1FF",
+                      "orderindex": 2
+                    },
+                    {
+                      "id": "189c0577-2a4d-4418-94f7-1cd1ba47b07c",
+                      "name": "QS222 Post Layout sim",
+                      "color": "#e50000",
+                      "orderindex": 3
+                    },
+                    {
+                      "id": "cd4eb20b-8b4e-4d53-a603-6429bf89aa47",
+                      "name": "QS222 RTL and Verification",
+                      "color": "#1bbc9c",
+                      "orderindex": 4
+                    },
+                    {
+                      "id": "3194b816-4519-48a2-ab3f-45c3ec0aea2f",
+                      "name": "QS222 PD",
+                      "color": "#0231E8",
+                      "orderindex": 5
+                    },
+                    {
+                      "id": "d1df3893-9cc8-4d72-8768-47d601bce0db",
+                      "name": "QS222 SDF and NLP sim",
+                      "color": "#667684",
+                      "orderindex": 6
+                    }
+                  ]
+                },
+                "date_created": "1744884546037",
+                "hide_from_guests": false,
+                "required": false
+              },
+              {
+                "id": "49f72fee-f709-4ad0-a4ed-cd45b94b4b76",
+                "name": "Planned Due date",
+                "type": "date",
+                "type_config": {},
+                "date_created": "1719403519049",
+                "hide_from_guests": false,
+                "value": "1767911400000",
+                "value_richtext": null,
+                "required": false
+              },
+              {
+                "id": "dfcad46f-fce3-40c2-848e-4e5e8bc1575e",
+                "name": "Planned Start Date",
+                "type": "date",
+                "type_config": {},
+                "date_created": "1746302335140",
+                "hide_from_guests": false,
+                "required": false
+              },
+              {
+                "id": "baa57bb6-5ce4-4700-9e69-9430b2f5cc2d",
+                "name": "Planned Start date",
+                "type": "date",
+                "type_config": {},
+                "date_created": "1712239533217",
+                "hide_from_guests": false,
+                "value": "1766701800000",
+                "value_richtext": null,
+                "required": false
+              },
+              {
+                "id": "8839f15a-0793-4b15-aba2-9936be3b6ead",
+                "name": "Progress Updates",
+                "type": "text",
+                "type_config": {
+                  "ai": {
+                    "format": "bullet",
+                    "source": "activity",
+                    "updateFrom": "24h"
+                  }
+                },
+                "date_created": "1744919935783",
+                "hide_from_guests": false,
+                "required": false
+              },
+              {
+                "id": "1d032a56-1d84-4ce2-ac10-ba77817cf110",
+                "name": "Project Phase",
+                "type": "drop_down",
+                "type_config": {
+                  "default": 0,
+                  "placeholder": null,
+                  "options": [
+                    {
+                      "id": "56674654-41b2-43c3-aab2-1df7f9bc2b82",
+                      "name": "Phase 1",
+                      "color": "#81B1FF",
+                      "orderindex": 0
+                    },
+                    {
+                      "id": "d9756577-4f12-45cb-9e7a-c9bd91812250",
+                      "name": "Phase 2",
+                      "color": "#3397dd",
+                      "orderindex": 1
+                    },
+                    {
+                      "id": "cbe3541f-2f2b-404b-a7f4-b268d5852d65",
+                      "name": "Phase 3",
+                      "color": "#3082B7",
+                      "orderindex": 2
+                    },
+                    {
+                      "id": "f94b6c62-358b-4f7c-bbf4-757163c21fe4",
+                      "name": "Phase 4",
+                      "color": "#9b59b6",
+                      "orderindex": 3
+                    }
+                  ]
+                },
+                "date_created": "1750430774043",
+                "hide_from_guests": false,
+                "required": false
+              },
+              {
+                "id": "42f0d863-85ab-4d8b-a966-e491bd83579d",
+                "name": "Projects (IC/PS)",
+                "type": "drop_down",
+                "type_config": {
+                  "sorting": "manual",
+                  "options": [
+                    {
+                      "id": "1a51d485-86a5-47c9-9da1-82073c3af19a",
+                      "name": "QS127 ",
+                      "color": null,
+                      "orderindex": 0
+                    },
+                    {
+                      "id": "16c62084-dbf3-43a9-bb9e-2811cf8a9dc6",
+                      "name": "QS127S",
+                      "color": null,
+                      "orderindex": 1
+                    },
+                    {
+                      "id": "dfb68fc2-136b-4d0a-adbf-f0374b5bab5b",
+                      "name": "QS221",
+                      "color": null,
+                      "orderindex": 2
+                    },
+                    {
+                      "id": "2b8f7d69-3cb6-4486-bfa0-2e39274ad7a5",
+                      "name": "QS222",
+                      "color": null,
+                      "orderindex": 3
+                    },
+                    {
+                      "id": "231f0bda-b166-4484-b06e-9b6753d8e4ac",
+                      "name": "QS223 UWB",
+                      "color": "#87909e",
+                      "orderindex": 4
+                    }
+                  ]
+                },
+                "date_created": "1720180374961",
+                "hide_from_guests": false,
+                "required": false
+              },
+              {
+                "id": "70bd1d18-c23e-4817-8d28-f74c43c6ea37",
+                "name": "Quality",
+                "type": "drop_down",
+                "type_config": {
+                  "sorting": "manual",
+                  "options": [
+                    {
+                      "id": "6299066c-0887-4958-aeb5-b446b1af5c50",
+                      "name": "1: High",
+                      "color": "#e50000",
+                      "orderindex": 0
+                    },
+                    {
+                      "id": "4c57ab31-435f-40ee-ac97-9ffddd196d94",
+                      "name": "2: Medium High",
+                      "color": "#E65100",
+                      "orderindex": 1
+                    },
+                    {
+                      "id": "e32f6ff7-c7fd-4793-824d-27b53a20054d",
+                      "name": "3: Medium",
+                      "color": "#f9d900",
+                      "orderindex": 2
+                    },
+                    {
+                      "id": "93da7581-89a1-4ce9-b52c-d30a25a7a1a5",
+                      "name": "4: Medium Low",
+                      "color": "#2ecd6f",
+                      "orderindex": 3
+                    },
+                    {
+                      "id": "359d1a62-3d26-49e2-a874-80898413be62",
+                      "name": "5: Low",
+                      "color": "#04A9F4",
+                      "orderindex": 4
+                    }
+                  ]
+                },
+                "date_created": "1741980345142",
+                "hide_from_guests": false,
+                "required": false
+              },
+              {
+                "id": "4fe66cb6-fb80-44b9-893f-f8bcbb39c593",
+                "name": "Summary",
+                "type": "text",
+                "type_config": {
+                  "ai": {
+                    "format": "bullet",
+                    "source": "summary"
+                  }
+                },
+                "date_created": "1744919625443",
+                "hide_from_guests": false,
+                "required": false
+              },
+              {
+                "id": "2f729288-8f7e-4571-804f-fc0e6a38be83",
+                "name": "Team",
+                "type": "labels",
+                "type_config": {
+                  "sorting": "manual",
+                  "options": [
+                    {
+                      "id": "d8d315b5-2edd-475a-8d66-d8e1e3ce4d54",
+                      "label": "FW",
+                      "color": null,
+                      "orderindex": 0
+                    },
+                    {
+                      "id": "52906635-84c9-404d-88ac-88481e7cd631",
+                      "label": "HW",
+                      "color": null,
+                      "orderindex": 1
+                    },
+                    {
+                      "id": "7d01f1b9-009d-4e3b-943b-f47b0849cbdc",
+                      "label": "IC",
+                      "color": null,
+                      "orderindex": 2
+                    },
+                    {
+                      "id": "f95ca21a-a187-47ee-8654-d983db9c8c3c",
+                      "label": "Protocol",
+                      "color": null,
+                      "orderindex": 3
+                    }
+                  ]
+                },
+                "date_created": "1741954726937",
+                "hide_from_guests": false,
+                "required": false
+              }
+            ],
+            "delayedFlag": "yes",
+            "delayDurationDays": 1,
+            "listId": "901704846537",
+            "listName": "QS223 TO",
+            "comments": [
+              {
+                "text": "Kirit: There were more changes than expected. \n",
+                "author": "KiritkumarP",
+                "date": "1767331040150"
+              },
+              {
+                "text": "Kirit: The contractor took two extra days and there were holidays on Dec-31 and Jan 1. The contractor was released on DEc-31. \n",
+                "author": "KiritkumarP",
+                "date": "1767330890425"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "stageNumber": 7,
+      "stageName": "Results review with Design/Architect",
+      "status": "active",
+      "taskCount": 3,
+      "tasks": [
+        {
+          "id": "86dyjexqf",
+          "name": "N3: Top-Schematic closure with digital port connections",
+          "owner": "Archisman Ghosh, sumon",
+          "description": "",
+          "comments": [
+            {
+              "text": "@Pushpal Das  Need to discuss with @KiritkumarP  ",
+              "author": "Pushpal Das",
+              "date": 1766500061714
+            },
+            {
+              "text": "Hi @KiritkumarP:\nHi Sumon Bose, \nPlease find top level connection path:\n/home/ArchismanGhosh/CC/QS223_Archisman_model/QS223_TOP_SUMON_24thNOV\nIn general most of the connections are okay. But please do check. It is quite easy for me to miss as this is my 1st time and few signal naming is really confusing. Sometime timezone works against me in clarifying the signals. \nSome of the PS signals (specificallly status ones) are not super clear to me. please check and let me know. \nSayantan Dey there is a really confusing naming pattern related to spi_addr<5:0> between mem_controller, fifo, and PS... There are signals like spi_addr, spi_addr_final, spui_addr_to_controller etc. Please double check those and let me know. I see similar things are followed from 222. Please clarify this over chat or with Sumon da once. \nPlease let me know if anything else is missing. Sorry for the delay, I was a bit occupied in all other tasks as you know. \n Please let me know if you have any question\nIt is done from my side\n",
+              "author": "Archisman Ghosh",
+              "date": 1764644723456
+            }
+          ],
+          "blockerReason": "Delay Reason @pm:\n1. Summary: Delay due to unclear signal naming conventions and missing PS signals.\n2. Technical: Confusing naming patterns for spi_addr<5:0> between mem_controller, fifo, and PS, and insufficient clarification on PS signals.",
+          "plannedStartDate": null,
+          "plannedDueDate": "1764282600000",
+          "actualStartDate": "1764023400000",
+          "actualCompletionDate": "1764650031346",
+          "startDate": "1764023400000",
+          "dueDate": "1764282600000",
+          "dateDone": "1764650031346",
+          "delayedLabel": "Yes",
+          "delayDetails": "Yes",
+          "delayDuration": 5,
+          "projectName": "QS223 TO",
+          "raw": {
+            "id": "86dyjexqf",
+            "name": "N3: Top-Schematic closure with digital port connections",
+            "description": "",
+            "status": "complete",
+            "statusType": "closed",
+            "assignees": [
+              {
+                "id": 96272410,
+                "username": "Archisman Ghosh",
+                "email": "archisman.ghosh@ixana.ai"
+              },
+              {
+                "id": 89154620,
+                "username": "sumon",
+                "email": "sumon.bose@10xar.com"
+              }
+            ],
+            "creator": "KiritkumarP",
+            "plannedStartDate": null,
+            "plannedDueDate": "1764282600000",
+            "actualStartDate": "1764023400000",
+            "actualCompletionDate": "1764650031346",
+            "dueDate": "1764282600000",
+            "startDate": "1764023400000",
+            "dateCreated": "1764051687270",
+            "dateUpdated": "1776158607655",
+            "tags": [],
+            "parent": "86dwy40n2",
+            "subtasks": [],
+            "dependencies": [],
+            "linkedTasks": [],
+            "customFields": [
+              {
+                "id": "e58c79fe-4069-46b0-a30f-4ba56787a244",
+                "name": "Category",
+                "type": "drop_down",
+                "type_config": {
+                  "sorting": "manual",
+                  "options": [
+                    {
+                      "id": "098f883a-07e6-4046-a1bc-d88bad403d8f",
+                      "name": "R&D",
+                      "color": null,
+                      "orderindex": 0
+                    },
+                    {
+                      "id": "58bee295-dc72-43a6-a8bf-2bfe45372485",
+                      "name": "Demo/Product",
+                      "color": null,
+                      "orderindex": 1
+                    },
+                    {
+                      "id": "d982ff35-9b83-4f36-aa89-beb419b5910c",
+                      "name": "Internal Process",
+                      "color": null,
+                      "orderindex": 2
+                    },
+                    {
+                      "id": "a1ac4d8a-ae73-41da-b650-fa9cbd40ce96",
+                      "name": "Chip Development",
+                      "color": null,
+                      "orderindex": 3
+                    }
+                  ]
+                },
+                "date_created": "1740605766735",
+                "hide_from_guests": false,
+                "required": false
+              },
+              {
+                "id": "c5d4e6c7-0fd0-4e7e-8f78-889b7f2d16dc",
+                "name": "DELAY DURATION",
+                "type": "formula",
+                "type_config": {
+                  "simple": false,
+                  "formula": "DAYS(TASK_DONE,TASK_DUE_DATE)",
+                  "version": "1.12",
+                  "reset_at": 1770895087014,
+                  "is_dynamic": false,
+                  "return_types": [
+                    "number"
+                  ],
+                  "calculation_state": "ready"
+                },
+                "date_created": "1752683547856",
+                "hide_from_guests": false,
+                "value": "5",
+                "value_richtext": null,
+                "required": false
+              },
+              {
+                "id": "da2e7823-83fb-4f03-96ff-2f335337dad1",
+                "name": "Delayed",
+                "type": "drop_down",
+                "type_config": {
+                  "sorting": "manual",
+                  "options": [
+                    {
+                      "id": "839471bd-322e-4e8e-a985-6f266de2738e",
+                      "name": "Yes",
+                      "color": "#800000",
+                      "orderindex": 0
+                    },
+                    {
+                      "id": "7c707fd8-fad7-404b-aca0-83074ae55ff4",
+                      "name": "No",
+                      "color": "#2ecd6f",
+                      "orderindex": 1
+                    }
+                  ]
+                },
+                "date_created": "1720598447591",
+                "hide_from_guests": false,
+                "value": 0,
+                "value_richtext": "",
+                "required": false
+              },
+              {
+                "id": "c1aa2df0-34b9-4480-9e48-a737185c59ae",
+                "name": "LNO",
+                "type": "drop_down",
+                "type_config": {
+                  "sorting": "manual",
+                  "options": [
+                    {
+                      "id": "870fcf08-23d6-4885-a153-04b033ec419a",
+                      "name": "L",
+                      "color": "#e50000",
+                      "orderindex": 0
+                    },
+                    {
+                      "id": "0fb23ef2-6adf-4ca9-a83d-b32a3cb3e2d6",
+                      "name": "N",
+                      "color": "#f9d900",
+                      "orderindex": 1
+                    },
+                    {
+                      "id": "78a5be0a-21e4-4fe1-83de-82535bb8b50e",
+                      "name": "O",
+                      "color": "#04A9F4",
+                      "orderindex": 2
+                    }
+                  ]
+                },
+                "date_created": "1741980130797",
+                "hide_from_guests": false,
+                "required": false
+              },
+              {
+                "id": "a94a8470-c1c5-4f89-ada6-a785e8ceffba",
+                "name": "List Type",
+                "type": "drop_down",
+                "type_config": {
+                  "ai": {
+                    "prompt": "",
+                    "source": "categorize"
+                  },
+                  "sorting": "manual",
+                  "options": [
+                    {
+                      "id": "b5746eb4-6875-4eae-9617-80debbcb1f53",
+                      "name": "QS222 Analog design",
+                      "color": "#FF4081",
+                      "orderindex": 0
+                    },
+                    {
+                      "id": "02efc3ac-f592-4d13-8386-59fa32f65619",
+                      "name": "Null",
+                      "color": "#FF7FAB",
+                      "orderindex": 1
+                    },
+                    {
+                      "id": "68ed2a4a-8ea1-4930-bce3-044773b2f545",
+                      "name": "QS222 Analog Layout",
+                      "color": "#81B1FF",
+                      "orderindex": 2
+                    },
+                    {
+                      "id": "189c0577-2a4d-4418-94f7-1cd1ba47b07c",
+                      "name": "QS222 Post Layout sim",
+                      "color": "#e50000",
+                      "orderindex": 3
+                    },
+                    {
+                      "id": "cd4eb20b-8b4e-4d53-a603-6429bf89aa47",
+                      "name": "QS222 RTL and Verification",
+                      "color": "#1bbc9c",
+                      "orderindex": 4
+                    },
+                    {
+                      "id": "3194b816-4519-48a2-ab3f-45c3ec0aea2f",
+                      "name": "QS222 PD",
+                      "color": "#0231E8",
+                      "orderindex": 5
+                    },
+                    {
+                      "id": "d1df3893-9cc8-4d72-8768-47d601bce0db",
+                      "name": "QS222 SDF and NLP sim",
+                      "color": "#667684",
+                      "orderindex": 6
+                    }
+                  ]
+                },
+                "date_created": "1744884546037",
+                "hide_from_guests": false,
+                "required": false
+              },
+              {
+                "id": "49f72fee-f709-4ad0-a4ed-cd45b94b4b76",
+                "name": "Planned Due date",
+                "type": "date",
+                "type_config": {},
+                "date_created": "1719403519049",
+                "hide_from_guests": false,
+                "value": "1764282600000",
+                "value_richtext": null,
+                "required": false
+              },
+              {
+                "id": "dfcad46f-fce3-40c2-848e-4e5e8bc1575e",
+                "name": "Planned Start Date",
+                "type": "date",
+                "type_config": {},
+                "date_created": "1746302335140",
+                "hide_from_guests": false,
+                "required": false
+              },
+              {
+                "id": "baa57bb6-5ce4-4700-9e69-9430b2f5cc2d",
+                "name": "Planned Start date",
+                "type": "date",
+                "type_config": {},
+                "date_created": "1712239533217",
+                "hide_from_guests": false,
+                "value": "1764023400000",
+                "value_richtext": null,
+                "required": false
+              },
+              {
+                "id": "8839f15a-0793-4b15-aba2-9936be3b6ead",
+                "name": "Progress Updates",
+                "type": "text",
+                "type_config": {
+                  "ai": {
+                    "format": "bullet",
+                    "source": "activity",
+                    "updateFrom": "24h"
+                  }
+                },
+                "date_created": "1744919935783",
+                "hide_from_guests": false,
+                "required": false
+              },
+              {
+                "id": "1d032a56-1d84-4ce2-ac10-ba77817cf110",
+                "name": "Project Phase",
+                "type": "drop_down",
+                "type_config": {
+                  "default": 0,
+                  "placeholder": null,
+                  "options": [
+                    {
+                      "id": "56674654-41b2-43c3-aab2-1df7f9bc2b82",
+                      "name": "Phase 1",
+                      "color": "#81B1FF",
+                      "orderindex": 0
+                    },
+                    {
+                      "id": "d9756577-4f12-45cb-9e7a-c9bd91812250",
+                      "name": "Phase 2",
+                      "color": "#3397dd",
+                      "orderindex": 1
+                    },
+                    {
+                      "id": "cbe3541f-2f2b-404b-a7f4-b268d5852d65",
+                      "name": "Phase 3",
+                      "color": "#3082B7",
+                      "orderindex": 2
+                    },
+                    {
+                      "id": "f94b6c62-358b-4f7c-bbf4-757163c21fe4",
+                      "name": "Phase 4",
+                      "color": "#9b59b6",
+                      "orderindex": 3
+                    }
+                  ]
+                },
+                "date_created": "1750430774043",
+                "hide_from_guests": false,
+                "required": false
+              },
+              {
+                "id": "42f0d863-85ab-4d8b-a966-e491bd83579d",
+                "name": "Projects (IC/PS)",
+                "type": "drop_down",
+                "type_config": {
+                  "sorting": "manual",
+                  "options": [
+                    {
+                      "id": "1a51d485-86a5-47c9-9da1-82073c3af19a",
+                      "name": "QS127 ",
+                      "color": null,
+                      "orderindex": 0
+                    },
+                    {
+                      "id": "16c62084-dbf3-43a9-bb9e-2811cf8a9dc6",
+                      "name": "QS127S",
+                      "color": null,
+                      "orderindex": 1
+                    },
+                    {
+                      "id": "dfb68fc2-136b-4d0a-adbf-f0374b5bab5b",
+                      "name": "QS221",
+                      "color": null,
+                      "orderindex": 2
+                    },
+                    {
+                      "id": "2b8f7d69-3cb6-4486-bfa0-2e39274ad7a5",
+                      "name": "QS222",
+                      "color": null,
+                      "orderindex": 3
+                    },
+                    {
+                      "id": "231f0bda-b166-4484-b06e-9b6753d8e4ac",
+                      "name": "QS223 UWB",
+                      "color": "#87909e",
+                      "orderindex": 4
+                    }
+                  ]
+                },
+                "date_created": "1720180374961",
+                "hide_from_guests": false,
+                "required": false
+              },
+              {
+                "id": "70bd1d18-c23e-4817-8d28-f74c43c6ea37",
+                "name": "Quality",
+                "type": "drop_down",
+                "type_config": {
+                  "sorting": "manual",
+                  "options": [
+                    {
+                      "id": "6299066c-0887-4958-aeb5-b446b1af5c50",
+                      "name": "1: High",
+                      "color": "#e50000",
+                      "orderindex": 0
+                    },
+                    {
+                      "id": "4c57ab31-435f-40ee-ac97-9ffddd196d94",
+                      "name": "2: Medium High",
+                      "color": "#E65100",
+                      "orderindex": 1
+                    },
+                    {
+                      "id": "e32f6ff7-c7fd-4793-824d-27b53a20054d",
+                      "name": "3: Medium",
+                      "color": "#f9d900",
+                      "orderindex": 2
+                    },
+                    {
+                      "id": "93da7581-89a1-4ce9-b52c-d30a25a7a1a5",
+                      "name": "4: Medium Low",
+                      "color": "#2ecd6f",
+                      "orderindex": 3
+                    },
+                    {
+                      "id": "359d1a62-3d26-49e2-a874-80898413be62",
+                      "name": "5: Low",
+                      "color": "#04A9F4",
+                      "orderindex": 4
+                    }
+                  ]
+                },
+                "date_created": "1741980345142",
+                "hide_from_guests": false,
+                "required": false
+              },
+              {
+                "id": "4fe66cb6-fb80-44b9-893f-f8bcbb39c593",
+                "name": "Summary",
+                "type": "text",
+                "type_config": {
+                  "ai": {
+                    "format": "bullet",
+                    "source": "summary"
+                  }
+                },
+                "date_created": "1744919625443",
+                "hide_from_guests": false,
+                "required": false
+              },
+              {
+                "id": "2f729288-8f7e-4571-804f-fc0e6a38be83",
+                "name": "Team",
+                "type": "labels",
+                "type_config": {
+                  "sorting": "manual",
+                  "options": [
+                    {
+                      "id": "d8d315b5-2edd-475a-8d66-d8e1e3ce4d54",
+                      "label": "FW",
+                      "color": null,
+                      "orderindex": 0
+                    },
+                    {
+                      "id": "52906635-84c9-404d-88ac-88481e7cd631",
+                      "label": "HW",
+                      "color": null,
+                      "orderindex": 1
+                    },
+                    {
+                      "id": "7d01f1b9-009d-4e3b-943b-f47b0849cbdc",
+                      "label": "IC",
+                      "color": null,
+                      "orderindex": 2
+                    },
+                    {
+                      "id": "f95ca21a-a187-47ee-8654-d983db9c8c3c",
+                      "label": "Protocol",
+                      "color": null,
+                      "orderindex": 3
+                    }
+                  ]
+                },
+                "date_created": "1741954726937",
+                "hide_from_guests": false,
+                "required": false
+              }
+            ],
+            "delayedFlag": "yes",
+            "delayDurationDays": 5,
+            "listId": "901704846537",
+            "listName": "QS223 TO",
+            "comments": [
+              {
+                "text": "@Pushpal Das  Need to discuss with @KiritkumarP  ",
+                "author": "Pushpal Das",
+                "date": "1766500061714"
+              },
+              {
+                "text": "Hi @KiritkumarP:\nHi Sumon Bose, \nPlease find top level connection path:\n/home/ArchismanGhosh/CC/QS223_Archisman_model/QS223_TOP_SUMON_24thNOV\nIn general most of the connections are okay. But please do check. It is quite easy for me to miss as this is my 1st time and few signal naming is really confusing. Sometime timezone works against me in clarifying the signals. \nSome of the PS signals (specificallly status ones) are not super clear to me. please check and let me know. \nSayantan Dey there is a really confusing naming pattern related to spi_addr<5:0> between mem_controller, fifo, and PS... There are signals like spi_addr, spi_addr_final, spui_addr_to_controller etc. Please double check those and let me know. I see similar things are followed from 222. Please clarify this over chat or with Sumon da once. \nPlease let me know if anything else is missing. Sorry for the delay, I was a bit occupied in all other tasks as you know. \n Please let me know if you have any question\nIt is done from my side\n",
+                "author": "Archisman Ghosh",
+                "date": "1764644723456"
+              }
+            ]
+          }
+        },
+        {
+          "id": "86dy5w6tq",
+          "name": "N3: DVCO power domain top-level schematic v2",
+          "owner": "sumon",
+          "description": "",
+          "comments": [
+            {
+              "text": "Sumon: Closed on Oct 24. Initially we were supposed to complete the task, analog team was having difficulty to close it, then I came in and closed it accordingly. \n",
+              "author": "Pushpal Das",
+              "date": 1761717125863
+            }
+          ],
+          "blockerReason": "Delay Reason @pm:\n1. Summary: The task was delayed due to a lack of clear communication between teams.\n2. Technical: Insufficient coordination between analog and digital teams hindered progress.",
+          "plannedStartDate": null,
+          "plannedDueDate": "1761258600000",
+          "actualStartDate": "1761258600000",
+          "actualCompletionDate": "1761545097177",
+          "startDate": "1761258600000",
+          "dueDate": "1761258600000",
+          "dateDone": "1761545097177",
+          "delayedLabel": "Yes",
+          "delayDetails": "Yes",
+          "delayDuration": 4,
+          "projectName": "QS223 TO",
+          "raw": {
+            "id": "86dy5w6tq",
+            "name": "N3: DVCO power domain top-level schematic v2",
+            "description": "",
+            "status": "complete",
+            "statusType": "closed",
+            "assignees": [
+              {
+                "id": 89154620,
+                "username": "sumon",
+                "email": "sumon.bose@10xar.com"
+              }
+            ],
+            "creator": "KiritkumarP",
+            "plannedStartDate": null,
+            "plannedDueDate": "1761258600000",
+            "actualStartDate": "1761258600000",
+            "actualCompletionDate": "1761545097177",
+            "dueDate": "1761258600000",
+            "startDate": "1761258600000",
+            "dateCreated": "1761295933896",
+            "dateUpdated": "1776158635334",
+            "tags": [],
+            "parent": "86dwy40n2",
+            "subtasks": [],
+            "dependencies": [],
+            "linkedTasks": [],
+            "customFields": [
+              {
+                "id": "e58c79fe-4069-46b0-a30f-4ba56787a244",
+                "name": "Category",
+                "type": "drop_down",
+                "type_config": {
+                  "sorting": "manual",
+                  "options": [
+                    {
+                      "id": "098f883a-07e6-4046-a1bc-d88bad403d8f",
+                      "name": "R&D",
+                      "color": null,
+                      "orderindex": 0
+                    },
+                    {
+                      "id": "58bee295-dc72-43a6-a8bf-2bfe45372485",
+                      "name": "Demo/Product",
+                      "color": null,
+                      "orderindex": 1
+                    },
+                    {
+                      "id": "d982ff35-9b83-4f36-aa89-beb419b5910c",
+                      "name": "Internal Process",
+                      "color": null,
+                      "orderindex": 2
+                    },
+                    {
+                      "id": "a1ac4d8a-ae73-41da-b650-fa9cbd40ce96",
+                      "name": "Chip Development",
+                      "color": null,
+                      "orderindex": 3
+                    }
+                  ]
+                },
+                "date_created": "1740605766735",
+                "hide_from_guests": false,
+                "required": false
+              },
+              {
+                "id": "c5d4e6c7-0fd0-4e7e-8f78-889b7f2d16dc",
+                "name": "DELAY DURATION",
+                "type": "formula",
+                "type_config": {
+                  "simple": false,
+                  "formula": "DAYS(TASK_DONE,TASK_DUE_DATE)",
+                  "version": "1.12",
+                  "reset_at": 1770895087014,
+                  "is_dynamic": false,
+                  "return_types": [
+                    "number"
+                  ],
+                  "calculation_state": "ready"
+                },
+                "date_created": "1752683547856",
+                "hide_from_guests": false,
+                "value": "4",
+                "value_richtext": null,
+                "required": false
+              },
+              {
+                "id": "da2e7823-83fb-4f03-96ff-2f335337dad1",
+                "name": "Delayed",
+                "type": "drop_down",
+                "type_config": {
+                  "sorting": "manual",
+                  "options": [
+                    {
+                      "id": "839471bd-322e-4e8e-a985-6f266de2738e",
+                      "name": "Yes",
+                      "color": "#800000",
+                      "orderindex": 0
+                    },
+                    {
+                      "id": "7c707fd8-fad7-404b-aca0-83074ae55ff4",
+                      "name": "No",
+                      "color": "#2ecd6f",
+                      "orderindex": 1
+                    }
+                  ]
+                },
+                "date_created": "1720598447591",
+                "hide_from_guests": false,
+                "value": 0,
+                "value_richtext": null,
+                "required": false
+              },
+              {
+                "id": "c1aa2df0-34b9-4480-9e48-a737185c59ae",
+                "name": "LNO",
+                "type": "drop_down",
+                "type_config": {
+                  "sorting": "manual",
+                  "options": [
+                    {
+                      "id": "870fcf08-23d6-4885-a153-04b033ec419a",
+                      "name": "L",
+                      "color": "#e50000",
+                      "orderindex": 0
+                    },
+                    {
+                      "id": "0fb23ef2-6adf-4ca9-a83d-b32a3cb3e2d6",
+                      "name": "N",
+                      "color": "#f9d900",
+                      "orderindex": 1
+                    },
+                    {
+                      "id": "78a5be0a-21e4-4fe1-83de-82535bb8b50e",
+                      "name": "O",
+                      "color": "#04A9F4",
+                      "orderindex": 2
+                    }
+                  ]
+                },
+                "date_created": "1741980130797",
+                "hide_from_guests": false,
+                "required": false
+              },
+              {
+                "id": "a94a8470-c1c5-4f89-ada6-a785e8ceffba",
+                "name": "List Type",
+                "type": "drop_down",
+                "type_config": {
+                  "ai": {
+                    "prompt": "",
+                    "source": "categorize"
+                  },
+                  "sorting": "manual",
+                  "options": [
+                    {
+                      "id": "b5746eb4-6875-4eae-9617-80debbcb1f53",
+                      "name": "QS222 Analog design",
+                      "color": "#FF4081",
+                      "orderindex": 0
+                    },
+                    {
+                      "id": "02efc3ac-f592-4d13-8386-59fa32f65619",
+                      "name": "Null",
+                      "color": "#FF7FAB",
+                      "orderindex": 1
+                    },
+                    {
+                      "id": "68ed2a4a-8ea1-4930-bce3-044773b2f545",
+                      "name": "QS222 Analog Layout",
+                      "color": "#81B1FF",
+                      "orderindex": 2
+                    },
+                    {
+                      "id": "189c0577-2a4d-4418-94f7-1cd1ba47b07c",
+                      "name": "QS222 Post Layout sim",
+                      "color": "#e50000",
+                      "orderindex": 3
+                    },
+                    {
+                      "id": "cd4eb20b-8b4e-4d53-a603-6429bf89aa47",
+                      "name": "QS222 RTL and Verification",
+                      "color": "#1bbc9c",
+                      "orderindex": 4
+                    },
+                    {
+                      "id": "3194b816-4519-48a2-ab3f-45c3ec0aea2f",
+                      "name": "QS222 PD",
+                      "color": "#0231E8",
+                      "orderindex": 5
+                    },
+                    {
+                      "id": "d1df3893-9cc8-4d72-8768-47d601bce0db",
+                      "name": "QS222 SDF and NLP sim",
+                      "color": "#667684",
+                      "orderindex": 6
+                    }
+                  ]
+                },
+                "date_created": "1744884546037",
+                "hide_from_guests": false,
+                "required": false
+              },
+              {
+                "id": "49f72fee-f709-4ad0-a4ed-cd45b94b4b76",
+                "name": "Planned Due date",
+                "type": "date",
+                "type_config": {},
+                "date_created": "1719403519049",
+                "hide_from_guests": false,
+                "value": "1761258600000",
+                "value_richtext": null,
+                "required": false
+              },
+              {
+                "id": "dfcad46f-fce3-40c2-848e-4e5e8bc1575e",
+                "name": "Planned Start Date",
+                "type": "date",
+                "type_config": {},
+                "date_created": "1746302335140",
+                "hide_from_guests": false,
+                "required": false
+              },
+              {
+                "id": "baa57bb6-5ce4-4700-9e69-9430b2f5cc2d",
+                "name": "Planned Start date",
+                "type": "date",
+                "type_config": {},
+                "date_created": "1712239533217",
+                "hide_from_guests": false,
+                "value": "1761258600000",
+                "value_richtext": null,
+                "required": false
+              },
+              {
+                "id": "8839f15a-0793-4b15-aba2-9936be3b6ead",
+                "name": "Progress Updates",
+                "type": "text",
+                "type_config": {
+                  "ai": {
+                    "format": "bullet",
+                    "source": "activity",
+                    "updateFrom": "24h"
+                  }
+                },
+                "date_created": "1744919935783",
+                "hide_from_guests": false,
+                "required": false
+              },
+              {
+                "id": "1d032a56-1d84-4ce2-ac10-ba77817cf110",
+                "name": "Project Phase",
+                "type": "drop_down",
+                "type_config": {
+                  "default": 0,
+                  "placeholder": null,
+                  "options": [
+                    {
+                      "id": "56674654-41b2-43c3-aab2-1df7f9bc2b82",
+                      "name": "Phase 1",
+                      "color": "#81B1FF",
+                      "orderindex": 0
+                    },
+                    {
+                      "id": "d9756577-4f12-45cb-9e7a-c9bd91812250",
+                      "name": "Phase 2",
+                      "color": "#3397dd",
+                      "orderindex": 1
+                    },
+                    {
+                      "id": "cbe3541f-2f2b-404b-a7f4-b268d5852d65",
+                      "name": "Phase 3",
+                      "color": "#3082B7",
+                      "orderindex": 2
+                    },
+                    {
+                      "id": "f94b6c62-358b-4f7c-bbf4-757163c21fe4",
+                      "name": "Phase 4",
+                      "color": "#9b59b6",
+                      "orderindex": 3
+                    }
+                  ]
+                },
+                "date_created": "1750430774043",
+                "hide_from_guests": false,
+                "required": false
+              },
+              {
+                "id": "42f0d863-85ab-4d8b-a966-e491bd83579d",
+                "name": "Projects (IC/PS)",
+                "type": "drop_down",
+                "type_config": {
+                  "sorting": "manual",
+                  "options": [
+                    {
+                      "id": "1a51d485-86a5-47c9-9da1-82073c3af19a",
+                      "name": "QS127 ",
+                      "color": null,
+                      "orderindex": 0
+                    },
+                    {
+                      "id": "16c62084-dbf3-43a9-bb9e-2811cf8a9dc6",
+                      "name": "QS127S",
+                      "color": null,
+                      "orderindex": 1
+                    },
+                    {
+                      "id": "dfb68fc2-136b-4d0a-adbf-f0374b5bab5b",
+                      "name": "QS221",
+                      "color": null,
+                      "orderindex": 2
+                    },
+                    {
+                      "id": "2b8f7d69-3cb6-4486-bfa0-2e39274ad7a5",
+                      "name": "QS222",
+                      "color": null,
+                      "orderindex": 3
+                    },
+                    {
+                      "id": "231f0bda-b166-4484-b06e-9b6753d8e4ac",
+                      "name": "QS223 UWB",
+                      "color": "#87909e",
+                      "orderindex": 4
+                    }
+                  ]
+                },
+                "date_created": "1720180374961",
+                "hide_from_guests": false,
+                "required": false
+              },
+              {
+                "id": "70bd1d18-c23e-4817-8d28-f74c43c6ea37",
+                "name": "Quality",
+                "type": "drop_down",
+                "type_config": {
+                  "sorting": "manual",
+                  "options": [
+                    {
+                      "id": "6299066c-0887-4958-aeb5-b446b1af5c50",
+                      "name": "1: High",
+                      "color": "#e50000",
+                      "orderindex": 0
+                    },
+                    {
+                      "id": "4c57ab31-435f-40ee-ac97-9ffddd196d94",
+                      "name": "2: Medium High",
+                      "color": "#E65100",
+                      "orderindex": 1
+                    },
+                    {
+                      "id": "e32f6ff7-c7fd-4793-824d-27b53a20054d",
+                      "name": "3: Medium",
+                      "color": "#f9d900",
+                      "orderindex": 2
+                    },
+                    {
+                      "id": "93da7581-89a1-4ce9-b52c-d30a25a7a1a5",
+                      "name": "4: Medium Low",
+                      "color": "#2ecd6f",
+                      "orderindex": 3
+                    },
+                    {
+                      "id": "359d1a62-3d26-49e2-a874-80898413be62",
+                      "name": "5: Low",
+                      "color": "#04A9F4",
+                      "orderindex": 4
+                    }
+                  ]
+                },
+                "date_created": "1741980345142",
+                "hide_from_guests": false,
+                "required": false
+              },
+              {
+                "id": "4fe66cb6-fb80-44b9-893f-f8bcbb39c593",
+                "name": "Summary",
+                "type": "text",
+                "type_config": {
+                  "ai": {
+                    "format": "bullet",
+                    "source": "summary"
+                  }
+                },
+                "date_created": "1744919625443",
+                "hide_from_guests": false,
+                "required": false
+              },
+              {
+                "id": "2f729288-8f7e-4571-804f-fc0e6a38be83",
+                "name": "Team",
+                "type": "labels",
+                "type_config": {
+                  "sorting": "manual",
+                  "options": [
+                    {
+                      "id": "d8d315b5-2edd-475a-8d66-d8e1e3ce4d54",
+                      "label": "FW",
+                      "color": null,
+                      "orderindex": 0
+                    },
+                    {
+                      "id": "52906635-84c9-404d-88ac-88481e7cd631",
+                      "label": "HW",
+                      "color": null,
+                      "orderindex": 1
+                    },
+                    {
+                      "id": "7d01f1b9-009d-4e3b-943b-f47b0849cbdc",
+                      "label": "IC",
+                      "color": null,
+                      "orderindex": 2
+                    },
+                    {
+                      "id": "f95ca21a-a187-47ee-8654-d983db9c8c3c",
+                      "label": "Protocol",
+                      "color": null,
+                      "orderindex": 3
+                    }
+                  ]
+                },
+                "date_created": "1741954726937",
+                "hide_from_guests": false,
+                "required": false
+              }
+            ],
+            "delayedFlag": "yes",
+            "delayDurationDays": 4,
+            "listId": "901704846537",
+            "listName": "QS223 TO",
+            "comments": [
+              {
+                "text": "Sumon: Closed on Oct 24. Initially we were supposed to complete the task, analog team was having difficulty to close it, then I came in and closed it accordingly. \n",
+                "author": "Pushpal Das",
+                "date": "1761717125863"
+              }
+            ]
+          }
+        },
+        {
+          "id": "86dy4u3r5",
+          "name": "N3: DVCO power domain top-level schematic v1",
+          "owner": "sumon",
+          "description": "",
+          "comments": [
+            {
+              "text": "Sumon: Closed on Oct 24. Initially we were supposed to complete the task, analog team was having difficulty to close it, then I came in and closed it accordingly. \n",
+              "author": "Pushpal Das",
+              "date": 1761716988080
+            }
+          ],
+          "blockerReason": "Delay Reason @pm:\n1. Summary: The task was delayed due to a lack of clear communication between teams.\n2. Technical: Insufficient coordination between analog and digital teams hindered progress.",
+          "plannedStartDate": null,
+          "plannedDueDate": "1760653800000",
+          "actualStartDate": "1760653800000",
+          "actualCompletionDate": "1761295948184",
+          "startDate": "1760653800000",
+          "dueDate": "1760653800000",
+          "dateDone": "1761295948184",
+          "delayedLabel": "Yes",
+          "delayDetails": "Yes",
+          "delayDuration": 8,
+          "projectName": "QS223 TO",
+          "raw": {
+            "id": "86dy4u3r5",
+            "name": "N3: DVCO power domain top-level schematic v1",
+            "description": "",
+            "status": "complete",
+            "statusType": "closed",
+            "assignees": [
+              {
+                "id": 89154620,
+                "username": "sumon",
+                "email": "sumon.bose@10xar.com"
+              }
+            ],
+            "creator": "KiritkumarP",
+            "plannedStartDate": null,
+            "plannedDueDate": "1760653800000",
+            "actualStartDate": "1760653800000",
+            "actualCompletionDate": "1761295948184",
+            "dueDate": "1760653800000",
+            "startDate": "1760653800000",
+            "dateCreated": "1761112148971",
+            "dateUpdated": "1776158638457",
+            "tags": [],
+            "parent": "86dwy40n2",
+            "subtasks": [],
+            "dependencies": [],
+            "linkedTasks": [],
+            "customFields": [
+              {
+                "id": "e58c79fe-4069-46b0-a30f-4ba56787a244",
+                "name": "Category",
+                "type": "drop_down",
+                "type_config": {
+                  "sorting": "manual",
+                  "options": [
+                    {
+                      "id": "098f883a-07e6-4046-a1bc-d88bad403d8f",
+                      "name": "R&D",
+                      "color": null,
+                      "orderindex": 0
+                    },
+                    {
+                      "id": "58bee295-dc72-43a6-a8bf-2bfe45372485",
+                      "name": "Demo/Product",
+                      "color": null,
+                      "orderindex": 1
+                    },
+                    {
+                      "id": "d982ff35-9b83-4f36-aa89-beb419b5910c",
+                      "name": "Internal Process",
+                      "color": null,
+                      "orderindex": 2
+                    },
+                    {
+                      "id": "a1ac4d8a-ae73-41da-b650-fa9cbd40ce96",
+                      "name": "Chip Development",
+                      "color": null,
+                      "orderindex": 3
+                    }
+                  ]
+                },
+                "date_created": "1740605766735",
+                "hide_from_guests": false,
+                "required": false
+              },
+              {
+                "id": "c5d4e6c7-0fd0-4e7e-8f78-889b7f2d16dc",
+                "name": "DELAY DURATION",
+                "type": "formula",
+                "type_config": {
+                  "simple": false,
+                  "formula": "DAYS(TASK_DONE,TASK_DUE_DATE)",
+                  "version": "1.12",
+                  "reset_at": 1770895087014,
+                  "is_dynamic": false,
+                  "return_types": [
+                    "number"
+                  ],
+                  "calculation_state": "ready"
+                },
+                "date_created": "1752683547856",
+                "hide_from_guests": false,
+                "value": "8",
+                "value_richtext": null,
+                "required": false
+              },
+              {
+                "id": "da2e7823-83fb-4f03-96ff-2f335337dad1",
+                "name": "Delayed",
+                "type": "drop_down",
+                "type_config": {
+                  "sorting": "manual",
+                  "options": [
+                    {
+                      "id": "839471bd-322e-4e8e-a985-6f266de2738e",
+                      "name": "Yes",
+                      "color": "#800000",
+                      "orderindex": 0
+                    },
+                    {
+                      "id": "7c707fd8-fad7-404b-aca0-83074ae55ff4",
+                      "name": "No",
+                      "color": "#2ecd6f",
+                      "orderindex": 1
+                    }
+                  ]
+                },
+                "date_created": "1720598447591",
+                "hide_from_guests": false,
+                "value": 0,
+                "value_richtext": null,
+                "required": false
+              },
+              {
+                "id": "c1aa2df0-34b9-4480-9e48-a737185c59ae",
+                "name": "LNO",
+                "type": "drop_down",
+                "type_config": {
+                  "sorting": "manual",
+                  "options": [
+                    {
+                      "id": "870fcf08-23d6-4885-a153-04b033ec419a",
+                      "name": "L",
+                      "color": "#e50000",
+                      "orderindex": 0
+                    },
+                    {
+                      "id": "0fb23ef2-6adf-4ca9-a83d-b32a3cb3e2d6",
+                      "name": "N",
+                      "color": "#f9d900",
+                      "orderindex": 1
+                    },
+                    {
+                      "id": "78a5be0a-21e4-4fe1-83de-82535bb8b50e",
+                      "name": "O",
+                      "color": "#04A9F4",
+                      "orderindex": 2
+                    }
+                  ]
+                },
+                "date_created": "1741980130797",
+                "hide_from_guests": false,
+                "required": false
+              },
+              {
+                "id": "a94a8470-c1c5-4f89-ada6-a785e8ceffba",
+                "name": "List Type",
+                "type": "drop_down",
+                "type_config": {
+                  "ai": {
+                    "prompt": "",
+                    "source": "categorize"
+                  },
+                  "sorting": "manual",
+                  "options": [
+                    {
+                      "id": "b5746eb4-6875-4eae-9617-80debbcb1f53",
+                      "name": "QS222 Analog design",
+                      "color": "#FF4081",
+                      "orderindex": 0
+                    },
+                    {
+                      "id": "02efc3ac-f592-4d13-8386-59fa32f65619",
+                      "name": "Null",
+                      "color": "#FF7FAB",
+                      "orderindex": 1
+                    },
+                    {
+                      "id": "68ed2a4a-8ea1-4930-bce3-044773b2f545",
+                      "name": "QS222 Analog Layout",
+                      "color": "#81B1FF",
+                      "orderindex": 2
+                    },
+                    {
+                      "id": "189c0577-2a4d-4418-94f7-1cd1ba47b07c",
+                      "name": "QS222 Post Layout sim",
+                      "color": "#e50000",
+                      "orderindex": 3
+                    },
+                    {
+                      "id": "cd4eb20b-8b4e-4d53-a603-6429bf89aa47",
+                      "name": "QS222 RTL and Verification",
+                      "color": "#1bbc9c",
+                      "orderindex": 4
+                    },
+                    {
+                      "id": "3194b816-4519-48a2-ab3f-45c3ec0aea2f",
+                      "name": "QS222 PD",
+                      "color": "#0231E8",
+                      "orderindex": 5
+                    },
+                    {
+                      "id": "d1df3893-9cc8-4d72-8768-47d601bce0db",
+                      "name": "QS222 SDF and NLP sim",
+                      "color": "#667684",
+                      "orderindex": 6
+                    }
+                  ]
+                },
+                "date_created": "1744884546037",
+                "hide_from_guests": false,
+                "required": false
+              },
+              {
+                "id": "49f72fee-f709-4ad0-a4ed-cd45b94b4b76",
+                "name": "Planned Due date",
+                "type": "date",
+                "type_config": {},
+                "date_created": "1719403519049",
+                "hide_from_guests": false,
+                "value": "1760653800000",
+                "value_richtext": null,
+                "required": false
+              },
+              {
+                "id": "dfcad46f-fce3-40c2-848e-4e5e8bc1575e",
+                "name": "Planned Start Date",
+                "type": "date",
+                "type_config": {},
+                "date_created": "1746302335140",
+                "hide_from_guests": false,
+                "required": false
+              },
+              {
+                "id": "baa57bb6-5ce4-4700-9e69-9430b2f5cc2d",
+                "name": "Planned Start date",
+                "type": "date",
+                "type_config": {},
+                "date_created": "1712239533217",
+                "hide_from_guests": false,
+                "value": "1760653800000",
+                "value_richtext": null,
+                "required": false
+              },
+              {
+                "id": "8839f15a-0793-4b15-aba2-9936be3b6ead",
+                "name": "Progress Updates",
+                "type": "text",
+                "type_config": {
+                  "ai": {
+                    "format": "bullet",
+                    "source": "activity",
+                    "updateFrom": "24h"
+                  }
+                },
+                "date_created": "1744919935783",
+                "hide_from_guests": false,
+                "required": false
+              },
+              {
+                "id": "1d032a56-1d84-4ce2-ac10-ba77817cf110",
+                "name": "Project Phase",
+                "type": "drop_down",
+                "type_config": {
+                  "default": 0,
+                  "placeholder": null,
+                  "options": [
+                    {
+                      "id": "56674654-41b2-43c3-aab2-1df7f9bc2b82",
+                      "name": "Phase 1",
+                      "color": "#81B1FF",
+                      "orderindex": 0
+                    },
+                    {
+                      "id": "d9756577-4f12-45cb-9e7a-c9bd91812250",
+                      "name": "Phase 2",
+                      "color": "#3397dd",
+                      "orderindex": 1
+                    },
+                    {
+                      "id": "cbe3541f-2f2b-404b-a7f4-b268d5852d65",
+                      "name": "Phase 3",
+                      "color": "#3082B7",
+                      "orderindex": 2
+                    },
+                    {
+                      "id": "f94b6c62-358b-4f7c-bbf4-757163c21fe4",
+                      "name": "Phase 4",
+                      "color": "#9b59b6",
+                      "orderindex": 3
+                    }
+                  ]
+                },
+                "date_created": "1750430774043",
+                "hide_from_guests": false,
+                "required": false
+              },
+              {
+                "id": "42f0d863-85ab-4d8b-a966-e491bd83579d",
+                "name": "Projects (IC/PS)",
+                "type": "drop_down",
+                "type_config": {
+                  "sorting": "manual",
+                  "options": [
+                    {
+                      "id": "1a51d485-86a5-47c9-9da1-82073c3af19a",
+                      "name": "QS127 ",
+                      "color": null,
+                      "orderindex": 0
+                    },
+                    {
+                      "id": "16c62084-dbf3-43a9-bb9e-2811cf8a9dc6",
+                      "name": "QS127S",
+                      "color": null,
+                      "orderindex": 1
+                    },
+                    {
+                      "id": "dfb68fc2-136b-4d0a-adbf-f0374b5bab5b",
+                      "name": "QS221",
+                      "color": null,
+                      "orderindex": 2
+                    },
+                    {
+                      "id": "2b8f7d69-3cb6-4486-bfa0-2e39274ad7a5",
+                      "name": "QS222",
+                      "color": null,
+                      "orderindex": 3
+                    },
+                    {
+                      "id": "231f0bda-b166-4484-b06e-9b6753d8e4ac",
+                      "name": "QS223 UWB",
+                      "color": "#87909e",
+                      "orderindex": 4
+                    }
+                  ]
+                },
+                "date_created": "1720180374961",
+                "hide_from_guests": false,
+                "required": false
+              },
+              {
+                "id": "70bd1d18-c23e-4817-8d28-f74c43c6ea37",
+                "name": "Quality",
+                "type": "drop_down",
+                "type_config": {
+                  "sorting": "manual",
+                  "options": [
+                    {
+                      "id": "6299066c-0887-4958-aeb5-b446b1af5c50",
+                      "name": "1: High",
+                      "color": "#e50000",
+                      "orderindex": 0
+                    },
+                    {
+                      "id": "4c57ab31-435f-40ee-ac97-9ffddd196d94",
+                      "name": "2: Medium High",
+                      "color": "#E65100",
+                      "orderindex": 1
+                    },
+                    {
+                      "id": "e32f6ff7-c7fd-4793-824d-27b53a20054d",
+                      "name": "3: Medium",
+                      "color": "#f9d900",
+                      "orderindex": 2
+                    },
+                    {
+                      "id": "93da7581-89a1-4ce9-b52c-d30a25a7a1a5",
+                      "name": "4: Medium Low",
+                      "color": "#2ecd6f",
+                      "orderindex": 3
+                    },
+                    {
+                      "id": "359d1a62-3d26-49e2-a874-80898413be62",
+                      "name": "5: Low",
+                      "color": "#04A9F4",
+                      "orderindex": 4
+                    }
+                  ]
+                },
+                "date_created": "1741980345142",
+                "hide_from_guests": false,
+                "required": false
+              },
+              {
+                "id": "4fe66cb6-fb80-44b9-893f-f8bcbb39c593",
+                "name": "Summary",
+                "type": "text",
+                "type_config": {
+                  "ai": {
+                    "format": "bullet",
+                    "source": "summary"
+                  }
+                },
+                "date_created": "1744919625443",
+                "hide_from_guests": false,
+                "required": false
+              },
+              {
+                "id": "2f729288-8f7e-4571-804f-fc0e6a38be83",
+                "name": "Team",
+                "type": "labels",
+                "type_config": {
+                  "sorting": "manual",
+                  "options": [
+                    {
+                      "id": "d8d315b5-2edd-475a-8d66-d8e1e3ce4d54",
+                      "label": "FW",
+                      "color": null,
+                      "orderindex": 0
+                    },
+                    {
+                      "id": "52906635-84c9-404d-88ac-88481e7cd631",
+                      "label": "HW",
+                      "color": null,
+                      "orderindex": 1
+                    },
+                    {
+                      "id": "7d01f1b9-009d-4e3b-943b-f47b0849cbdc",
+                      "label": "IC",
+                      "color": null,
+                      "orderindex": 2
+                    },
+                    {
+                      "id": "f95ca21a-a187-47ee-8654-d983db9c8c3c",
+                      "label": "Protocol",
+                      "color": null,
+                      "orderindex": 3
+                    }
+                  ]
+                },
+                "date_created": "1741954726937",
+                "hide_from_guests": false,
+                "required": false
+              }
+            ],
+            "delayedFlag": "yes",
+            "delayDurationDays": 8,
+            "listId": "901704846537",
+            "listName": "QS223 TO",
+            "comments": [
+              {
+                "text": "Sumon: Closed on Oct 24. Initially we were supposed to complete the task, analog team was having difficulty to close it, then I came in and closed it accordingly. \n",
+                "author": "Pushpal Das",
+                "date": "1761716988080"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "stageNumber": 8,
+      "stageName": "Meets design expectations? (YES → next stage, NO → debug & loop back to Stage 6)",
+      "status": "upcoming",
+      "taskCount": 0,
+      "tasks": []
+    },
+    {
+      "stageNumber": 9,
+      "stageName": "Report & Documentation",
+      "status": "upcoming",
+      "taskCount": 0,
+      "tasks": []
+    },
+    {
+      "stageNumber": 10,
+      "stageName": "Feedback to Architect/Design (loops back to Stage 2 for next-gen)",
+      "status": "upcoming",
+      "taskCount": 0,
+      "tasks": []
+    },
+    {
+      "stageNumber": 11,
+      "stageName": "Publish Data Sheet for customers",
+      "status": "active",
+      "taskCount": 1,
+      "tasks": [
+        {
+          "id": "86dwyv49z",
+          "name": "QS223 CUSTOM LAYOUT",
+          "owner": "sumon, KiritkumarP",
+          "description": "",
+          "comments": [
+            {
+              "text": "Kirit: Delay reason \n1) While designing the UWB filter, we had to do a couple of iterations to meet the bandwidth requirements. \n2) We changed the LPF layout a few times to reduce parasitics onthe  LPF o/p node. We had to bring RSSI and AGC i/p close to the LPF output to reduce the parasitic cap. \n3) UWB Clock buffer: We changed the clock buffer layout a few times to meet the delay requirements. \n4) We had to modify the integrator to meet the CDR PLL 320MHz requirements \n5) There was a change in BR_mixer and BR LPF design \n6) Added source follower at the output of ED and LPF \n7) Changed floor plan many times to meet the top-level routing requirements and optimize the critical signal path. (We brought BE_top closer to the ED o/p and SS_top closer to the LPF/ED o/p. \n8) There was a change in the Spectrum sensor design. \n",
+              "author": "KiritkumarP",
+              "date": 1769777037391
+            },
+            {
+              "text": "Testing automation comments are working with task @Avik Majumder ",
+              "author": "Pushpal Das",
+              "date": 1757361677604
+            }
+          ],
+          "blockerReason": "Delay Reason @pm:\n1. Summary: The task was delayed due to multiple design iterations and changes to meet various requirements.\n2. Technical: Design iterations for UWB filter, LPF layout, clock buffer, CDR PLL, BR_mixer, and Spectrum sensor designs.",
+          "plannedStartDate": null,
+          "plannedDueDate": "1772145000000",
+          "actualStartDate": "1752791400000",
+          "actualCompletionDate": "1773395902167",
+          "startDate": "1752791400000",
+          "dueDate": "1772145000000",
+          "dateDone": "1773395902167",
+          "delayedLabel": "Yes",
+          "delayDetails": "Yes",
+          "delayDuration": 15,
+          "projectName": "QS223 TO",
+          "raw": {
+            "id": "86dwyv49z",
+            "name": "QS223 CUSTOM LAYOUT",
+            "description": "",
+            "status": "complete",
+            "statusType": "closed",
+            "assignees": [
+              {
+                "id": 89154620,
+                "username": "sumon",
+                "email": "sumon.bose@10xar.com"
+              },
+              {
+                "id": 89241490,
+                "username": "KiritkumarP",
+                "email": "kiritkumar.panchal@ixana.ai"
+              }
+            ],
+            "creator": "sumon",
+            "plannedStartDate": null,
+            "plannedDueDate": "1772145000000",
+            "actualStartDate": "1752791400000",
+            "actualCompletionDate": "1773395902167",
+            "dueDate": "1772145000000",
+            "startDate": "1752791400000",
+            "dateCreated": "1749100110600",
+            "dateUpdated": "1776158694486",
+            "tags": [],
+            "parent": null,
+            "subtasks": [],
+            "dependencies": [],
+            "linkedTasks": [],
+            "customFields": [
+              {
+                "id": "e58c79fe-4069-46b0-a30f-4ba56787a244",
+                "name": "Category",
+                "type": "drop_down",
+                "type_config": {
+                  "sorting": "manual",
+                  "options": [
+                    {
+                      "id": "098f883a-07e6-4046-a1bc-d88bad403d8f",
+                      "name": "R&D",
+                      "color": null,
+                      "orderindex": 0
+                    },
+                    {
+                      "id": "58bee295-dc72-43a6-a8bf-2bfe45372485",
+                      "name": "Demo/Product",
+                      "color": null,
+                      "orderindex": 1
+                    },
+                    {
+                      "id": "d982ff35-9b83-4f36-aa89-beb419b5910c",
+                      "name": "Internal Process",
+                      "color": null,
+                      "orderindex": 2
+                    },
+                    {
+                      "id": "a1ac4d8a-ae73-41da-b650-fa9cbd40ce96",
+                      "name": "Chip Development",
+                      "color": null,
+                      "orderindex": 3
+                    }
+                  ]
+                },
+                "date_created": "1740605766735",
+                "hide_from_guests": false,
+                "required": false
+              },
+              {
+                "id": "c5d4e6c7-0fd0-4e7e-8f78-889b7f2d16dc",
+                "name": "DELAY DURATION",
+                "type": "formula",
+                "type_config": {
+                  "simple": false,
+                  "formula": "DAYS(TASK_DONE,TASK_DUE_DATE)",
+                  "version": "1.12",
+                  "reset_at": 1770895087014,
+                  "is_dynamic": false,
+                  "return_types": [
+                    "number"
+                  ],
+                  "calculation_state": "ready"
+                },
+                "date_created": "1752683547856",
+                "hide_from_guests": false,
+                "value": "15",
+                "value_richtext": null,
+                "required": false
+              },
+              {
+                "id": "da2e7823-83fb-4f03-96ff-2f335337dad1",
+                "name": "Delayed",
+                "type": "drop_down",
+                "type_config": {
+                  "sorting": "manual",
+                  "options": [
+                    {
+                      "id": "839471bd-322e-4e8e-a985-6f266de2738e",
+                      "name": "Yes",
+                      "color": "#800000",
+                      "orderindex": 0
+                    },
+                    {
+                      "id": "7c707fd8-fad7-404b-aca0-83074ae55ff4",
+                      "name": "No",
+                      "color": "#2ecd6f",
+                      "orderindex": 1
+                    }
+                  ]
+                },
+                "date_created": "1720598447591",
+                "hide_from_guests": false,
+                "value": 0,
+                "value_richtext": "",
+                "required": false
+              },
+              {
+                "id": "c1aa2df0-34b9-4480-9e48-a737185c59ae",
+                "name": "LNO",
+                "type": "drop_down",
+                "type_config": {
+                  "sorting": "manual",
+                  "options": [
+                    {
+                      "id": "870fcf08-23d6-4885-a153-04b033ec419a",
+                      "name": "L",
+                      "color": "#e50000",
+                      "orderindex": 0
+                    },
+                    {
+                      "id": "0fb23ef2-6adf-4ca9-a83d-b32a3cb3e2d6",
+                      "name": "N",
+                      "color": "#f9d900",
+                      "orderindex": 1
+                    },
+                    {
+                      "id": "78a5be0a-21e4-4fe1-83de-82535bb8b50e",
+                      "name": "O",
+                      "color": "#04A9F4",
+                      "orderindex": 2
+                    }
+                  ]
+                },
+                "date_created": "1741980130797",
+                "hide_from_guests": false,
+                "required": false
+              },
+              {
+                "id": "a94a8470-c1c5-4f89-ada6-a785e8ceffba",
+                "name": "List Type",
+                "type": "drop_down",
+                "type_config": {
+                  "ai": {
+                    "prompt": "",
+                    "source": "categorize"
+                  },
+                  "sorting": "manual",
+                  "options": [
+                    {
+                      "id": "b5746eb4-6875-4eae-9617-80debbcb1f53",
+                      "name": "QS222 Analog design",
+                      "color": "#FF4081",
+                      "orderindex": 0
+                    },
+                    {
+                      "id": "02efc3ac-f592-4d13-8386-59fa32f65619",
+                      "name": "Null",
+                      "color": "#FF7FAB",
+                      "orderindex": 1
+                    },
+                    {
+                      "id": "68ed2a4a-8ea1-4930-bce3-044773b2f545",
+                      "name": "QS222 Analog Layout",
+                      "color": "#81B1FF",
+                      "orderindex": 2
+                    },
+                    {
+                      "id": "189c0577-2a4d-4418-94f7-1cd1ba47b07c",
+                      "name": "QS222 Post Layout sim",
+                      "color": "#e50000",
+                      "orderindex": 3
+                    },
+                    {
+                      "id": "cd4eb20b-8b4e-4d53-a603-6429bf89aa47",
+                      "name": "QS222 RTL and Verification",
+                      "color": "#1bbc9c",
+                      "orderindex": 4
+                    },
+                    {
+                      "id": "3194b816-4519-48a2-ab3f-45c3ec0aea2f",
+                      "name": "QS222 PD",
+                      "color": "#0231E8",
+                      "orderindex": 5
+                    },
+                    {
+                      "id": "d1df3893-9cc8-4d72-8768-47d601bce0db",
+                      "name": "QS222 SDF and NLP sim",
+                      "color": "#667684",
+                      "orderindex": 6
+                    }
+                  ]
+                },
+                "date_created": "1744884546037",
+                "hide_from_guests": false,
+                "required": false
+              },
+              {
+                "id": "49f72fee-f709-4ad0-a4ed-cd45b94b4b76",
+                "name": "Planned Due date",
+                "type": "date",
+                "type_config": {},
+                "date_created": "1719403519049",
+                "hide_from_guests": false,
+                "value": "1772145000000",
+                "value_richtext": null,
+                "required": false
+              },
+              {
+                "id": "dfcad46f-fce3-40c2-848e-4e5e8bc1575e",
+                "name": "Planned Start Date",
+                "type": "date",
+                "type_config": {},
+                "date_created": "1746302335140",
+                "hide_from_guests": false,
+                "required": false
+              },
+              {
+                "id": "baa57bb6-5ce4-4700-9e69-9430b2f5cc2d",
+                "name": "Planned Start date",
+                "type": "date",
+                "type_config": {},
+                "date_created": "1712239533217",
+                "hide_from_guests": false,
+                "value": "1752791400000",
+                "value_richtext": null,
+                "required": false
+              },
+              {
+                "id": "8839f15a-0793-4b15-aba2-9936be3b6ead",
+                "name": "Progress Updates",
+                "type": "text",
+                "type_config": {
+                  "ai": {
+                    "format": "bullet",
+                    "source": "activity",
+                    "updateFrom": "24h"
+                  }
+                },
+                "date_created": "1744919935783",
+                "hide_from_guests": false,
+                "value": "- Task created by [@sumon](#89154620) and status set to 'to do'.\n- Custom field 'Projects (IC/PS)' set to 'QS223 UWB'.\n- No additional updates or comments so far.",
+                "value_richtext": "{\"ops\":[{\"insert\":\"Task created by \"},{\"insert\":{\"user_mention\":{\"id\":\"89154620\",\"name\":\"sumon\"}}},{\"insert\":\" and status set to 'to do'.\"},{\"insert\":\"\\n\",\"attributes\":{\"list\":\"bullet\"}},{\"insert\":\"Custom field 'Projects (IC/PS)' set to 'QS223 UWB'.\"},{\"insert\":\"\\n\",\"attributes\":{\"list\":\"bullet\"}},{\"insert\":\"No additional updates or comments so far.\"},{\"insert\":\"\\n\",\"attributes\":{\"list\":\"bullet\"}}]}",
+                "required": false
+              },
+              {
+                "id": "1d032a56-1d84-4ce2-ac10-ba77817cf110",
+                "name": "Project Phase",
+                "type": "drop_down",
+                "type_config": {
+                  "default": 0,
+                  "placeholder": null,
+                  "options": [
+                    {
+                      "id": "56674654-41b2-43c3-aab2-1df7f9bc2b82",
+                      "name": "Phase 1",
+                      "color": "#81B1FF",
+                      "orderindex": 0
+                    },
+                    {
+                      "id": "d9756577-4f12-45cb-9e7a-c9bd91812250",
+                      "name": "Phase 2",
+                      "color": "#3397dd",
+                      "orderindex": 1
+                    },
+                    {
+                      "id": "cbe3541f-2f2b-404b-a7f4-b268d5852d65",
+                      "name": "Phase 3",
+                      "color": "#3082B7",
+                      "orderindex": 2
+                    },
+                    {
+                      "id": "f94b6c62-358b-4f7c-bbf4-757163c21fe4",
+                      "name": "Phase 4",
+                      "color": "#9b59b6",
+                      "orderindex": 3
+                    }
+                  ]
+                },
+                "date_created": "1750430774043",
+                "hide_from_guests": false,
+                "required": false
+              },
+              {
+                "id": "42f0d863-85ab-4d8b-a966-e491bd83579d",
+                "name": "Projects (IC/PS)",
+                "type": "drop_down",
+                "type_config": {
+                  "sorting": "manual",
+                  "options": [
+                    {
+                      "id": "1a51d485-86a5-47c9-9da1-82073c3af19a",
+                      "name": "QS127 ",
+                      "color": null,
+                      "orderindex": 0
+                    },
+                    {
+                      "id": "16c62084-dbf3-43a9-bb9e-2811cf8a9dc6",
+                      "name": "QS127S",
+                      "color": null,
+                      "orderindex": 1
+                    },
+                    {
+                      "id": "dfb68fc2-136b-4d0a-adbf-f0374b5bab5b",
+                      "name": "QS221",
+                      "color": null,
+                      "orderindex": 2
+                    },
+                    {
+                      "id": "2b8f7d69-3cb6-4486-bfa0-2e39274ad7a5",
+                      "name": "QS222",
+                      "color": null,
+                      "orderindex": 3
+                    },
+                    {
+                      "id": "231f0bda-b166-4484-b06e-9b6753d8e4ac",
+                      "name": "QS223 UWB",
+                      "color": "#87909e",
+                      "orderindex": 4
+                    }
+                  ]
+                },
+                "date_created": "1720180374961",
+                "hide_from_guests": false,
+                "value": 4,
+                "value_richtext": null,
+                "required": false
+              },
+              {
+                "id": "70bd1d18-c23e-4817-8d28-f74c43c6ea37",
+                "name": "Quality",
+                "type": "drop_down",
+                "type_config": {
+                  "sorting": "manual",
+                  "options": [
+                    {
+                      "id": "6299066c-0887-4958-aeb5-b446b1af5c50",
+                      "name": "1: High",
+                      "color": "#e50000",
+                      "orderindex": 0
+                    },
+                    {
+                      "id": "4c57ab31-435f-40ee-ac97-9ffddd196d94",
+                      "name": "2: Medium High",
+                      "color": "#E65100",
+                      "orderindex": 1
+                    },
+                    {
+                      "id": "e32f6ff7-c7fd-4793-824d-27b53a20054d",
+                      "name": "3: Medium",
+                      "color": "#f9d900",
+                      "orderindex": 2
+                    },
+                    {
+                      "id": "93da7581-89a1-4ce9-b52c-d30a25a7a1a5",
+                      "name": "4: Medium Low",
+                      "color": "#2ecd6f",
+                      "orderindex": 3
+                    },
+                    {
+                      "id": "359d1a62-3d26-49e2-a874-80898413be62",
+                      "name": "5: Low",
+                      "color": "#04A9F4",
+                      "orderindex": 4
+                    }
+                  ]
+                },
+                "date_created": "1741980345142",
+                "hide_from_guests": false,
+                "required": false
+              },
+              {
+                "id": "4fe66cb6-fb80-44b9-893f-f8bcbb39c593",
+                "name": "Summary",
+                "type": "text",
+                "type_config": {
+                  "ai": {
+                    "format": "bullet",
+                    "source": "summary"
+                  }
+                },
+                "date_created": "1744919625443",
+                "hide_from_guests": false,
+                "value": "- No one assigned yet.\n- No comments or checklist items.\n- Status is 'to do', not started.\n- Custom field: QS223 UWB.",
+                "value_richtext": "{\"ops\":[{\"insert\":\"No one assigned yet.\"},{\"insert\":\"\\n\",\"attributes\":{\"list\":\"bullet\"}},{\"insert\":\"No comments or checklist items.\"},{\"insert\":\"\\n\",\"attributes\":{\"list\":\"bullet\"}},{\"insert\":\"Status is 'to do', not started.\"},{\"insert\":\"\\n\",\"attributes\":{\"list\":\"bullet\"}},{\"insert\":\"Custom field: QS223 UWB.\"},{\"insert\":\"\\n\",\"attributes\":{\"list\":\"bullet\"}}]}",
+                "required": false
+              },
+              {
+                "id": "2f729288-8f7e-4571-804f-fc0e6a38be83",
+                "name": "Team",
+                "type": "labels",
+                "type_config": {
+                  "sorting": "manual",
+                  "options": [
+                    {
+                      "id": "d8d315b5-2edd-475a-8d66-d8e1e3ce4d54",
+                      "label": "FW",
+                      "color": null,
+                      "orderindex": 0
+                    },
+                    {
+                      "id": "52906635-84c9-404d-88ac-88481e7cd631",
+                      "label": "HW",
+                      "color": null,
+                      "orderindex": 1
+                    },
+                    {
+                      "id": "7d01f1b9-009d-4e3b-943b-f47b0849cbdc",
+                      "label": "IC",
+                      "color": null,
+                      "orderindex": 2
+                    },
+                    {
+                      "id": "f95ca21a-a187-47ee-8654-d983db9c8c3c",
+                      "label": "Protocol",
+                      "color": null,
+                      "orderindex": 3
+                    }
+                  ]
+                },
+                "date_created": "1741954726937",
+                "hide_from_guests": false,
+                "required": false
+              }
+            ],
+            "delayedFlag": "yes",
+            "delayDurationDays": 15,
+            "listId": "901704846537",
+            "listName": "QS223 TO",
+            "comments": [
+              {
+                "text": "Kirit: Delay reason \n1) While designing the UWB filter, we had to do a couple of iterations to meet the bandwidth requirements. \n2) We changed the LPF layout a few times to reduce parasitics onthe  LPF o/p node. We had to bring RSSI and AGC i/p close to the LPF output to reduce the parasitic cap. \n3) UWB Clock buffer: We changed the clock buffer layout a few times to meet the delay requirements. \n4) We had to modify the integrator to meet the CDR PLL 320MHz requirements \n5) There was a change in BR_mixer and BR LPF design \n6) Added source follower at the output of ED and LPF \n7) Changed floor plan many times to meet the top-level routing requirements and optimize the critical signal path. (We brought BE_top closer to the ED o/p and SS_top closer to the LPF/ED o/p. \n8) There was a change in the Spectrum sensor design. \n",
+                "author": "KiritkumarP",
+                "date": "1769777037391"
+              },
+              {
+                "text": "Testing automation comments are working with task @Avik Majumder ",
+                "author": "Pushpal Das",
+                "date": "1757361677604"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "nextStep": "Complete tasks in \"Results review with Design/Architect\" and prepare for downstream stages.",
+  "mode": "completed-delayed"
+}

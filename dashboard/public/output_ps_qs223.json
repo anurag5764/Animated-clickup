@@ -47,14 +47,16 @@
       "taskCount": 2,
       "tasks": [
         {
+          "id": "86dxgmu8m",
           "name": "QS223 PD",
-          "assignee": "sumon",
-          "detail": "brief summary for QS223 PD"
+          "owner": "sumon",
+          "description": ""
         },
         {
+          "id": "86dx448z4",
           "name": "QS223 AMS simulations",
-          "assignee": "KiritkumarP",
-          "detail": "brief summary for QS223 AMS simulations"
+          "owner": "KiritkumarP, sumon",
+          "description": ""
         }
       ]
     },

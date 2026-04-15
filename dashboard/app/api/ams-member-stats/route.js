@@ -8,6 +8,7 @@ const MIN_SAMPLE = 5;
 function resolveTasksFile() {
   const cwd = process.cwd();
   const candidates = [
+    path.join(cwd, '..', 'data', 'ams', 'ams_tasks.json'),
     path.join(cwd, '..', 'ams_tasks.json'),
     path.join(cwd, 'ams_tasks.json'),
   ];
@@ -103,6 +104,10 @@ export async function GET() {
       generatedAt: new Date().toISOString(),
       sourceFile: path.basename(abs),
       minSampleForRanking: MIN_SAMPLE,
+      teamKind: 'ams',
+      teamLabel: 'AMS Team',
+      workflowTitle: 'AMS Workflow',
+      projectId: null,
       team: {
         totalTaskAssignments: pooledTotal,
         delayedAssignments: pooledDelayed,
