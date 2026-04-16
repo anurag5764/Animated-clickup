@@ -219,7 +219,8 @@ function plannedStartMsFromTask(task) {
     root.startDate ??
       root.start_date ??
       task.startDate ??
-      task.start_date
+      task.start_date ??
+      findCustomFieldMs(task, ['planned start', 'planned start date'])
   );
   return Number.isFinite(n) ? n : null;
 }
@@ -231,7 +232,12 @@ function plannedDueMsFromTask(task) {
     root.plannedDueDate ??
       root.planned_due_date ??
       task.plannedDueDate ??
-      task.planned_due_date
+      task.planned_due_date ??
+      root.dueDate ??
+      root.due_date ??
+      task.dueDate ??
+      task.due_date ??
+      findCustomFieldMs(task, ['planned due', 'planned due date'])
   );
   return Number.isFinite(n) ? n : null;
 }
@@ -249,6 +255,18 @@ function actualEndMsFromTask(task) {
       root.dateClosed ??
       root.date_closed ??
       task.dueDate ??
+      root.dueDate ??
+      root.due_date ??
+      task.due_date
+  );
+  return Number.isFinite(n) ? n : null;
+}
+
+/** Actual due date from ClickUp (not the planned one from custom fields). */
+function actualDueMsFromTask(task) {
+  const root = taskRoot(task);
+  const n = Number(
+    task.dueDate ??
       root.dueDate ??
       root.due_date ??
       task.due_date
@@ -276,14 +294,19 @@ function computeDelayScheduleAnalysis(task) {
         task.start_date
     ) || null;
   const doneMs = actualEndMsFromTask(task);
+  const actualDueMs = actualDueMsFromTask(task);
 
   const plannedDurationDays = calendarDaysSpanIST(pStart, pDue);
-  const finalDurationDays = calendarDaysSpanIST(aStart, doneMs);
+  // Use actual due date for length delay as per user request
+  const finalDurationDays = calendarDaysSpanIST(aStart, actualDueMs ?? doneMs);
+  
   const startDelayDays = pStart != null && aStart != null ? calendarDaysSpanIST(pStart, aStart) : null;
   const lengthDelayDays =
     plannedDurationDays != null && finalDurationDays != null
       ? finalDurationDays - plannedDurationDays
       : null;
+  
+  // Completion delay remains based on doneMs (date closed) vs planned due
   const completionDelayDays = pDue != null && doneMs != null ? calendarDaysSpanIST(pDue, doneMs) : null;
 
   const delays = [];
@@ -466,6 +489,7 @@ function DelayTimelineBars({ analysis }) {
     lengthDelayDays,
     completionDelayDays,
   } = analysis;
+
   if (!timeline || (!timeline.planned && !timeline.final)) {
     return (
       <div className="text-[0.65rem] text-text-muted rounded-lg border border-white/10 bg-white/[0.03] px-2.5 py-2 leading-snug min-w-0 max-w-full">
@@ -479,121 +503,89 @@ function DelayTimelineBars({ analysis }) {
   const startZone = zones.find((z) => z.key === 'leader') || null;
   const lengthZone = zones.find((z) => z.key === 'length') || null;
   const completionZone = zones.find((z) => z.key === 'owner') || null;
-  const msValue = (v) => (v != null && Number.isFinite(Number(v)) ? Number(v) : null);
-  const plannedStartMs = msValue(anchorMs?.pStart);
-  const plannedDueMs = msValue(anchorMs?.pDue);
-  const finalStartMs = msValue(anchorMs?.aStart);
-  const signedStartDelay = startDelayDays != null && finalStartMs < plannedStartMs ? -startDelayDays : startDelayDays;
-  const signedCompletionDelay = completionDelayDays;
 
-  const anchorTextStyle = (centerPct) => {
-    if (centerPct <= 9) return { left: 0, transform: 'none', textAlign: 'left' };
-    if (centerPct >= 91) return { right: 0, left: 'auto', transform: 'none', textAlign: 'right' };
-    return { left: `${centerPct}%`, transform: 'translateX(-50%)', textAlign: 'center' };
-  };
+  const plannedStartMs = anchorMs?.pStart;
+  const plannedDueMs = anchorMs?.pDue;
+  const finalStartMs = anchorMs?.aStart;
 
   const milestoneEntries = [...milestones].sort((a, b) => Number(a.left) - Number(b.left));
 
-  const laneBaseClass = 'absolute left-0 right-0 rounded-full bg-zinc-950/90 border border-white/10 pointer-events-none';
-  /** Same bar treatment for planned + actual base span (thin muted green). */
-  const laneBarFillClass = 'h-full w-full rounded-full bg-completed/45 border border-completed/45';
-  const scheduleBadgeClass = (value, lateTone, earlyTone = 'text-completed') => {
-    if (value == null) return 'text-text-muted';
-    if (value > 0) return lateTone;
-    if (value < 0) return earlyTone;
-    return 'text-completed';
-  };
   const timelineDateLabel = (p) => (p?.ms ? formatTimelineDate(p.ms) : '—');
-  /** Alternate labels above/below the single timeline. */
-  const milestoneDateStyle = (p, idx) => {
-    const base = anchorTextStyle(p.left);
-    const isUpper = idx % 2 === 0;
-    return {
-      ...base,
-      top: isUpper ? '1.0rem' : '3.85rem',
-    };
-  };
+
+  /** Lane 1: Actual execution bar (thin gray/green line). */
+  const actualBar = timeline.final ? (
+    <div className="absolute z-[2] top-[14px] h-[6px] w-full" style={scheduleLaneStyle(timeline.final)}>
+      <div className="h-full w-full rounded-full bg-completed/60 border border-completed/40 shadow-[0_0_8px_rgba(63,185,80,0.25)]" />
+    </div>
+  ) : null;
+
+  /** Lane 2: Delay bar with colored segments. */
+  const delayBar = (
+    <div className="absolute z-[3] top-[34px] h-[6px] w-full pointer-events-none">
+      {startZone && (
+        <div
+          className="absolute h-full rounded-full bg-warning/45 border border-warning/30 border-dashed animate-pulse"
+          style={{ left: `${startZone.left}%`, width: `${startZone.width}%` }}
+        />
+      )}
+      {lengthZone && (
+        <div
+          className="absolute h-full rounded-full bg-rose-500/50 border border-rose-500/40 shadow-[0_0_8px_rgba(244,63,94,0.2)]"
+          style={{ left: `${lengthZone.left}%`, width: `${lengthZone.width}%` }}
+        />
+      )}
+      {completionZone && (
+        <div
+          className="absolute h-full rounded-full bg-amber-500/50 border border-amber-500/40 shadow-[0_0_8px_rgba(245,158,11,0.2)]"
+          style={{ left: `${completionZone.left}%`, width: `${completionZone.width}%` }}
+        />
+      )}
+    </div>
+  );
 
   return (
-    <div className="min-w-0 max-w-full rounded-lg border border-white/[0.1] bg-white/[0.02] px-2.5 py-2.5 overflow-visible space-y-2">
-      <div className="flex flex-wrap items-center gap-1.5 text-[0.58rem]">
-        <span className={`px-2 py-0.5 rounded border ${delayTypeChipClass('start')}`}>
-          Start: {formatSignedDayDelta(signedStartDelay)}
-        </span>
-        <span className={`px-2 py-0.5 rounded border ${delayTypeChipClass('length')}`}>
-          Length: {formatSignedDayDelta(lengthDelayDays)}
-        </span>
-        <span className={`px-2 py-0.5 rounded border ${delayTypeChipClass('completion')}`}>
-          Completion: {formatSignedDayDelta(signedCompletionDelay)}
-        </span>
-      </div>
+    <div className="min-w-0 max-w-full rounded-xl border border-white/[0.08] bg-black/40 px-3 py-4 overflow-visible space-y-4 shadow-inner">
 
-      <div className="relative w-full min-w-0 h-[5.5rem]">
-        <div className={`${laneBaseClass} top-[2.25rem] h-[5px]`} />
+      <div className="relative w-full h-[64px] bg-white/[0.02] rounded-lg border border-white/[0.04]">
+        {/* Timeline Axis Background */}
+        <div className="absolute inset-x-0 top-[17px] h-px bg-white/5" />
+        <div className="absolute inset-x-0 top-[37px] h-px bg-white/5" />
 
-        {timeline.planned ? (
-          <div className="absolute z-[1]" style={{ ...scheduleLaneStyle(timeline.planned), top: '2.25rem', height: '5px' }}>
-            <div className={laneBarFillClass} />
+        {/* Lane 1: Planned Background (Ghost Bar) */}
+        {timeline.planned && (
+          <div className="absolute z-[1] top-[14px] h-[6px] w-full" style={scheduleLaneStyle(timeline.planned)}>
+            <div className="h-full w-full rounded-full bg-white/[0.05] border border-white/[0.1] border-dashed" />
           </div>
-        ) : null}
+        )}
 
-        {timeline.final ? (
-          <div
-            className="absolute z-[2]"
-            style={{ ...scheduleLaneStyle(timeline.final), top: '2.25rem', height: '5px' }}
-          >
-            <div className="h-full w-full rounded-full border border-white/25 bg-white/10" />
-          </div>
-        ) : null}
+        {actualBar}
+        {delayBar}
 
-        {startZone ? (
-          <div
-            className="absolute z-[3] rounded-full border border-warning/75 bg-warning/35 border-dashed"
-            style={{ left: `${startZone.left}%`, width: `${startZone.width}%`, top: '2.25rem', height: '5px' }}
-          />
-        ) : null}
-
-        {lengthZone ? (
-          <div
-            className="absolute z-[4] rounded-full bg-accent/75 border border-accent/70 shadow-[0_0_8px_rgba(255,99,33,0.22)]"
-            style={{ left: `${lengthZone.left}%`, width: `${lengthZone.width}%`, top: '2.25rem', height: '5px' }}
-          />
-        ) : null}
-
-        {completionZone ? (
-          <div
-            className="absolute z-[5] rounded-full bg-blocked/85 border border-blocked/60 shadow-[0_0_10px_rgba(239,68,68,0.22)]"
-            style={{ left: `${completionZone.left}%`, width: `${completionZone.width}%`, top: '2.25rem', height: '5px' }}
-          />
-        ) : null}
-
-        {milestoneEntries.map((p, i) => (
-            <Fragment key={`${p.key || 'pt'}-${i}`}>
-              <button
-                type="button"
-                className="absolute z-[40] h-3 w-3 -ml-0.5 -mt-0.5 rounded-full border border-white/50 bg-black shadow-sm cursor-default"
-                style={{
-                  left: `${p.left}%`,
-                  top: '2.45rem',
-                  transform: 'translate(-50%, -50%)',
+        {/* Milestones / Dates - Using alternating top/bottom and collision detection if possible, or just wider spacing */}
+        {milestoneEntries.map((p, i) => {
+          // Calculate if we should put the label at top or bottom to avoid collision
+          // For 4 points, alternating 0, 1, 0, 1 is usually okay if they aren't extremely close
+          const isUpper = i % 2 === 0;
+          
+          return (
+            <div
+              key={`${p.key || 'pt'}-${i}`}
+              className="absolute group h-full"
+              style={{ left: `${p.left}%`, top: '0' }}
+            >
+              <div className="absolute left-0 top-0 bottom-0 w-px bg-white/[0.12] group-hover:bg-accent/40 shadow-[0_0_4px_rgba(255,255,255,0.1)] transition-colors" />
+              <div 
+                className="absolute left-1/2 -translate-x-1/2 px-1.5 py-0.5 rounded bg-[#1a1a1a]/90 backdrop-blur-md border border-white/10 text-[0.5rem] font-medium text-text-secondary whitespace-nowrap shadow-xl z-10"
+                style={{ 
+                  top: isUpper ? '-20px' : '44px',
                 }}
-                aria-label={timelineDateLabel(p)}
-              />
-              <div
-                className="absolute z-[50] text-[0.56rem] leading-none text-text-secondary whitespace-nowrap pointer-events-none rounded px-1.5 py-0.5 bg-zinc-950/95 border border-white/[0.2] shadow-sm"
-                style={milestoneDateStyle(p, i)}
               >
                 {timelineDateLabel(p)}
               </div>
-            </Fragment>
-          ))}
+            </div>
+          );
+        })}
       </div>
-
-      {!analysis.hasFullSet ? (
-        <p className="text-[0.52rem] text-text-muted leading-snug">
-          Add planned start/due, final start date, and date done for delay timeline.
-        </p>
-      ) : null}
     </div>
   );
 }
@@ -679,6 +671,9 @@ function normalizePsTask(task) {
           .filter(Boolean)
           .join(', ')
       : '';
+  const lno = parseLnoFromName(task.name);
+  const dateDone = root.date_done || root.dateDone || null;
+  
   return {
     id: task.name || task.id || `task-${Math.random().toString(36).slice(2)}`,
     name: task.name || 'Untitled task',
@@ -698,6 +693,12 @@ function normalizePsTask(task) {
     delayDuration: task.delayDuration ?? null,
     projectName: task.projectName || root.listName,
     isPsTask: true,
+    lnoTier: lno.tier,
+    lnoLabel: lno.label,
+    startDate: root.start_date || root.startDate || null,
+    dueDate: root.due_date || root.dueDate || null,
+    dateDone,
+    completionDate: dateDone || root.date_closed || root.dateClosed || null,
     raw: root,
   };
 }
@@ -926,16 +927,23 @@ function mapAmsStages(data) {
     const stageTasks = (grouped.get(stageNumber) || []).slice().sort(compareLnoTasks);
 
     const s = summaryMap.get(stageNumber);
+    // Recalculate counts directly from tasks for accuracy as requested
+    const lnoLeverage = stageTasks.filter((t) => t.lnoTier === 'L').length;
+    const lnoNeutral = stageTasks.filter((t) => t.lnoTier === 'N').length;
+    const lnoOverhead = stageTasks.filter((t) => t.lnoTier === 'O').length;
+    const lnoUnparsed = stageTasks.filter((t) => !t.lnoTier).length;
+    const delayed = stageTasks.filter((t) => 
+      t.delayedLabel === 'Yes' || 
+      (t.delayDuration !== null && t.delayDuration > 0) ||
+      (t.dateDone && t.dueDate && Number(t.dateDone) > Number(t.dueDate))
+    ).length;
+
     const stageCounts = {
-      delayed: Number(s?.delayed ?? stageTasks.length ?? 0),
-      lnoLeverage: Number(
-        s?.lnoLeverage ?? stageTasks.filter((t) => t.lnoTier === 'L').length
-      ),
-      lnoNeutral: Number(s?.lnoNeutral ?? stageTasks.filter((t) => t.lnoTier === 'N').length),
-      lnoOverhead: Number(s?.lnoOverhead ?? stageTasks.filter((t) => t.lnoTier === 'O').length),
-      lnoUnparsed: Number(
-        s?.lnoUnparsed ?? stageTasks.filter((t) => !t.lnoTier).length
-      ),
+      delayed,
+      lnoLeverage,
+      lnoNeutral,
+      lnoOverhead,
+      lnoUnparsed,
     };
 
     const typeCounts = stageTasks.reduce((acc, task) => {
@@ -1219,16 +1227,18 @@ export default function Pipeline({
   rtlProject = 'qs222',
   amsProject = 'qs222',
 }) {
-  /** AMS: “Where we are” = PS-style flat tooltips; “What went wrong” = nested hover + delay analysis. */
-  const isAmsSimple = teamKey === 'ams' && viewTab === 'current';
-  const isPsRtlWrong = (teamKey === 'ps' || teamKey === 'rtl') && viewTab === 'wrong';
-  const showDelayNestedDetail =
-    (teamKey === 'ams' && viewTab !== 'current') || isPsRtlWrong;
-  const showSimplePsRtlList = (teamKey === 'ps' || teamKey === 'rtl') && viewTab === 'current';
-
   const [tooltip, setTooltip] = useState(null);
   const [tooltipPos, setTooltipPos] = useState({ left: 0, top: 0 });
   const [subTooltip, setSubTooltip] = useState(null);
+
+  /** 'Current' view (Where we are) = simplified flat list across all teams. */
+  const isCurrentView = viewTab === 'current';
+  
+  /** 
+   * Enable nested detailed hover for 'What went wrong' views.
+   */
+  const showDelayNestedDetail = !isCurrentView;
+
   /** Fixed viewport position for nested panel (set after parent is laid out). */
   const [subTooltipFixedPos, setSubTooltipFixedPos] = useState(null);
   const [subTooltipHeight, setSubTooltipHeight] = useState(NESTED_SUBTOOLTIP_HEIGHT_PX);
@@ -1239,8 +1249,8 @@ export default function Pipeline({
   const nestedRef = useRef(null);
 
   useEffect(() => {
-    if (isAmsSimple) setSubTooltip(null);
-  }, [isAmsSimple]);
+    if (isCurrentView) setSubTooltip(null);
+  }, [isCurrentView]);
 
   useEffect(() => {
     if (viewTab === 'current' && (teamKey === 'ps' || teamKey === 'rtl')) setSubTooltip(null);
@@ -1268,10 +1278,10 @@ export default function Pipeline({
   const showLeaderBoardButton = leaderBoardStatsUrl != null;
 
   const subTooltipSchedule = useMemo(() => {
-    if (!subTooltip || isAmsSimple) return null;
+    if (!subTooltip || isCurrentView) return null;
     if (!showDelayNestedDetail) return null;
     return computeDelayScheduleAnalysis(subTooltip);
-  }, [subTooltip, isAmsSimple, showDelayNestedDetail]);
+  }, [subTooltip, isCurrentView, showDelayNestedDetail]);
 
   const subTooltipCommentsSorted = useMemo(() => {
     if (!subTooltip?.comments?.length) return [];
@@ -1288,22 +1298,58 @@ export default function Pipeline({
   const stages = useMemo(() => {
     if (teamKey === 'ams') return mapAmsStages(viewData);
     if (teamKey === 'ps') {
-      if (!Array.isArray(viewData?.stages)) return [];
-      return viewData.stages.map((stage) => ({
-        ...stage,
-        title: stage.stageName || stage.title || `Stage ${stage.stageNumber}`,
-        taskCount: Number(stage.taskCount || stage.tasks?.length || 0),
-        tasks: Array.isArray(stage.tasks) ? stage.tasks.map((t) => normalizePsTask(t)) : [],
-      }));
+      return viewData.stages.map((stage) => {
+        const stageTasks = Array.isArray(stage.tasks) ? stage.tasks.map((t) => normalizePsTask(t)) : [];
+        return {
+          ...stage,
+          title: stage.stageName || stage.title || `Stage ${stage.stageNumber}`,
+          taskCount: Number(stage.taskCount || stageTasks.length || 0),
+          tasks: stageTasks,
+          stageCounts: (() => {
+            const delayed = stageTasks.filter((t) => 
+              t.delayedLabel === 'Yes' || 
+              (t.delayDuration !== null && t.delayDuration > 0) ||
+              (t.dateDone && t.dueDate && Number(t.dateDone) > Number(t.dueDate))
+            ).length;
+            
+            return {
+              delayed,
+              lnoLeverage: stageTasks.filter((t) => t.lnoTier === 'L').length,
+              lnoNeutral: stageTasks.filter((t) => t.lnoTier === 'N').length,
+              lnoOverhead: stageTasks.filter((t) => t.lnoTier === 'O').length,
+              lnoUnparsed: stageTasks.filter((t) => !t.lnoTier).length,
+            };
+          })(),
+          topBlockerType: 'none',
+        };
+      });
     }
     if (teamKey === 'rtl') {
-      if (!Array.isArray(viewData?.stages)) return [];
-      return viewData.stages.map((stage, idx) => ({
-        ...stage,
-        title: RTL_STAGE_NAMES[idx] || stage.stageName || stage.title || `Stage ${stage.stageNumber}`,
-        taskCount: Number(stage.taskCount || stage.tasks?.length || 0),
-        tasks: Array.isArray(stage.tasks) ? stage.tasks.map((t) => normalizePsTask(t)) : [],
-      }));
+      return viewData.stages.map((stage, idx) => {
+        const stageTasks = Array.isArray(stage.tasks) ? stage.tasks.map((t) => normalizePsTask(t)) : [];
+        return {
+          ...stage,
+          title: RTL_STAGE_NAMES[idx] || stage.stageName || stage.title || `Stage ${stage.stageNumber}`,
+          taskCount: Number(stage.taskCount || stageTasks.length || 0),
+          tasks: stageTasks,
+          stageCounts: (() => {
+            const delayed = stageTasks.filter((t) => 
+              t.delayedLabel === 'Yes' || 
+              (t.delayDuration !== null && t.delayDuration > 0) ||
+              (t.dateDone && t.dueDate && Number(t.dateDone) > Number(t.dueDate))
+            ).length;
+            
+            return {
+              delayed,
+              lnoLeverage: stageTasks.filter((t) => t.lnoTier === 'L').length,
+              lnoNeutral: stageTasks.filter((t) => t.lnoTier === 'N').length,
+              lnoOverhead: stageTasks.filter((t) => t.lnoTier === 'O').length,
+              lnoUnparsed: stageTasks.filter((t) => !t.lnoTier).length,
+            };
+          })(),
+          topBlockerType: 'none',
+        };
+      });
     }
     if (!Array.isArray(viewData?.stages)) return [];
     return viewData.stages.map((stage) => ({
@@ -1311,13 +1357,22 @@ export default function Pipeline({
       title: stage.title || stage.stageName || `Stage ${stage.stageNumber}`,
       taskCount: Number(stage.taskCount || stage.tasks?.length || 0),
       tasks: Array.isArray(stage.tasks) ? stage.tasks.map((task) => normalizeTask(task)) : [],
-      stageCounts: {
-        delayed: Number(stage.taskCount || stage.tasks?.length || 0),
-        lnoLeverage: 0,
-        lnoNeutral: 0,
-        lnoOverhead: 0,
-        lnoUnparsed: 0,
-      },
+      stageCounts: (() => {
+        const stageTasks = Array.isArray(stage.tasks) ? stage.tasks.map((task) => normalizeTask(task)) : [];
+        const delayed = stageTasks.filter((t) => 
+          t.delayedLabel === 'Yes' || 
+          (t.delayDuration !== null && t.delayDuration > 0) ||
+          (t.dateDone && t.dueDate && Number(t.dateDone) > Number(t.dueDate))
+        ).length;
+        
+        return {
+          delayed,
+          lnoLeverage: stageTasks.filter((t) => t.lnoTier === 'L').length,
+          lnoNeutral: stageTasks.filter((t) => t.lnoTier === 'N').length,
+          lnoOverhead: stageTasks.filter((t) => t.lnoTier === 'O').length,
+          lnoUnparsed: stageTasks.filter((t) => !t.lnoTier).length,
+        };
+      })(),
       topBlockerType: 'none',
     }));
   }, [viewData, teamKey]);
@@ -1328,7 +1383,7 @@ export default function Pipeline({
     setTooltip(stage);
     setSubTooltip(null);
     setSubTooltipFixedPos(null);
-    if (teamKey === 'ams' && !isAmsSimple) setTooltipLnoFilter('all');
+    if (teamKey === 'ams' && !isCurrentView) setTooltipLnoFilter('all');
   };
 
   const closeTooltips = (event) => {
@@ -1356,8 +1411,8 @@ export default function Pipeline({
   };
 
   const openSubTooltip = (event, task) => {
-    if (isAmsSimple) return;
-    if ((teamKey === 'ps' || teamKey === 'rtl') && viewTab !== 'wrong') return;
+    if (viewTab === 'current') return;
+    // Removed the restriction that blocked PS/RTL from showing nested tooltips in 'current' view
 
     const viewportPad = 10;
     const maxByViewport = Math.max(220, window.innerHeight - viewportPad * 2);
@@ -1400,23 +1455,13 @@ export default function Pipeline({
       <div className="w-full max-w-[980px] mx-auto flex flex-1 min-h-0 flex-col bg-card border border-border rounded-2xl relative overflow-hidden">
         <h2 className="text-center text-[0.65rem] font-bold uppercase tracking-[0.15em] text-text-secondary pt-4 pb-2 shrink-0">
           {teamKey === 'ams'
-            ? `${teamLabel} · AMS Workflow${isAmsSimple ? ' · In progress' : ''}`
+            ? `${teamLabel} · AMS Workflow${isCurrentView ? ' · In progress' : ''}`
             : teamKey === 'ps'
               ? `${teamLabel} · Test Flow`
               : teamKey === 'rtl'
                 ? `${teamLabel} · RTL Pipeline`
                 : `${teamLabel} · Flowchart`}
         </h2>
-        {teamKey === 'ams' && !isAmsSimple && (
-          <div className="px-4 pb-2 shrink-0 flex justify-center">
-            <div className="flex flex-wrap items-center justify-center gap-2 text-[0.65rem] text-text-muted">
-              <span className="px-2 py-0.5 rounded bg-blocked/15 text-blocked">L Leverage · red</span>
-              <span className="px-2 py-0.5 rounded bg-accent/15 text-accent">N Neutral · orange</span>
-              <span className="px-2 py-0.5 rounded bg-yellow-500/15 text-yellow-200">O Overhead · yellow</span>
-              <span className="px-2 py-0.5 rounded bg-completed/15 text-completed">No tag · muted</span>
-            </div>
-          </div>
-        )}
         {showLeaderBoardButton && (
           <button
             type="button"
@@ -1429,7 +1474,7 @@ export default function Pipeline({
 
         <div
           className={`flex-1 flex min-h-0 px-2 sm:px-6 pb-4 ${
-            teamKey === 'ps' || isAmsSimple
+            teamKey === 'ps' || isCurrentView
               ? 'overflow-hidden items-center justify-center'
               : 'overflow-auto items-center justify-center pb-6'
           }`}
@@ -1554,8 +1599,11 @@ export default function Pipeline({
             <span className="text-xs text-text-secondary shrink-0">Stage {tooltip.stageNumber}</span>
           </div>
           <div className="text-sm font-semibold mb-2 shrink-0 min-w-0 break-words leading-snug">{tooltip.title}</div>
-          {teamKey === 'ams' && !isAmsSimple && (
+          {((teamKey === 'ams' && !isCurrentView) || teamKey === 'ps' || teamKey === 'rtl') && (
             <div className="flex flex-wrap gap-1.5 mb-2 text-[0.62rem] shrink-0 min-w-0">
+              <div className="rounded px-2 py-1 border border-white/10 text-white font-bold shrink-0">
+                Total: {tooltip.tasks.length}
+              </div>
               <div className="rounded px-1.5 py-1 border border-white/10 text-text-muted shrink-0">
                 Delayed: {tooltip.stageCounts?.delayed ?? 0}
               </div>
@@ -1581,24 +1629,26 @@ export default function Pipeline({
               </div>
             </div>
           )}
-          <div className="text-[0.7rem] text-text-muted mb-2 shrink-0">{tooltip.taskCount} task(s)</div>
-          {teamKey === 'ams' && !isAmsSimple && (
-            <div className="flex flex-wrap gap-1 mb-2 shrink-0 min-w-0">
+          <div className="flex items-center justify-between gap-2 mb-2 shrink-0 min-w-0">
+             <div className="text-[0.7rem] text-text-muted">{tooltip.taskCount} task(s)</div>
+          </div>
+          {((teamKey === 'ams' && !isCurrentView) || teamKey === 'ps' || teamKey === 'rtl') && (
+            <div className="flex gap-1 mb-2 shrink-0 min-w-0 w-full">
               {[
                 { key: 'all', label: 'All' },
-                { key: 'L', label: 'L' },
-                { key: 'N', label: 'N' },
-                { key: 'O', label: 'O' },
+                { key: 'L', label: 'Leverage' },
+                { key: 'N', label: 'Neutral' },
+                { key: 'O', label: 'Overhead' },
               ].map((f) => (
                 <button
                   key={f.key}
                   type="button"
                   onClick={() => setTooltipLnoFilter(f.key)}
                   onMouseEnter={keepTooltips}
-                  className={`text-[0.62rem] px-2 py-1 rounded border transition-colors shrink-0 ${
+                  className={`flex-1 text-[0.6rem] px-1 py-1 rounded border transition-colors shrink-0 font-bold uppercase tracking-tighter ${
                     tooltipLnoFilter === f.key
                       ? 'border-accent bg-accent/20 text-accent'
-                      : 'border-border text-text-secondary hover:border-accent/40'
+                      : 'border-white/10 text-text-muted hover:border-white/20'
                   }`}
                 >
                   {f.label}
@@ -1607,51 +1657,71 @@ export default function Pipeline({
             </div>
           )}
           <div className="flex-1 min-h-0 overflow-x-hidden overflow-y-auto pr-1 -mr-1 custom-scrollbar">
-            {(showSimplePsRtlList || (teamKey === 'ams' && isAmsSimple)) && tooltip.tasks.length === 0 && (
-              <div className="text-text-muted text-sm">No tasks in this stage.</div>
-            )}
-            {(showSimplePsRtlList || (teamKey === 'ams' && isAmsSimple)) &&
-              tooltip.tasks.map((task) => {
-                const desc =
-                  teamKey === 'ams' && isAmsSimple ? amsTaskDescriptionForSimpleList(task) : task.description;
-                const owner =
-                  teamKey === 'ams' && isAmsSimple ? amsOwnerDisplay(task) : task.owner;
-                return (
-                  <div
-                    key={task.id}
-                    className="relative py-2.5 border-b border-white/[0.05] last:border-b-0 cursor-default min-w-0"
-                  >
-                    <div className="min-w-0 max-w-full">
-                      <div className="text-sm font-medium text-foreground/95 truncate">{task.name}</div>
-                      <div className="text-[0.65rem] text-accent/80 mt-0.5 truncate uppercase tracking-wider font-semibold">
-                        {owner}
-                      </div>
-                      {desc ? (
-                        <div className="text-[0.7rem] text-foreground/80 mt-2 leading-relaxed whitespace-pre-wrap break-words max-h-32 overflow-y-auto custom-scrollbar border-l border-white/10 pl-2 ml-0.5 bg-white/[0.01] py-1 rounded-sm">
-                          {desc}
+            {isCurrentView ? (
+              <>
+                {tooltip.tasks.length === 0 && <div className="text-text-muted text-sm px-2">No tasks in this stage.</div>}
+                {tooltip.tasks.map((task) => {
+                  const owner = teamKey === 'ams' ? amsOwnerDisplay(task) : task.owner;
+                  return (
+                    <div
+                      key={task.id}
+                      className="relative py-2.5 border-b border-white/[0.05] last:border-b-0 cursor-default min-w-0 px-2"
+                    >
+                      <div className="min-w-0 max-w-full">
+                        <div className="text-sm font-medium text-foreground/95 truncate">{task.name}</div>
+                        <div className="mt-0.5 flex items-center justify-between gap-2 min-w-0">
+                          <div className="text-xs text-accent-soft/80 flex flex-wrap items-baseline gap-x-2 gap-y-0.5 min-w-0">
+                            <span className="min-w-0 max-w-full truncate">{owner}</span>
+                            <span
+                              className={`min-w-0 max-w-full break-words ${
+                                task.delayedLabel === 'Yes' ||
+                                (task.delayDuration !== null && task.delayDuration > 0) ||
+                                (task.dateDone && task.dueDate && Number(task.dateDone) > Number(task.dueDate))
+                                  ? 'text-blocked'
+                                  : 'text-completed'
+                              }`}
+                            >
+                              Delay:{' '}
+                              {task.delayedLabel === 'Yes' ||
+                              (task.delayDuration !== null && task.delayDuration > 0) ||
+                              (task.dateDone && task.dueDate && Number(task.dateDone) > Number(task.dueDate))
+                                ? 'Yes'
+                                : 'No'}
+                            </span>
+                          </div>
+                          {(() => {
+                            const analysis = computeDelayScheduleAnalysis(task);
+                            if (analysis.plannedWindowCalendarDays == null) return null;
+                            return (
+                              <div className="text-[0.5rem] font-bold text-text-muted shrink-0 bg-white/[0.04] px-1.2 py-0.5 rounded border border-white/[0.05]">
+                                P {analysis.plannedWindowCalendarDays}d · E {analysis.finalWindowCalendarDays}d
+                                {analysis.completionDelayDays > 0 && (
+                                  <span className="text-amber-500"> + C {analysis.completionDelayDays}d</span>
+                                )}
+                              </div>
+                            );
+                          })()}
                         </div>
-                      ) : null}
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
-            {teamKey === 'ams' && !isAmsSimple && tooltip.tasks.length === 0 && (
-              <div className="text-text-muted text-sm">No tasks in this stage.</div>
-            )}
-            {teamKey === 'ams' &&
-              !isAmsSimple &&
+                  );
+                })}
+              </>
+            ) : (
               (() => {
                 const sections = buildAmsTooltipSections(tooltip.tasks, tooltipLnoFilter);
                 if (sections.length === 0) {
-                  return <div className="text-text-muted text-sm">No tasks match this filter.</div>;
+                  return <div className="text-text-muted text-sm px-2">No tasks match this filter.</div>;
                 }
                 return sections.map((section) => (
                   <div key={section.key} className="mb-3 last:mb-0 min-w-0">
-                    <div
-                      className={`text-[0.6rem] font-semibold uppercase tracking-wide mb-1.5 pl-2 border-l-2 min-w-0 break-words pr-1 ${section.barClass}`}
-                    >
-                      {section.title} · {section.tasks.length}
-                    </div>
+                    {section.key !== 'other' && (
+                        <div
+                        className={`text-[0.6rem] font-semibold uppercase tracking-wide mb-1.5 pl-2 border-l-2 min-w-0 break-words pr-1 ${section.barClass}`}
+                        >
+                        {section.title} · {section.tasks.length}
+                        </div>
+                    )}
                     {section.tasks.map((task) => (
                       <div
                         key={task.id}
@@ -1669,84 +1739,41 @@ export default function Pipeline({
                               {task.name}
                             </div>
                           </div>
-                          <div className="text-xs text-accent-soft/80 mt-0.5 flex flex-wrap items-baseline gap-x-2 gap-y-0.5 min-w-0">
-                            <span className="min-w-0 max-w-full truncate">{task.owner}</span>
-                            <span
-                              className={`min-w-0 max-w-full break-words ${
-                                (task.delayedLabel === 'Yes' || 
-                                 (task.delayDuration !== null && task.delayDuration > 0) ||
-                                 (task.dateDone && task.dueDate && Number(task.dateDone) > Number(task.dueDate))) 
-                                  ? 'text-blocked' 
-                                  : 'text-completed'
-                              }`}
-                            >
-                              Delay: {(task.delayedLabel === 'Yes' || 
-                                       (task.delayDuration !== null && task.delayDuration > 0) ||
-                                       (task.dateDone && task.dueDate && Number(task.dateDone) > Number(task.dueDate))) ? 'Yes' : 'No'}
-                            </span>
+                          <div className="mt-0.5 flex items-center justify-between gap-2 min-w-0">
+                            <div className="text-xs text-accent-soft/80 flex flex-wrap items-baseline gap-x-2 gap-y-0.5 min-w-0">
+                                <span className="min-w-0 max-w-full truncate">{task.owner}</span>
+                                <span
+                                className={`min-w-0 max-w-full break-words ${
+                                    (task.delayedLabel === 'Yes' || 
+                                    (task.delayDuration !== null && task.delayDuration > 0) ||
+                                    (task.dateDone && task.dueDate && Number(task.dateDone) > Number(task.dueDate))) 
+                                    ? 'text-blocked' 
+                                    : 'text-completed'
+                                }`}
+                                >
+                                Delay: {(task.delayedLabel === 'Yes' || 
+                                        (task.delayDuration !== null && task.delayDuration > 0) ||
+                                        (task.dateDone && task.dueDate && Number(task.dateDone) > Number(task.dueDate))) ? 'Yes' : 'No'}
+                                </span>
+                            </div>
+                            {(() => {
+                              const analysis = computeDelayScheduleAnalysis(task);
+                              if (analysis.plannedWindowCalendarDays == null) return null;
+                              return (
+                                <div className="text-[0.5rem] font-bold text-text-muted shrink-0 bg-white/[0.04] px-1.2 py-0.5 rounded border border-white/[0.05]">
+                                  P {analysis.plannedWindowCalendarDays}d · E {analysis.finalWindowCalendarDays}d
+                                  {analysis.completionDelayDays > 0 && <span className="text-amber-500"> + C {analysis.completionDelayDays}d</span>}
+                                </div>
+                              );
+                            })()}
                           </div>
                         </div>
                       </div>
                     ))}
                   </div>
                 ));
-              })()}
-            {isPsRtlWrong && tooltip.tasks.length === 0 && (
-              <div className="text-text-muted text-sm">No delayed tasks in this stage.</div>
+              })()
             )}
-            {isPsRtlWrong &&
-              tooltip.tasks.map((task) => (
-                <div
-                  key={task.id}
-                  className="relative py-2 border-b border-white/[0.05] last:border-b-0 cursor-default min-w-0"
-                  onMouseEnter={(event) => openSubTooltip(event, task)}
-                >
-                  <div className="min-w-0 max-w-full">
-                    <div className="text-sm text-foreground/95 min-w-0 truncate leading-snug">{task.name}</div>
-                    <div className="text-xs text-accent-soft/80 mt-0.5 flex flex-wrap items-baseline gap-x-2 gap-y-0.5 min-w-0">
-                      <span className="min-w-0 max-w-full truncate">{task.owner}</span>
-                      <span
-                        className={`min-w-0 max-w-full break-words ${
-                          (task.delayedLabel === 'Yes' || 
-                           (task.delayDuration !== null && task.delayDuration > 0) ||
-                           (task.dateDone && task.dueDate && Number(task.dateDone) > Number(task.dueDate))) 
-                            ? 'text-blocked' 
-                            : 'text-completed'
-                        }`}
-                      >
-                        Delay: {(task.delayedLabel === 'Yes' || 
-                                 (task.delayDuration !== null && task.delayDuration > 0) ||
-                                 (task.dateDone && task.dueDate && Number(task.dateDone) > Number(task.dueDate))) ? 'Yes' : 'No'}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            {teamKey !== 'ps' && teamKey !== 'ams' && teamKey !== 'rtl' && tooltip.tasks.length === 0 && (
-              <div className="text-text-muted text-sm">No tasks in this stage.</div>
-            )}
-            {teamKey !== 'ps' &&
-              teamKey !== 'ams' &&
-              teamKey !== 'rtl' &&
-              tooltip.tasks.map((task) => (
-                <div
-                  key={task.id}
-                  className="relative py-2.5 border-b border-white/[0.05] last:border-b-0 cursor-default min-w-0"
-                  onMouseEnter={(event) => openSubTooltip(event, task)}
-                >
-                  <div className="min-w-0 max-w-full">
-                    <div className="flex items-start gap-2 min-w-0 max-w-full">
-                      <span className={`text-[0.6rem] px-1.5 py-0.5 rounded shrink-0 ${lnoBadgeClass(task.lnoTier)}`}>
-                        {task.lnoLabel || '—'}
-                      </span>
-                      <div className="text-sm text-foreground/95 min-w-0 flex-1 truncate leading-snug">{task.name}</div>
-                    </div>
-                    <div className="text-xs text-accent-soft/80 mt-0.5 flex flex-wrap gap-x-2 gap-y-0.5 min-w-0">
-                      <span className="min-w-0 max-w-full truncate">{task.owner}</span>
-                    </div>
-                  </div>
-                </div>
-              ))}
           </div>
         </div>
 
@@ -1773,7 +1800,7 @@ export default function Pipeline({
                 }}
               />
 
-              {teamKey !== 'ams' && !isPsRtlWrong && (
+              {teamKey !== 'ams' && (
                 <div className="shrink-0 min-w-0">
                   <div className="flex items-start justify-between gap-2 mb-1.5 min-w-0">
                     <div className="text-sm font-semibold leading-snug min-w-0 break-words pr-1 text-accent">{subTooltip.name}</div>
@@ -1793,33 +1820,18 @@ export default function Pipeline({
                 </div>
               )}
 
-              {showDelayNestedDetail ? (
-                <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
-                  <AmsTaskNestedDetail
-                    task={subTooltip}
-                    schedule={subTooltipSchedule}
-                    commentsSorted={subTooltipCommentsSorted}
-                    formatDate={formatDate}
-                    formatCalendarDayCount={formatCalendarDayCount}
-                    DelayTimelineBars={DelayTimelineBars}
-                    delayTypeChipClass={delayTypeChipClass}
-                    DELAY_TYPE_LABEL={DELAY_TYPE_LABEL}
-                  />
-                </div>
-              ) : (
-                <div className="grid flex-1 min-h-0 h-full min-w-0 grid-cols-1 mt-1 pt-2 border-t border-white/[0.08]">
-                  <div className="min-w-0 min-h-0 h-full max-h-full flex flex-col justify-start overflow-hidden self-stretch">
-                    <div className="flex flex-col h-full overflow-y-auto custom-scrollbar">
-                      <div className="text-[0.6rem] font-semibold uppercase tracking-wide text-text-secondary mb-1">
-                        Task Description
-                      </div>
-                      <div className="text-[0.7rem] leading-relaxed text-text-muted break-words whitespace-pre-wrap">
-                        {subTooltip.description || 'No description provided.'}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
+              <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
+                <AmsTaskNestedDetail
+                  task={subTooltip}
+                  schedule={subTooltipSchedule}
+                  commentsSorted={subTooltipCommentsSorted}
+                  formatDate={formatDate}
+                  formatCalendarDayCount={formatCalendarDayCount}
+                  DelayTimelineBars={DelayTimelineBars}
+                  delayTypeChipClass={delayTypeChipClass}
+                  DELAY_TYPE_LABEL={DELAY_TYPE_LABEL}
+                />
+              </div>
             </div>
           )}
           </>,
