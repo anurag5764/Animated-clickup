@@ -36,14 +36,14 @@ const JOBS = CHIPS.flatMap((id) => [
   {
     id,
     kind: 'current',
-    tasksFile: `data/extracts/ams_current_folder_tasks_${id}.json`,
-    outputFile: `data/outputs/output_ams_current_${id}.json`,
+    tasksFile: `dashboard/data/extracts/ams_current_folder_tasks_${id}.json`,
+    outputFile: `dashboard/data/outputs/output_ams_current_${id}.json`,
   },
   {
     id,
     kind: 'wrong',
-    tasksFile: `data/extracts/ams_wrong_folder_tasks_${id}.json`,
-    outputFile: `data/outputs/output_ams_wrong_${id}.json`,
+    tasksFile: `dashboard/data/extracts/ams_wrong_folder_tasks_${id}.json`,
+    outputFile: `dashboard/data/outputs/output_ams_wrong_${id}.json`,
   },
 ]);
 

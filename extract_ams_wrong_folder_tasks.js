@@ -38,19 +38,19 @@ const PROJECTS = [
     id: 'qs222',
     label: 'QS222',
     folderId: '90172530829',
-    outFile: 'data/extracts/ams_wrong_folder_tasks_qs222.json',
+    outFile: 'dashboard/data/extracts/ams_wrong_folder_tasks_qs222.json',
   },
   {
     id: 'qs223',
     label: 'QS223',
     folderId: '90172523095',
-    outFile: 'data/extracts/ams_wrong_folder_tasks_qs223.json',
+    outFile: 'dashboard/data/extracts/ams_wrong_folder_tasks_qs223.json',
   },
   {
     id: 'qs127',
     label: 'QS127',
     folderId: '90172600045',
-    outFile: 'data/extracts/ams_wrong_folder_tasks_qs127.json',
+    outFile: 'dashboard/data/extracts/ams_wrong_folder_tasks_qs127.json',
   },
 ];
 
@@ -108,8 +108,20 @@ function parseDelayedMetadata(customFields = []) {
 
 function isDelayedYes(task) {
   const customFields = task.custom_fields || [];
-  const { delayedFlag } = parseDelayedMetadata(customFields);
-  return delayedFlag === 'yes';
+  const { delayedFlag, delayDurationDays } = parseDelayedMetadataFull(customFields);
+  
+  // 1. Explicit flag
+  if (delayedFlag === 'yes') return true;
+  
+  // 2. Positive delay duration field
+  if (delayDurationDays !== null && delayDurationDays > 0) return true;
+  
+  // 3. Date comparison: completion vs due
+  if (task.date_done && task.due_date) {
+    if (Number(task.date_done) > Number(task.due_date)) return true;
+  }
+  
+  return false;
 }
 
 function findCustomFieldMs(customFields, names) {
@@ -303,7 +315,7 @@ async function main() {
       taskCount: tasks.length,
       tasks,
     };
-    fs.mkdirSync('data/extracts', { recursive: true });
+    fs.mkdirSync('dashboard/data/extracts', { recursive: true });
     fs.writeFileSync(project.outFile, JSON.stringify(payload, null, 2));
     console.log(`\n💾 ${tasks.length} task(s) → ${project.outFile}`);
     summary[project.id] = tasks.length;

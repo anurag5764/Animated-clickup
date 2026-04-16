@@ -1,0 +1,407 @@
+{
+  "generatedAt": "2026-04-16T10:19:26.436Z",
+  "teamKind": "ams",
+  "teamLabel": "AMS Team",
+  "workflowTitle": "Leaderboard Stats",
+  "projectId": "qs127",
+  "minSampleForRanking": 5,
+  "team": {
+    "totalTaskAssignments": 259,
+    "delayedAssignments": 27,
+    "onTimeRate": 89.6
+  },
+  "members": [
+    {
+      "username": "sumon",
+      "email": "sumon.bose@10xar.com",
+      "totalTasks": 61,
+      "delayedTasks": 7,
+      "onTimeTasks": 54,
+      "onTimeRate": 88.5,
+      "sufficientSample": true
+    },
+    {
+      "username": "Sayantan Dey",
+      "email": "sayantan.dey@10xar.com",
+      "totalTasks": 2,
+      "delayedTasks": 0,
+      "onTimeTasks": 2,
+      "onTimeRate": 100,
+      "sufficientSample": false
+    },
+    {
+      "username": "Manash Dey",
+      "email": "manash.dey@ixana.ai",
+      "totalTasks": 24,
+      "delayedTasks": 6,
+      "onTimeTasks": 18,
+      "onTimeRate": 75,
+      "sufficientSample": true
+    },
+    {
+      "username": "Ayash Ashraf",
+      "email": "ayash.ashraf@ixana.ai",
+      "totalTasks": 28,
+      "delayedTasks": 10,
+      "onTimeTasks": 18,
+      "onTimeRate": 64.3,
+      "sufficientSample": true
+    },
+    {
+      "username": "Aniruddh CHoudhary",
+      "email": "aniruddh.choudhary@10xar.com",
+      "totalTasks": 1,
+      "delayedTasks": 1,
+      "onTimeTasks": 0,
+      "onTimeRate": 0,
+      "sufficientSample": false
+    },
+    {
+      "username": "Samanway Pal",
+      "email": "samanway.pal@ixana.ai",
+      "totalTasks": 2,
+      "delayedTasks": 1,
+      "onTimeTasks": 1,
+      "onTimeRate": 50,
+      "sufficientSample": false
+    },
+    {
+      "username": "Himanshu Shaw",
+      "email": "himanshu.shaw@ixana.ai",
+      "totalTasks": 1,
+      "delayedTasks": 1,
+      "onTimeTasks": 0,
+      "onTimeRate": 0,
+      "sufficientSample": false
+    },
+    {
+      "username": "Arka Chowdhury",
+      "email": "arka.chowdhury@ixana.ai",
+      "totalTasks": 1,
+      "delayedTasks": 1,
+      "onTimeTasks": 0,
+      "onTimeRate": 0,
+      "sufficientSample": false
+    },
+    {
+      "username": "Ebin Abraham",
+      "email": "ebin.abraham@10xar.com",
+      "totalTasks": 99,
+      "delayedTasks": 0,
+      "onTimeTasks": 99,
+      "onTimeRate": 100,
+      "sufficientSample": true
+    },
+    {
+      "username": "hareesh th",
+      "email": "hareesh.th@ixana.ai",
+      "totalTasks": 24,
+      "delayedTasks": 0,
+      "onTimeTasks": 24,
+      "onTimeRate": 100,
+      "sufficientSample": true
+    },
+    {
+      "username": "Sihun Kim",
+      "email": "sihun.kim@ixana.ai",
+      "totalTasks": 2,
+      "delayedTasks": 0,
+      "onTimeTasks": 2,
+      "onTimeRate": 100,
+      "sufficientSample": false
+    },
+    {
+      "username": "Arunashish Datta",
+      "email": "arunashish.datta@ixana.ai",
+      "totalTasks": 2,
+      "delayedTasks": 0,
+      "onTimeTasks": 2,
+      "onTimeRate": 100,
+      "sufficientSample": false
+    },
+    {
+      "username": "Sayemul Islam",
+      "email": "sayemul.islam@ixana.ai",
+      "totalTasks": 2,
+      "delayedTasks": 0,
+      "onTimeTasks": 2,
+      "onTimeRate": 100,
+      "sufficientSample": false
+    },
+    {
+      "username": "Ihab Nahlus",
+      "email": "ihab.nahlus@ixana.ai",
+      "totalTasks": 2,
+      "delayedTasks": 0,
+      "onTimeTasks": 2,
+      "onTimeRate": 100,
+      "sufficientSample": false
+    },
+    {
+      "username": "Sarat Anumula",
+      "email": "sarat.anumula@ixana.ai",
+      "totalTasks": 4,
+      "delayedTasks": 0,
+      "onTimeTasks": 4,
+      "onTimeRate": 100,
+      "sufficientSample": false
+    },
+    {
+      "username": "Vinayak Agrawal",
+      "email": "vinayak.agrawal@ixana.ai",
+      "totalTasks": 4,
+      "delayedTasks": 0,
+      "onTimeTasks": 4,
+      "onTimeRate": 100,
+      "sufficientSample": false
+    }
+  ],
+  "rankedBestToWorst": [
+    {
+      "username": "Ebin Abraham",
+      "email": "ebin.abraham@10xar.com",
+      "totalTasks": 99,
+      "delayedTasks": 0,
+      "onTimeTasks": 99,
+      "onTimeRate": 100,
+      "sufficientSample": true,
+      "rank": 1
+    },
+    {
+      "username": "hareesh th",
+      "email": "hareesh.th@ixana.ai",
+      "totalTasks": 24,
+      "delayedTasks": 0,
+      "onTimeTasks": 24,
+      "onTimeRate": 100,
+      "sufficientSample": true,
+      "rank": 2
+    },
+    {
+      "username": "sumon",
+      "email": "sumon.bose@10xar.com",
+      "totalTasks": 61,
+      "delayedTasks": 7,
+      "onTimeTasks": 54,
+      "onTimeRate": 88.5,
+      "sufficientSample": true,
+      "rank": 3
+    },
+    {
+      "username": "Manash Dey",
+      "email": "manash.dey@ixana.ai",
+      "totalTasks": 24,
+      "delayedTasks": 6,
+      "onTimeTasks": 18,
+      "onTimeRate": 75,
+      "sufficientSample": true,
+      "rank": 4
+    },
+    {
+      "username": "Ayash Ashraf",
+      "email": "ayash.ashraf@ixana.ai",
+      "totalTasks": 28,
+      "delayedTasks": 10,
+      "onTimeTasks": 18,
+      "onTimeRate": 64.3,
+      "sufficientSample": true,
+      "rank": 5
+    }
+  ],
+  "attentionNeeded": [
+    {
+      "username": "Ayash Ashraf",
+      "email": "ayash.ashraf@ixana.ai",
+      "totalTasks": 28,
+      "delayedTasks": 10,
+      "onTimeTasks": 18,
+      "onTimeRate": 64.3,
+      "sufficientSample": true
+    },
+    {
+      "username": "Manash Dey",
+      "email": "manash.dey@ixana.ai",
+      "totalTasks": 24,
+      "delayedTasks": 6,
+      "onTimeTasks": 18,
+      "onTimeRate": 75,
+      "sufficientSample": true
+    },
+    {
+      "username": "sumon",
+      "email": "sumon.bose@10xar.com",
+      "totalTasks": 61,
+      "delayedTasks": 7,
+      "onTimeTasks": 54,
+      "onTimeRate": 88.5,
+      "sufficientSample": true
+    },
+    {
+      "username": "Ebin Abraham",
+      "email": "ebin.abraham@10xar.com",
+      "totalTasks": 99,
+      "delayedTasks": 0,
+      "onTimeTasks": 99,
+      "onTimeRate": 100,
+      "sufficientSample": true
+    },
+    {
+      "username": "hareesh th",
+      "email": "hareesh.th@ixana.ai",
+      "totalTasks": 24,
+      "delayedTasks": 0,
+      "onTimeTasks": 24,
+      "onTimeRate": 100,
+      "sufficientSample": true
+    }
+  ],
+  "topPerformers": [
+    {
+      "username": "Ebin Abraham",
+      "email": "ebin.abraham@10xar.com",
+      "totalTasks": 99,
+      "delayedTasks": 0,
+      "onTimeTasks": 99,
+      "onTimeRate": 100,
+      "sufficientSample": true
+    },
+    {
+      "username": "hareesh th",
+      "email": "hareesh.th@ixana.ai",
+      "totalTasks": 24,
+      "delayedTasks": 0,
+      "onTimeTasks": 24,
+      "onTimeRate": 100,
+      "sufficientSample": true
+    },
+    {
+      "username": "sumon",
+      "email": "sumon.bose@10xar.com",
+      "totalTasks": 61,
+      "delayedTasks": 7,
+      "onTimeTasks": 54,
+      "onTimeRate": 88.5,
+      "sufficientSample": true
+    },
+    {
+      "username": "Manash Dey",
+      "email": "manash.dey@ixana.ai",
+      "totalTasks": 24,
+      "delayedTasks": 6,
+      "onTimeTasks": 18,
+      "onTimeRate": 75,
+      "sufficientSample": true
+    },
+    {
+      "username": "Ayash Ashraf",
+      "email": "ayash.ashraf@ixana.ai",
+      "totalTasks": 28,
+      "delayedTasks": 10,
+      "onTimeTasks": 18,
+      "onTimeRate": 64.3,
+      "sufficientSample": true
+    }
+  ],
+  "lowSample": [
+    {
+      "username": "Sayantan Dey",
+      "email": "sayantan.dey@10xar.com",
+      "totalTasks": 2,
+      "delayedTasks": 0,
+      "onTimeTasks": 2,
+      "onTimeRate": 100,
+      "sufficientSample": false
+    },
+    {
+      "username": "Aniruddh CHoudhary",
+      "email": "aniruddh.choudhary@10xar.com",
+      "totalTasks": 1,
+      "delayedTasks": 1,
+      "onTimeTasks": 0,
+      "onTimeRate": 0,
+      "sufficientSample": false
+    },
+    {
+      "username": "Samanway Pal",
+      "email": "samanway.pal@ixana.ai",
+      "totalTasks": 2,
+      "delayedTasks": 1,
+      "onTimeTasks": 1,
+      "onTimeRate": 50,
+      "sufficientSample": false
+    },
+    {
+      "username": "Himanshu Shaw",
+      "email": "himanshu.shaw@ixana.ai",
+      "totalTasks": 1,
+      "delayedTasks": 1,
+      "onTimeTasks": 0,
+      "onTimeRate": 0,
+      "sufficientSample": false
+    },
+    {
+      "username": "Arka Chowdhury",
+      "email": "arka.chowdhury@ixana.ai",
+      "totalTasks": 1,
+      "delayedTasks": 1,
+      "onTimeTasks": 0,
+      "onTimeRate": 0,
+      "sufficientSample": false
+    },
+    {
+      "username": "Sihun Kim",
+      "email": "sihun.kim@ixana.ai",
+      "totalTasks": 2,
+      "delayedTasks": 0,
+      "onTimeTasks": 2,
+      "onTimeRate": 100,
+      "sufficientSample": false
+    },
+    {
+      "username": "Arunashish Datta",
+      "email": "arunashish.datta@ixana.ai",
+      "totalTasks": 2,
+      "delayedTasks": 0,
+      "onTimeTasks": 2,
+      "onTimeRate": 100,
+      "sufficientSample": false
+    },
+    {
+      "username": "Sayemul Islam",
+      "email": "sayemul.islam@ixana.ai",
+      "totalTasks": 2,
+      "delayedTasks": 0,
+      "onTimeTasks": 2,
+      "onTimeRate": 100,
+      "sufficientSample": false
+    },
+    {
+      "username": "Ihab Nahlus",
+      "email": "ihab.nahlus@ixana.ai",
+      "totalTasks": 2,
+      "delayedTasks": 0,
+      "onTimeTasks": 2,
+      "onTimeRate": 100,
+      "sufficientSample": false
+    },
+    {
+      "username": "Sarat Anumula",
+      "email": "sarat.anumula@ixana.ai",
+      "totalTasks": 4,
+      "delayedTasks": 0,
+      "onTimeTasks": 4,
+      "onTimeRate": 100,
+      "sufficientSample": false
+    },
+    {
+      "username": "Vinayak Agrawal",
+      "email": "vinayak.agrawal@ixana.ai",
+      "totalTasks": 4,
+      "delayedTasks": 0,
+      "onTimeTasks": 4,
+      "onTimeRate": 100,
+      "sufficientSample": false
+    }
+  ],
+  "rawTasksProcessed": 208
+}

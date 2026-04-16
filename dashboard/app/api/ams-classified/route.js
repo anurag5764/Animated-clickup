@@ -3,12 +3,15 @@ import path from 'node:path';
 
 export async function GET() {
   try {
-    const root = path.join(process.cwd(), '..');
+    const root = process.cwd();
     const candidates = [
       path.join(root, 'data', 'ams', 'ams_blocker_analysis.json'),
-      path.join(root, 'ams_blocker_analysis.json'),
+      path.join(root, 'data', 'ams_blocker_analysis.json'),
+      // Fallback for local root dev
+      path.join(root, 'dashboard', 'data', 'ams', 'ams_blocker_analysis.json'),
+      // Legacy fallback
+      path.join(root, '..', 'data', 'ams', 'ams_blocker_analysis.json'),
     ];
-    const filePath = candidates[0];
     let raw = null;
     for (const p of candidates) {
       try {

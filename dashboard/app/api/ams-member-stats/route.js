@@ -1,16 +1,22 @@
 import fs from 'node:fs';
-import path from 'node:path';
+import path from 'path';
 import { NextResponse } from 'next/server';
-import { isAmsTaskDelayed } from '../../../lib/amsDelayed';
 
-const MIN_SAMPLE = 5;
+const ALLOWED = new Set(['qs222', 'qs223', 'qs127']);
 
-function resolveTasksFile() {
+function resolveOutputFile(filename) {
   const cwd = process.cwd();
+  const isExtract = filename.startsWith('leaderboard_') || filename.includes('_folder_tasks_');
+  const dir = isExtract ? 'extracts' : 'outputs';
+  
   const candidates = [
-    path.join(cwd, '..', 'data', 'ams', 'ams_tasks.json'),
-    path.join(cwd, '..', 'ams_tasks.json'),
-    path.join(cwd, 'ams_tasks.json'),
+    path.join(cwd, 'data', dir, filename),
+    path.join(cwd, 'data', filename),
+    path.join(cwd, 'public', filename),
+    // Fallback for local dev if cwd is root
+    path.join(cwd, 'dashboard', 'data', dir, filename),
+    // Legacy fallback
+    path.join(cwd, '..', 'data', dir, filename),
   ];
   for (const p of candidates) {
     if (fs.existsSync(p)) return p;
@@ -18,13 +24,22 @@ function resolveTasksFile() {
   return null;
 }
 
-export async function GET() {
-  const abs = resolveTasksFile();
+export async function GET(request) {
+  const project = request.nextUrl.searchParams.get('project') || 'qs222';
+
+  if (!ALLOWED.has(project)) {
+    return NextResponse.json({ error: 'Invalid project' }, { status: 400 });
+  }
+
+  const filename = `leaderboard_ams_${project}.json`;
+  const abs = resolveOutputFile(filename);
+
   if (!abs) {
     return NextResponse.json(
       {
-        error: 'Missing ams_tasks.json',
-        hint: 'Place ams_tasks.json in the repo root (parent of dashboard/).',
+        error: `Missing ${filename}`,
+        hint:
+          'Run node extract_ams_leaderboard_stats.js from the repo root (needs CLICKUP_API_TOKEN), or copy the JSON beside dashboard/.',
       },
       { status: 404 }
     );
@@ -32,100 +47,13 @@ export async function GET() {
 
   try {
     const raw = fs.readFileSync(abs, 'utf-8');
-    const tasks = JSON.parse(raw);
-    if (!Array.isArray(tasks)) {
-      return NextResponse.json({ error: 'ams_tasks.json must be a JSON array' }, { status: 500 });
-    }
-
-    /** @type {Record<string, { username: string, email: string | null, total: number, delayed: number }>} */
-    const byUser = {};
-
-    for (const task of tasks) {
-      const delayed = isAmsTaskDelayed(task);
-      const assignees = Array.isArray(task.assignees) ? task.assignees : [];
-      let keys = assignees
-        .map((a) => String(a.username || a.email || a.id || '').trim())
-        .filter(Boolean);
-      if (keys.length === 0) keys = ['__unassigned__'];
-
-      for (const key of keys) {
-        if (!byUser[key]) {
-          if (key === '__unassigned__') {
-            byUser[key] = { username: 'Unassigned', email: null, total: 0, delayed: 0 };
-          } else {
-            const a = assignees.find(
-              (x) =>
-                String(x.username || '').trim() === key ||
-                String(x.email || '').trim() === key ||
-                String(x.id) === key
-            );
-            byUser[key] = {
-              username: a?.username || key,
-              email: a?.email || null,
-              total: 0,
-              delayed: 0,
-            };
-          }
-        }
-        byUser[key].total += 1;
-        if (delayed) byUser[key].delayed += 1;
-      }
-    }
-
-    const members = Object.values(byUser)
-      .map((m) => {
-        const onTime = m.total - m.delayed;
-        const onTimeRate = m.total > 0 ? Math.round((onTime / m.total) * 1000) / 10 : 0;
-        return {
-          username: m.username,
-          email: m.email,
-          totalTasks: m.total,
-          delayedTasks: m.delayed,
-          onTimeTasks: onTime,
-          onTimeRate,
-          sufficientSample: m.total >= MIN_SAMPLE,
-        };
-      })
-      .filter((m) => m.totalTasks > 0);
-
-    const ranked = [...members].filter((m) => m.sufficientSample);
-    ranked.sort((a, b) => b.onTimeRate - a.onTimeRate);
-
-    let pooledTotal = 0;
-    let pooledDelayed = 0;
-    for (const m of members) {
-      pooledTotal += m.totalTasks;
-      pooledDelayed += m.delayedTasks;
-    }
-    const teamOnTimeRate =
-      pooledTotal > 0 ? Math.round(((pooledTotal - pooledDelayed) / pooledTotal) * 1000) / 10 : null;
-
-    const payload = {
-      generatedAt: new Date().toISOString(),
-      sourceFile: path.basename(abs),
-      minSampleForRanking: MIN_SAMPLE,
-      teamKind: 'ams',
-      teamLabel: 'AMS Team',
-      workflowTitle: 'AMS Workflow',
-      projectId: null,
-      team: {
-        totalTaskAssignments: pooledTotal,
-        delayedAssignments: pooledDelayed,
-        onTimeRate: teamOnTimeRate,
-      },
-      members,
-      rankedBestToWorst: ranked.map((m, i) => ({ ...m, rank: i + 1 })),
-      attentionNeeded: [...ranked].sort((a, b) => a.onTimeRate - b.onTimeRate).slice(0, 8),
-      topPerformers: [...ranked].sort((a, b) => b.onTimeRate - a.onTimeRate).slice(0, 8),
-      lowSample: members.filter((m) => !m.sufficientSample),
-    };
-
-    return NextResponse.json(payload, {
+    const data = JSON.parse(raw);
+    return NextResponse.json(data, {
       headers: { 'Cache-Control': 'no-store' },
     });
   } catch (e) {
     return NextResponse.json(
-      { error: 'Failed to build member stats', detail: String(e.message) },
+      { error: 'Failed to read member stats', detail: String(e.message) },
       { status: 500 }
     );
   }

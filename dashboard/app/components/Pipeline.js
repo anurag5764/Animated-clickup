@@ -1217,6 +1217,7 @@ export default function Pipeline({
   wrongDateFilter = 'all',
   psProject = 'qs222',
   rtlProject = 'qs222',
+  amsProject = 'qs222',
 }) {
   /** AMS: “Where we are” = PS-style flat tooltips; “What went wrong” = nested hover + delay analysis. */
   const isAmsSimple = teamKey === 'ams' && viewTab === 'current';
@@ -1252,7 +1253,9 @@ export default function Pipeline({
   /** PS/RTL: folder extracts (`*_folder_tasks_*.json`) match AMS — full per-member task counts + Delayed field. Wrong-only JSON is too narrow for team accuracy. */
   const leaderBoardStatsUrl = useMemo(() => {
     if (viewTab !== 'wrong') return null;
-    if (teamKey === 'ams') return '/api/ams-member-stats';
+    if (teamKey === 'ams') {
+      return `/api/ams-member-stats?project=${encodeURIComponent(amsProject)}`;
+    }
     if (teamKey === 'ps') {
       return `/api/ps-member-stats?project=${encodeURIComponent(psProject)}`;
     }
@@ -1260,7 +1263,7 @@ export default function Pipeline({
       return `/api/rtl-member-stats?project=${encodeURIComponent(rtlProject)}`;
     }
     return null;
-  }, [viewTab, teamKey, psProject, rtlProject]);
+  }, [viewTab, teamKey, psProject, rtlProject, amsProject]);
 
   const showLeaderBoardButton = leaderBoardStatsUrl != null;
 
@@ -1669,10 +1672,17 @@ export default function Pipeline({
                           <div className="text-xs text-accent-soft/80 mt-0.5 flex flex-wrap items-baseline gap-x-2 gap-y-0.5 min-w-0">
                             <span className="min-w-0 max-w-full truncate">{task.owner}</span>
                             <span
-                              className={`min-w-0 max-w-full break-words ${task.delayedLabel === 'Yes' ? 'text-blocked' : 'text-completed'}`}
+                              className={`min-w-0 max-w-full break-words ${
+                                (task.delayedLabel === 'Yes' || 
+                                 (task.delayDuration !== null && task.delayDuration > 0) ||
+                                 (task.dateDone && task.dueDate && Number(task.dateDone) > Number(task.dueDate))) 
+                                  ? 'text-blocked' 
+                                  : 'text-completed'
+                              }`}
                             >
-                              Delay: {task.delayDetails}
-                              {task.delayedLabel === 'Yes' && task.delayDuration !== null ? ` (${task.delayDuration}d)` : ''}
+                              Delay: {(task.delayedLabel === 'Yes' || 
+                                       (task.delayDuration !== null && task.delayDuration > 0) ||
+                                       (task.dateDone && task.dueDate && Number(task.dateDone) > Number(task.dueDate))) ? 'Yes' : 'No'}
                             </span>
                           </div>
                         </div>
@@ -1696,10 +1706,17 @@ export default function Pipeline({
                     <div className="text-xs text-accent-soft/80 mt-0.5 flex flex-wrap items-baseline gap-x-2 gap-y-0.5 min-w-0">
                       <span className="min-w-0 max-w-full truncate">{task.owner}</span>
                       <span
-                        className={`min-w-0 max-w-full break-words ${task.delayedLabel === 'Yes' ? 'text-blocked' : 'text-completed'}`}
+                        className={`min-w-0 max-w-full break-words ${
+                          (task.delayedLabel === 'Yes' || 
+                           (task.delayDuration !== null && task.delayDuration > 0) ||
+                           (task.dateDone && task.dueDate && Number(task.dateDone) > Number(task.dueDate))) 
+                            ? 'text-blocked' 
+                            : 'text-completed'
+                        }`}
                       >
-                        Delay: {task.delayDetails}
-                        {task.delayedLabel === 'Yes' && task.delayDuration != null ? ` (${task.delayDuration}d)` : ''}
+                        Delay: {(task.delayedLabel === 'Yes' || 
+                                 (task.delayDuration !== null && task.delayDuration > 0) ||
+                                 (task.dateDone && task.dueDate && Number(task.dateDone) > Number(task.dueDate))) ? 'Yes' : 'No'}
                       </span>
                     </div>
                   </div>

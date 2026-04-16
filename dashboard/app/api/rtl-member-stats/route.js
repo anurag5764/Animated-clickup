@@ -1,17 +1,22 @@
 import fs from 'node:fs';
 import path from 'path';
 import { NextResponse } from 'next/server';
-import { buildFolderMemberStatsPayload } from '../../../lib/wrongMemberStats';
 
 const ALLOWED = new Set(['qs222', 'qs223', 'qs127']);
 
 function resolveOutputFile(filename) {
   const cwd = process.cwd();
+  const isExtract = filename.startsWith('leaderboard_') || filename.includes('_folder_tasks_');
+  const dir = isExtract ? 'extracts' : 'outputs';
+  
   const candidates = [
-    path.join(cwd, '..', 'data', 'extracts', filename),
-    path.join(cwd, '..', filename),
-    path.join(cwd, filename),
+    path.join(cwd, 'data', dir, filename),
+    path.join(cwd, 'data', filename),
     path.join(cwd, 'public', filename),
+    // Fallback for local dev if cwd is root
+    path.join(cwd, 'dashboard', 'data', dir, filename),
+    // Legacy fallback
+    path.join(cwd, '..', 'data', dir, filename),
   ];
   for (const p of candidates) {
     if (fs.existsSync(p)) return p;
@@ -26,7 +31,7 @@ export async function GET(request) {
     return NextResponse.json({ error: 'Invalid project' }, { status: 400 });
   }
 
-  const filename = `rtl_folder_tasks_${project}.json`;
+  const filename = `leaderboard_rtl_${project}.json`;
   const abs = resolveOutputFile(filename);
 
   if (!abs) {
@@ -34,7 +39,7 @@ export async function GET(request) {
       {
         error: `Missing ${filename}`,
         hint:
-          'Run node extract_rtl_folder_tasks.js from the repo root (needs CLICKUP_API_TOKEN), or copy the JSON beside dashboard/. Re-extract so tasks include custom_fields for Delayed.',
+          'Run node extract_rtl_leaderboard_stats.js from the repo root (needs CLICKUP_API_TOKEN), or copy the JSON beside dashboard/.',
       },
       { status: 404 }
     );
@@ -43,17 +48,12 @@ export async function GET(request) {
   try {
     const raw = fs.readFileSync(abs, 'utf-8');
     const data = JSON.parse(raw);
-    const payload = buildFolderMemberStatsPayload(data, {
-      team: 'rtl',
-      project,
-      sourceFile: path.basename(abs),
-    });
-    return NextResponse.json(payload, {
+    return NextResponse.json(data, {
       headers: { 'Cache-Control': 'no-store' },
     });
   } catch (e) {
     return NextResponse.json(
-      { error: 'Failed to build member stats', detail: String(e.message) },
+      { error: 'Failed to read member stats', detail: String(e.message) },
       { status: 500 }
     );
   }

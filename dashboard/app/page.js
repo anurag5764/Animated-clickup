@@ -301,6 +301,7 @@ export default function Home() {
                 wrongDateFilter={wrongDateFilter}
                 psProject={psProject}
                 rtlProject={rtlProject}
+                amsProject={amsProject}
               />
             </div>
           )}

@@ -37,33 +37,33 @@ import { inferWrongViewDelayReason } from './wrong_delay_reason_infer.js';
 
 dotenv.config();
 
-const CURRENT_PROJECTS = [
+const STRATEGIES = [
   {
-    tasksFile: 'data/extracts/rtl_folder_tasks_qs222.json',
-    outputFile: 'data/outputs/output_rtl_qs222.json',
+    tasksFile: 'dashboard/data/extracts/rtl_folder_tasks_qs222.json',
+    outputFile: 'dashboard/data/outputs/output_rtl_qs222.json',
   },
   {
-    tasksFile: 'data/extracts/rtl_folder_tasks_qs223.json',
-    outputFile: 'data/outputs/output_rtl_qs223.json',
+    tasksFile: 'dashboard/data/extracts/rtl_folder_tasks_qs223.json',
+    outputFile: 'dashboard/data/outputs/output_rtl_qs223.json',
   },
   {
-    tasksFile: 'data/extracts/rtl_folder_tasks_qs127.json',
-    outputFile: 'data/outputs/output_rtl_qs127.json',
+    tasksFile: 'dashboard/data/extracts/rtl_folder_tasks_qs127.json',
+    outputFile: 'dashboard/data/outputs/output_rtl_qs127.json',
   },
 ];
 
 const WRONG_PROJECTS = [
   {
-    tasksFile: 'data/extracts/rtl_wrong_folder_tasks_qs222.json',
-    outputFile: 'data/outputs/output_rtl_wrong_qs222.json',
+    tasksFile: 'dashboard/data/extracts/rtl_wrong_folder_tasks_qs222.json',
+    outputFile: 'dashboard/data/outputs/output_rtl_wrong_qs222.json',
   },
   {
-    tasksFile: 'data/extracts/rtl_wrong_folder_tasks_qs223.json',
-    outputFile: 'data/outputs/output_rtl_wrong_qs223.json',
+    tasksFile: 'dashboard/data/extracts/rtl_wrong_folder_tasks_qs223.json',
+    outputFile: 'dashboard/data/outputs/output_rtl_wrong_qs223.json',
   },
   {
-    tasksFile: 'data/extracts/rtl_wrong_folder_tasks_qs127.json',
-    outputFile: 'data/outputs/output_rtl_wrong_qs127.json',
+    tasksFile: 'dashboard/data/extracts/rtl_wrong_folder_tasks_qs127.json',
+    outputFile: 'dashboard/data/outputs/output_rtl_wrong_qs127.json',
   },
 ];
 

@@ -409,7 +409,7 @@ export default function AmsDeliveryInsightModal({
                   : 'border-white/15 text-text-muted hover:text-foreground hover:border-white/30'
               }`}
             >
-              Worst
+              Decreasing
             </button>
             <button
               type="button"
@@ -420,7 +420,7 @@ export default function AmsDeliveryInsightModal({
                   : 'border-white/15 text-text-muted hover:text-foreground hover:border-white/30'
               }`}
             >
-              Best
+              Increasing
             </button>
             <button
               type="button"
@@ -448,20 +448,12 @@ export default function AmsDeliveryInsightModal({
                   delayed={team.delayedAssignments}
                   total={team.totalTaskAssignments}
                 />
-                <div className="flex-1 min-w-0 text-[0.7rem] text-text-muted space-y-1 border-t sm:border-t-0 sm:border-l border-white/[0.06] sm:pl-4 pt-3 sm:pt-0">
-                  <p className="text-text-secondary font-medium text-xs">How to read</p>
-                  <p>
-                    <span className="text-completed">Green</span> segments = share of tasks finished on time;{' '}
-                    <span className="text-blocked/90">red</span> = delayed. Rings and bars use the same hue scale (red →
-                    yellow → green).
-                  </p>
-                </div>
               </div>
 
               {members.length > 0 && (
                 <div className="space-y-2">
                   <h3 className="text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-text-secondary">
-                    Comparison chart
+                    Performance chart
                   </h3>
                   <MemberBarChart members={members} />
                 </div>
@@ -469,7 +461,7 @@ export default function AmsDeliveryInsightModal({
 
               <div className="space-y-2">
                 <h3 className="text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-text-secondary">
-                  Detail
+                  Member performance analytics
                 </h3>
                 <ul className="space-y-2.5">
                   {members.map((m) => (

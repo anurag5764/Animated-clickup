@@ -53,19 +53,19 @@ const PROJECTS = [
     id: 'qs222',
     label: 'QS222',
     folderId: '90172530829',
-    outFile: 'data/extracts/rtl_folder_tasks_qs222.json',
+    outFile: 'dashboard/data/extracts/rtl_folder_tasks_qs222.json',
   },
   {
     id: 'qs223',
     label: 'QS223',
     folderId: '90172523095',
-    outFile: 'data/extracts/rtl_folder_tasks_qs223.json',
+    outFile: 'dashboard/data/extracts/rtl_folder_tasks_qs223.json',
   },
   {
     id: 'qs127',
     label: 'QS127',
     folderId: '90172600045',
-    outFile: 'data/extracts/rtl_folder_tasks_qs127.json',
+    outFile: 'dashboard/data/extracts/rtl_folder_tasks_qs127.json',
   },
 ];
 
@@ -312,7 +312,7 @@ async function main() {
       taskCount: tasks.length,
       tasks,
     };
-    fs.mkdirSync('data/extracts', { recursive: true });
+    fs.mkdirSync('dashboard/data/extracts', { recursive: true });
     fs.writeFileSync(project.outFile, JSON.stringify(payload, null, 2));
     console.log(`\n💾 ${tasks.length} task(s) → ${project.outFile}`);
     summary[project.id] = tasks.length;

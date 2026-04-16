@@ -6,11 +6,17 @@ const ALLOWED = new Set(['qs222', 'qs223', 'qs127']);
 
 function resolveOutputFile(filename) {
   const cwd = process.cwd();
+  const isExtract = filename.startsWith('leaderboard_') || filename.includes('_folder_tasks_');
+  const dir = isExtract ? 'extracts' : 'outputs';
+  
   const candidates = [
-    path.join(cwd, '..', 'data', 'outputs', filename),
-    path.join(cwd, '..', filename),
-    path.join(cwd, filename),
+    path.join(cwd, 'data', dir, filename),
+    path.join(cwd, 'data', filename),
     path.join(cwd, 'public', filename),
+    // Fallback for local dev if cwd is root
+    path.join(cwd, 'dashboard', 'data', dir, filename),
+    // Legacy fallback
+    path.join(cwd, '..', 'data', dir, filename),
   ];
   for (const p of candidates) {
     if (fs.existsSync(p)) return p;

@@ -8,12 +8,15 @@
     "extract:ps-folders": "node extract_ps_folder_tasks.js",
     "extract:ps-wrong": "node extract_ps_wrong_folder_tasks.js",
     "analyze:ps": "node analyze_ps_workflow.js",
+    "extract:leaderboard-ps": "node extract_ps_leaderboard_stats.js",
     "extract:rtl-folders": "node extract_rtl_folder_tasks.js",
     "extract:rtl-wrong": "node extract_rtl_wrong_folder_tasks.js",
     "analyze:rtl": "node analyze_rtl_workflow.js",
+    "extract:leaderboard-rtl": "node extract_rtl_leaderboard_stats.js",
     "extract:ams-folders": "node extract_ams_folder_tasks.js",
     "extract:ams-wrong": "node extract_ams_wrong_folder_tasks.js",
-    "analyze:ams": "node analyze_ams_workflow.js"
+    "analyze:ams": "node analyze_ams_workflow.js",
+    "extract:leaderboard-ams": "node extract_ams_leaderboard_stats.js"
   },
   "keywords": [],
   "author": "",
