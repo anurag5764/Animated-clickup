@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-16T10:15:39.841Z",
+  "generatedAt": "2026-04-16T11:21:08.122Z",
   "teamKind": "ps",
   "teamLabel": "PS Team",
   "workflowTitle": "Leaderboard Stats",
@@ -7,44 +7,44 @@
   "minSampleForRanking": 5,
   "team": {
     "totalTaskAssignments": 41,
-    "delayedAssignments": 8,
-    "onTimeRate": 80.5
+    "delayedAssignments": 40,
+    "onTimeRate": 2.4
   },
   "members": [
     {
       "username": "sumon",
       "email": "sumon.bose@10xar.com",
       "totalTasks": 32,
-      "delayedTasks": 5,
-      "onTimeTasks": 27,
-      "onTimeRate": 84.4,
+      "delayedTasks": 32,
+      "onTimeTasks": 0,
+      "onTimeRate": 0,
       "sufficientSample": true
     },
     {
       "username": "Ayash Ashraf",
       "email": "ayash.ashraf@ixana.ai",
       "totalTasks": 2,
-      "delayedTasks": 1,
-      "onTimeTasks": 1,
-      "onTimeRate": 50,
+      "delayedTasks": 2,
+      "onTimeTasks": 0,
+      "onTimeRate": 0,
       "sufficientSample": false
     },
     {
       "username": "Archisman Ghosh",
       "email": "archisman.ghosh@ixana.ai",
       "totalTasks": 3,
-      "delayedTasks": 1,
-      "onTimeTasks": 2,
-      "onTimeRate": 66.7,
+      "delayedTasks": 3,
+      "onTimeTasks": 0,
+      "onTimeRate": 0,
       "sufficientSample": false
     },
     {
       "username": "Anirudh Roy",
       "email": "anirudh.roy@10xar.com",
       "totalTasks": 1,
-      "delayedTasks": 0,
-      "onTimeTasks": 1,
-      "onTimeRate": 100,
+      "delayedTasks": 1,
+      "onTimeTasks": 0,
+      "onTimeRate": 0,
       "sufficientSample": false
     },
     {
@@ -60,9 +60,9 @@
       "username": "Kumaresh Dhotrad",
       "email": "kumaresh.dhotrad@ixana.ai",
       "totalTasks": 2,
-      "delayedTasks": 0,
-      "onTimeTasks": 2,
-      "onTimeRate": 100,
+      "delayedTasks": 1,
+      "onTimeTasks": 1,
+      "onTimeRate": 50,
       "sufficientSample": false
     }
   ],
@@ -71,9 +71,9 @@
       "username": "sumon",
       "email": "sumon.bose@10xar.com",
       "totalTasks": 32,
-      "delayedTasks": 5,
-      "onTimeTasks": 27,
-      "onTimeRate": 84.4,
+      "delayedTasks": 32,
+      "onTimeTasks": 0,
+      "onTimeRate": 0,
       "sufficientSample": true,
       "rank": 1
     }
@@ -83,9 +83,9 @@
       "username": "sumon",
       "email": "sumon.bose@10xar.com",
       "totalTasks": 32,
-      "delayedTasks": 5,
-      "onTimeTasks": 27,
-      "onTimeRate": 84.4,
+      "delayedTasks": 32,
+      "onTimeTasks": 0,
+      "onTimeRate": 0,
       "sufficientSample": true
     }
   ],
@@ -94,9 +94,9 @@
       "username": "sumon",
       "email": "sumon.bose@10xar.com",
       "totalTasks": 32,
-      "delayedTasks": 5,
-      "onTimeTasks": 27,
-      "onTimeRate": 84.4,
+      "delayedTasks": 32,
+      "onTimeTasks": 0,
+      "onTimeRate": 0,
       "sufficientSample": true
     }
   ],
@@ -105,27 +105,27 @@
       "username": "Ayash Ashraf",
       "email": "ayash.ashraf@ixana.ai",
       "totalTasks": 2,
-      "delayedTasks": 1,
-      "onTimeTasks": 1,
-      "onTimeRate": 50,
+      "delayedTasks": 2,
+      "onTimeTasks": 0,
+      "onTimeRate": 0,
       "sufficientSample": false
     },
     {
       "username": "Archisman Ghosh",
       "email": "archisman.ghosh@ixana.ai",
       "totalTasks": 3,
-      "delayedTasks": 1,
-      "onTimeTasks": 2,
-      "onTimeRate": 66.7,
+      "delayedTasks": 3,
+      "onTimeTasks": 0,
+      "onTimeRate": 0,
       "sufficientSample": false
     },
     {
       "username": "Anirudh Roy",
       "email": "anirudh.roy@10xar.com",
       "totalTasks": 1,
-      "delayedTasks": 0,
-      "onTimeTasks": 1,
-      "onTimeRate": 100,
+      "delayedTasks": 1,
+      "onTimeTasks": 0,
+      "onTimeRate": 0,
       "sufficientSample": false
     },
     {
@@ -141,9 +141,9 @@
       "username": "Kumaresh Dhotrad",
       "email": "kumaresh.dhotrad@ixana.ai",
       "totalTasks": 2,
-      "delayedTasks": 0,
-      "onTimeTasks": 2,
-      "onTimeRate": 100,
+      "delayedTasks": 1,
+      "onTimeTasks": 1,
+      "onTimeRate": 50,
       "sufficientSample": false
     }
   ],
